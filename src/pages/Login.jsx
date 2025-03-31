@@ -40,9 +40,10 @@ function Login() {
         <img src={logo} alt="Talkmore Logo" className="logo" />
 
         <div className="login-content">
+        <div className="login-box">
           <h1 className="login-headline">EmployeeMore</h1>
-          <div className="login-box">
-          <h2>Logg inn</h2>
+          
+          <h2 className="login-title">Logg inn</h2>
 
           {/* skjemaet bruker handleLogin når man trykker på "Logg inn" */}
           <form onSubmit={handleLogin}>
@@ -75,19 +76,9 @@ function Login() {
               <a href="#">Glemt passord?</a>
             </div>
 
-            {/* knapper nederst */}
-            <div className="login-buttons">
+            {/* login-knapp nederst */}
+            <div className="login-button">
               <button type="submit" className="login-submit">Logg inn</button>
-              <button
-                type="button"
-                className="login-cancel"
-                onClick={() => {
-                  setEmail('');
-                  setPassword('');
-                }}
-              >
-                Avbryt
-              </button>
             </div>
           </form>
         </div>
