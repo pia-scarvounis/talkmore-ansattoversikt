@@ -1,0 +1,21 @@
+/* global.css - gjelder alle sider i EmployeeMore */
+
+
+/* fontsize & type i hele prosjektet */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Circular Pro Book", sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: "Circular Pro Bold", sans-serif;
+  font-size: 25px;
+}
+
+/* se om vi trenger denne her, eller om vi styler knappene på de ulike sidene hver for seg*/ 
+
+button {
+  font-size: 15px;
+  font-weight: bold;
+}
