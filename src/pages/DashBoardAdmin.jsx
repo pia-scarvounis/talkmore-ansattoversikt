@@ -3,10 +3,10 @@ import NavAdmin from "../components/navigation/NavAdmin";
 
 const DashBoardAdmin = () => {
   return (
-    <div style={{ display: "flex" }}>
+    <div>
       <NavAdmin />
 
-      <div style={{ flexGrow: 1, padding: "20px" }}>
+      <div>
         <h1>Admin Dashboard</h1>
         {/* Her kommer resten*/}
       </div>

@@ -1,13 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import logo from "../assets/images/tm-logo.png.";
+import logo from "../assets/images/tm-logo.png";
 import "../styles/global.css";
-import "..styles/nav.css";
+import "../styles/nav.css";
 
 const NavAdmin = () => {
   return (
     <div className="sidebar">
-      <div className="logo">
+      <div className="logo-container">
         <img src={logo} alt="Talkmore logo" />
       </div>
 

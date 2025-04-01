@@ -15,7 +15,7 @@ function Login() {
     e.preventDefault(); // siden reloades ikke
 
     // !!! vi må bytte ut api-kall med ekte API-kall.!!! 
-    fetch('https://api.eksemppel.com/login', {
+    fetch('https://api.eksempel.com/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }, // forteller apiet at vi sender JSON
       body: JSON.stringify({ email, password }) //  sender inn e-post og passord fra skjemaet
@@ -41,7 +41,7 @@ function Login() {
 
         <div className="login-content">
         <div className="login-box">
-          <h1 className="login-headline">EmployeeMore</h1>
+          <h1 className="login-headline">Ansattoversikt</h1>
           
           <h2 className="login-title">Logg inn</h2>
 
