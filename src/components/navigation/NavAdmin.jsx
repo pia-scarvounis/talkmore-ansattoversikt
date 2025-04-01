@@ -18,7 +18,7 @@ const NavAdmin = () => {
         <div className="section">
           <h4>Privat</h4>
           <NavLink to="/privat/brooklyn">Brooklyn</NavLink>
-          <NavLink to="/privat/havanna">Havanna</NavLink>
+          <NavLink to="/privat/havana">Havana</NavLink>
           <NavLink to="/privat/casablanca">Casablanca</NavLink>
           <NavLink to="/privat/springfield">Springfield</NavLink>
         </div>
