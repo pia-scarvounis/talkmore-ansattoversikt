@@ -30,7 +30,7 @@ function Login() {
         // hvis det skjer en feil (eks, feil passord eller ingen kontakt med api..), vises det her.
         console.error('Login error:', err);
       });
-  };
+  }; // !!! vi må bytte ut api-kall med ekte API-kall.!!!
 
   return (
     <div
