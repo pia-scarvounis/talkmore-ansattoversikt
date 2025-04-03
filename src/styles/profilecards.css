@@ -1,6 +1,7 @@
 
 /*Profilkort kontainer*/
 .profile-card{
+    position: relative;
     border: 3px solid #8FD1EF;
     border-radius: 14px;
     height: 383px;
@@ -8,6 +9,11 @@
     text-align: center;
     
 }
+/*Profilkort hover øker med 5% */
+.profile-card:hover{
+   transform: scale(1.05);
+}
+
 /*Profilkort bakgrunn med farge*/
 .profile-card .background-color{
     border-radius: 11px;
@@ -18,6 +24,7 @@
     width: 290px;
     background-color: #8FD1EF;
 }
+
 /*Profilkort bakgrunn med farge TEKST innhold container*/
 .label-main{
     padding: 7px;
@@ -36,6 +43,7 @@
 }
 
 /* Legge til css for rosa kort Admin+teamledere*/
+
 /*Profilkort bilde size*/
 .profile-img {
     width: 160px ;
