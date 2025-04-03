@@ -8,11 +8,15 @@ body {
   font-family: "Circular Pro Book", sans-serif;
 }
 
-h1, h2, h3 {
+h1, h2 {
   font-family: "Circular Pro Bold", sans-serif;
-  font-size: 25px;
+  font-size: 24px;
 }
 
+h3, p {
+  font-family: "Circular Pro Book", sans-serif;
+  font-size: 16px;
+}
 /* se om vi trenger denne her, eller om vi styler knappene på de ulike sidene hver for seg*/ 
 
 button {
