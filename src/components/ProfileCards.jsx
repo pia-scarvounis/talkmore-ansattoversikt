@@ -16,8 +16,8 @@ const ProfileCards = () => {
         <div className='background-color'>
             <div className='label-main'>
                 <h3> Fornavn Etternavn</h3>
-                <p> Ansattnr(Talkmore) ansatt.jobnumber</p>
-                <p> Ansattnr(Telenor)  ansatt.jobnumber</p>
+                <p> Ansattnr(Talkmore) ansatt.jobNr</p>
+                <p> Ansattnr(Telenor)  ansatt.jobNr</p>
             </div>
         </div>
         
