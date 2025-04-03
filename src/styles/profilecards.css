@@ -2,28 +2,43 @@
 /*Profilkort kontainer*/
 .profile-card{
     border: 3px solid #8FD1EF;
-    border-radius: 13px;
-    height: 366px;
+    border-radius: 14px;
+    height: 379px;
     width: 290px;
     text-align: center;
+    
 }
 /*Profilkort bakgrunn med farge*/
-.background-color{
-    border-radius: 13px;
-    height: 100px;
+.profile-card .background-color{
+    border-radius: 11px;
+    text-align: center;
+    padding: 0;
+    margin-top: -3px;
+    height: 109px;
     width: 290px;
     background-color: #8FD1EF;
 }
+/*Profilkort bakgrunn med farge TEKST innhold container*/
+.label-main{
+    padding: 7px;
+    
+}
 
 
 
+/*span klasser med font weight bold*/
+.label-info{
+    font-family: "Circular Pro Bold", sans-serif ;
+    font-weight: bold;
+}
 
+/*Profilkort kontainer*/
 .profile-img-container{
     margin: 10px auto;
 }
 
 /* Legge til css for rosa kort Admin+teamledere*/
-
+/*Profilkort bilde size*/
 .profile-img {
     width: 160px ;
     height: 160px ;
