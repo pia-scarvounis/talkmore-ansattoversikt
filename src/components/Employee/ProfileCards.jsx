@@ -1,17 +1,16 @@
 import React from 'react'
-import "../styles/global.css"
+import "../../styles/global.css"
 //importere css for profilkort
 
-import "../styles/profilecards.css"
+import "../../styles/profilecards.css"
 
-import profileImage from "../assets/images/default-img.png"
+import profileImage from "../../assets/images/default-img.png"
 
 const ProfileCards = () => {
     //Hente inn en ansatt
     //Sette inn betingelser for farge på kortene om det blir rosa/blå bakgrunn
   return (
     <div className='profile-card'>
-        <h1> prøver å fikse en feil test</h1>
         {/**Tekstene under skal ha bakgrunn i sin egen div*/}
         <div className='background-color'>
             <div className='label-main'>
