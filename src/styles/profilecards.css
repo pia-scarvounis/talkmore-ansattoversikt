@@ -3,7 +3,7 @@
 .profile-card{
     border: 3px solid #8FD1EF;
     border-radius: 14px;
-    height: 379px;
+    height: 383px;
     width: 290px;
     text-align: center;
     
@@ -23,8 +23,6 @@
     padding: 7px;
     
 }
-
-
 
 /*span klasser med font weight bold*/
 .label-info{
