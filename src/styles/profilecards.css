@@ -1,0 +1,30 @@
+
+/*Profilkort kontainer*/
+.profile-card{
+    border: 3px solid #8FD1EF;
+    border-radius: 13px;
+    height: 366px;
+    width: 290px;
+    text-align: center;
+}
+/*Profilkort bakgrunn med farge*/
+.background-color{
+    border-radius: 13px;
+    height: 100px;
+    width: 290px;
+    background-color: #8FD1EF;
+}
+
+
+
+
+.profile-img-container{
+    margin: 10px auto;
+}
+
+/* Legge til css for rosa kort Admin+teamledere*/
+
+.profile-img {
+    width: 160px ;
+    height: 160px ;
+}
