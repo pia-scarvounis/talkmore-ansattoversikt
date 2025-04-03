@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import DashBoardAdmin from "./pages/DashBoardAdmin";
-import ProfileCards from "./components/ProfileCards";
+import ProfileCards from "./components/Employee/ProfileCards";
 import "./styles/global.css";
 
 function App() {
