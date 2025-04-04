@@ -1,7 +1,6 @@
 import '../styles/global.css';
 import '../styles/login.css';
 import logo from '../assets/images/tm-logo.png';
-import background from '../assets/images/login-background.png';
 
 // hente useState fra React for å kunne lagre og oppdatere input-verdiene.
 import { useState } from 'react';
@@ -35,7 +34,6 @@ function Login() {
   return (
     <div
       className="login-page"
-      style={{ backgroundImage: `url(${background})` }}
     >
         <img src={logo} alt="Talkmore Logo" className="logo" />
 

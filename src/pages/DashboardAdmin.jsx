@@ -1,7 +1,7 @@
 import React from "react";
 import NavAdmin from "../components/navigation/NavAdmin";
 
-const DashBoardAdmin = () => {
+const DashboardAdmin = () => {
   return (
     <div>
       <NavAdmin />
@@ -14,4 +14,4 @@ const DashBoardAdmin = () => {
   );
 };
 
-export default DashBoardAdmin;
+export default DashboardAdmin;

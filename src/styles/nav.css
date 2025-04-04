@@ -42,7 +42,7 @@
   transition: all 0.2s ease-in-out;
 }
 
-/* hovedlenker – med grønn strek under ved hover */
+/* mainlink: grønn strek under ved hover */
 .main-link {
   position: relative;
   display: inline-block;
@@ -64,7 +64,7 @@
   display: inline;
 }
 
-/* underlenker – med grønn boks ved hover */
+/* sublink: grønn boks ved hover */
 .sub-link:hover {
   background-color: #ddf5d2;
 
