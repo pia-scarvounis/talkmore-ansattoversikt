@@ -1,0 +1,26 @@
+.stat-box {
+  background-color: #e2f5da;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-box.highlight {
+  background-color: #fff;
+  border: 2px solid #8dd340;
+}
+
+.stat-box h4 {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.stat-box .value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.stat-box .unit {
+  font-size: 12px;
+  color: gray;
+}
