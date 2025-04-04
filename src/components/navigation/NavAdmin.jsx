@@ -15,7 +15,7 @@ const NavAdmin = () => {
         <NavLink to="/dashboard" className="nav-link main-link">
           Dashboard
         </NavLink>
-        <NavLink to="/profilecardslist" className="nav-link main-link">
+        <NavLink to="/profilecardlists" className="nav-link main-link">
           Alle Ansatte
         </NavLink>
 
@@ -68,8 +68,8 @@ const NavAdmin = () => {
           <NavLink to="registrer" className="nav-link main-link">
             Registrer ansatt
           </NavLink>
-          </div>
-          <div className="section">
+        </div>
+        <div className="section">
           <NavLink to="logout" className="nav-link main-link">
             Logg ut
           </NavLink>
