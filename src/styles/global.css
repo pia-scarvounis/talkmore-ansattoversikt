@@ -24,7 +24,7 @@ button {
   font-weight: bold;
 }
 /*Lager en styling for profilkort listevisning med flex som skal gjelde alle sidene med profilkort lister*/
-.profilePage-container{
+.profilePages-container{
   display: flex;
 }
 .profileList-container{
