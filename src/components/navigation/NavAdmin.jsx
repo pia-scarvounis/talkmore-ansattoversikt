@@ -15,7 +15,7 @@ const NavAdmin = () => {
         <NavLink to="/dashboard" className="nav-link main-link">
           Dashboard
         </NavLink>
-        <NavLink to="/ansatte" className="nav-link main-link">
+        <NavLink to="/profilecardslist" className="nav-link main-link">
           Alle Ansatte
         </NavLink>
 
