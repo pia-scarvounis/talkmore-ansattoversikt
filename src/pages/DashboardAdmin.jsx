@@ -3,7 +3,7 @@ import NavAdmin from "../components/navigation/NavAdmin";
 import StatBox from "../components/StatBox";
 import "../styles/dashboard.css";
 
-const DashBoardAdmin = () => {
+const DashboardAdmin = () => {
   return (
     <div className="dashboard-layout">
       <NavAdmin />
@@ -31,4 +31,4 @@ const DashBoardAdmin = () => {
   );
 };
 
-export default DashBoardAdmin;
+export default DashboardAdmin;

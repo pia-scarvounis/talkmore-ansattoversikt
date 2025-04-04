@@ -1,7 +1,6 @@
 import '../styles/global.css';
 import '../styles/login.css';
 import logo from '../assets/images/tm-logo.png';
-import background from '../assets/images/login-background.png';
 
 // hente useState fra React for å kunne lagre og oppdatere input-verdiene.
 import { useState } from 'react';
@@ -30,12 +29,11 @@ function Login() {
         // hvis det skjer en feil (eks, feil passord eller ingen kontakt med api..), vises det her.
         console.error('Login error:', err);
       });
-  };
+  }; // !!! vi må bytte ut api-kall med ekte API-kall.!!!
 
   return (
     <div
       className="login-page"
-      style={{ backgroundImage: `url(${background})` }}
     >
         <img src={logo} alt="Talkmore Logo" className="logo" />
 

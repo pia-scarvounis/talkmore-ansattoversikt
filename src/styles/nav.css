@@ -1,66 +1,78 @@
-/* SIDEBAR OG NAV */
+/* SIDEBAR OG LOGO */
 .sidebar {
-    width: 240px;
-    height: 100vh;
-    background-color: #fff;
-    padding: 40px 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .logo-container {
-    margin-bottom: 40px;
-    text-align: left;
-  }
-  
-  .logo {
-    width: 140px;
-  }
-  
-  /* NAVIGASJON */
-  .nav {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .nav a {
-    text-decoration: none;
-    color: black;
-    font-size: 16px;
-    padding: 6px 8px;
-    border-radius: 4px;
-    transition: all 0.2s ease-in-out;
-  }
-  
-  /* OVERSKRIFTER (privat, bedrift, osv.) */
-  .section h4 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* grønn strek under h4 på hover */
-  .section h4:hover::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background-color: #48802C;
-  }
-  
-  /* HOVER-EFFEKT på små nav-lenker */
-  .section a:hover {
-    background-color: #DDF5D2;
-  }
-  
-  /* Spesielt for hovedlenker (ikke i .section) */
-  .nav > a:hover {
-    border-bottom: 3px solid #48802C;
-  }
-  
+  width: 240px;
+  height: 100vh;
+  background-color: #fff;
+  padding: 40px 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.logo-container {
+  margin-bottom: 100px;
+  text-align: left;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+  width: 200px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+/* NAVIGASJON */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: black;
+  font-size: 16px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* mainlink: grønn strek under ved hover */
+.main-link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.main-link:hover {
+  text-decoration: underline;
+  text-decoration-color: #48802c;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 3px;
+}
+
+.sub-link {
+  font-size: 15px;
+  font-weight: normal;
+  display: inline;
+}
+
+/* sublink: grønn boks ved hover */
+.sub-link:hover {
+  background-color: #ddf5d2;
+
+}
+
+/* for å gruppere underlenkene pent */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
