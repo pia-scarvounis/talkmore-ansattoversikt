@@ -9,7 +9,7 @@ const ProfileCardLists = () => {
     <div className='pageContent-text'>
             <h1>Alle ansatte (eksempel) </h1>
         </div>
-    <div className='profilePage-container'>
+    <div className='profilePages-container'>
          
         <NavAdmin/>
 
