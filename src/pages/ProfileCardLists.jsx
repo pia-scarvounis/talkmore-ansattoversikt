@@ -25,4 +25,4 @@ const ProfileCardLists = () => {
   )
 }
 
-export default ProfileCardLists
+export default ProfileCardLists;
