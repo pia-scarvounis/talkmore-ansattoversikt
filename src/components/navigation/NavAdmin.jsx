@@ -65,7 +65,7 @@ const NavAdmin = () => {
         </div>
 
         <div className="section">
-          <NavLink to="registrer" className="nav-link main-link">
+          <NavLink to="/registrer" className="nav-link main-link">
             Registrer ansatt
           </NavLink>
         </div>
