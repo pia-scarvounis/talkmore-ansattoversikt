@@ -1,0 +1,89 @@
+.register-page {
+    display: flex;
+    min-height: 100vh;
+    background-color: #fff;
+  }
+  
+  .register-content {
+    margin-left: 240px; /* gjøre plass til navigasjon */
+    padding: 60px 120px; /* mer space på høyre og venstre */
+    flex: 1;
+  }
+  
+  h1 {
+    margin-bottom: 50px;
+  }
+  
+  .form-section {
+    margin-top: 40px;
+    padding-top: 40px;
+  }
+  
+  .section-heading {
+    color: #555;
+    margin-bottom: 25px;
+    font-size: 18px;
+  } /* har stylet denne , se om vi kan lage en felles styling for alle heading-overskrifter i global i stedet*/ 
+  
+  .two-column {
+    display: flex;
+    gap: 100px; /* mer space mellom venstre og høyre kolonne */
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .column {
+    flex: 1;
+    max-width: 350px; /* gjør kolonnene smalere */
+    display: flex;
+    flex-direction: column;
+    gap: 14px; 
+  }
+
+  /* input styling ligger i global.css */
+  
+
+  
+  .image-upload-container {
+    margin-bottom: 40px;
+    color: #555;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  
+  
+  .image-box {
+    position: relative;
+    display: inline-block;
+    background-color: #f8f8f8;
+    border-radius: 30px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .profile-image {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #eaeaea;
+  }
+  
+  .icon-buttons {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .icon-button {
+    width: 23px;
+    height: 23px;
+    cursor: pointer;
+  }
+  

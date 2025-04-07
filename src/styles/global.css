@@ -17,7 +17,7 @@ h3, p {
   font-family: "Circular Pro Book", sans-serif;
   font-size: 14px;
 }
-/* se om vi trenger denne her, eller om vi styler knappene på de ulike sidene hver for seg*/ 
+/* knapper */ 
 
 button {
   font-size: 15px;
@@ -37,4 +37,22 @@ button {
   justify-content: center;
   flex-wrap: wrap;
   margin-left: 300px;
+}
+
+
+/* inputfelt hele siden */
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 500;
 }
