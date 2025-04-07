@@ -34,6 +34,8 @@ button {
   gap: 15px;
   margin-left: 293px;
 }
+
+/* Styling til sidenavn per side, untatt font*/
 .pageContent-text {
   justify-content: center;
   flex-wrap: wrap;
