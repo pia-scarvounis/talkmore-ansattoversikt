@@ -30,6 +30,16 @@ const FilterOption = () => {
         <option value="20%">20%</option>
         <option value="10%">10%</option>
       </select>
+      <div className='options-checkbox'>
+        <label>
+            <input type="checkbox" name='Heltid' className='checkbox'/>
+            Heltid
+        </label>
+        <label>
+            <input type="checkbox" name='Deltid' className='checkbox'/>
+            Deltid
+        </label>
+      </div>
     </div>
   )
 }
