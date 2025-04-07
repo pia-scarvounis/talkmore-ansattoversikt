@@ -6,23 +6,22 @@ import "../styles/global.css"
 
 const ProfileCardLists = () => {
   return (
-    <div>
-         <FilterOption/>
-    <div className='pageContent-text'>
+    <div>     
+        <div className='pageContent-text'>
             <h1>Alle ansatte (eksempel) </h1>
         </div>
-    <div className='profilePages-container'>
+    <FilterOption/>
+        <div className='profilePages-container'>
          
-        <NavAdmin/>
+            <NavAdmin/>
 
-       
-        <div className='profileList-container'>
-        {/**Lager en liste med 10 profilekort fra komponentet */}
-        {Array(10).fill(null).map((_, index) => (
-            <ProfileCards></ProfileCards>
-        ))}
+            <div className='profileList-container'>
+            {/**Lager en liste med 10 profilekort fra komponentet */}
+                {Array(10).fill(null).map((_, index) => (
+                <ProfileCards></ProfileCards>
+                ))}
+            </div>
         </div>
-    </div>
     </div>
   )
 }

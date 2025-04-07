@@ -38,9 +38,17 @@ button {
   flex-wrap: wrap;
   margin-left: 300px;
 }
-/* Styling for filtrering systemet på alle sidene*/
+/* Styling for posisjon for filtrering systemet på alle sidene*/
 .filter-section{
   flex-wrap: wrap;
   margin-left: 380px;
   padding: 30px;
+}
+/* Denne skal legges i egen css fil snart*/
+.options-section{
+  display:inline-flex;
+  padding: 9px;
+  border-radius: 5px;
+  margin-right: 15px;
+  gap: 20px;
 }
