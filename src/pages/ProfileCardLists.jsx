@@ -1,11 +1,13 @@
 import React from 'react'
 import ProfileCards from '../components/Employee/ProfileCards'
 import NavAdmin from "../components/navigation/NavAdmin"
+import FilterOption from '../components/Employee/FilterOption'
 import "../styles/global.css"
 
 const ProfileCardLists = () => {
   return (
     <div>
+         <FilterOption/>
     <div className='pageContent-text'>
             <h1>Alle ansatte (eksempel) </h1>
         </div>
