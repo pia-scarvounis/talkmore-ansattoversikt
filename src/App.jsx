@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import DashBoardAdmin from "./pages/DashBoardAdmin";
 import ProfileCards from "./components/Employee/ProfileCards";
 import ProfileCardLists from "./pages/ProfileCardLists";
+import RegisterEmployee from "./pages/RegisterEmployee";
 import "./styles/global.css";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/dashboard" element={<DashBoardAdmin />} />
         <Route path="/profilecards" element={<ProfileCards />} />
         <Route path="/profilecardlists" element={<ProfileCardLists />} />
+        <Route path="/register" element={<RegisterEmployee />} />
       </Routes>
     </Router>
   );
