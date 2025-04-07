@@ -1,5 +1,6 @@
 import React from 'react'
 import "../../styles/global.css"
+
 //importere css for profilkort
 
 import "../../styles/profilecards.css"
