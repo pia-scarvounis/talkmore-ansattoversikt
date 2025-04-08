@@ -1,6 +1,5 @@
 /* global.css - gjelder alle sider i EmployeeMore */
 
-
 /* fontsize & type i hele prosjektet */
 body {
   margin: 0;
@@ -8,26 +7,27 @@ body {
   font-family: "Circular Pro Book", sans-serif;
 }
 
-h1, h2 {
+h1,
+h2 {
   font-family: "Circular Pro Bold", sans-serif;
   font-size: 24px;
 }
 
-h3, p {
+h3,
+p {
   font-family: "Circular Pro Book", sans-serif;
   font-size: 14px;
 }
-/* se om vi trenger denne her, eller om vi styler knappene på de ulike sidene hver for seg*/ 
 
 button {
   font-size: 15px;
   font-weight: bold;
 }
 /*Lager en styling for profilkort listevisning med flex som skal gjelde alle sidene med profilkort lister*/
-.profilePages-container{
+.profilePages-container {
   display: flex;
 }
-.profileList-container{
+.profileList-container {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
@@ -46,4 +46,23 @@ button {
   padding: 40px;
   margin-top: 40px;
   margin-bottom: 40px;
+}
+
+/* inputfelt hele siden */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 500;
 }
