@@ -31,14 +31,21 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  margin-left: 293px;
+  margin-left: 383px;
 }
-
-/* Styling til sidenavn per side, untatt font*/
-.pageContent-text {
+/*Hovedtekst på sidene som forteller hvor man er på siden*/
+.pageContent-text{
   justify-content: center;
   flex-wrap: wrap;
   margin-left: 300px;
+}
+/* Styling for posisjon for filtrering systemet på alle sidene*/
+.filter-section{
+  flex-wrap: wrap;
+  margin-left: 290px;
+  padding: 40px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 /* inputfelt hele siden */

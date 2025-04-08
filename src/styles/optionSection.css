@@ -1,0 +1,19 @@
+/* Denne skal legges i egen css fil snart*/
+.options-section{
+    display:inline-flex;
+    padding: 9px;
+    border-radius: 5px;
+    margin-right: 15px;
+    gap: 20px;
+  }
+
+/*Checkbox styling div, hoved container styling ligger i global.css*/
+.options-checkbox{
+    padding: 15px;
+    margin-top: 20px;
+    margin-left: -41px;
+}
+.checkbox{
+    margin-right: 15px;
+    margin-left: 28px;
+}
