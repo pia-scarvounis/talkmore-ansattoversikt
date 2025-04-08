@@ -8,8 +8,16 @@ import iconKA from "../assets/icons/ka.svg";
 import iconFTE from "../assets/icons/fte.svg";
 import iconTL from "../assets/icons/tl.svg";
 import DateSelector from "../components/Dashboard/DateSelector";
+import { useSelector } from "react-redux";
+import { format } from "date-fns";
+import { nb } from "date-fns/locale";
 
 const DashboardAdmin = () => {
+  const selectedDate = useSelector((state) => state.date.selectedDate);
+  const formattedDate = format(new Date(selectedDate), "EEEE d. MMMM yyyy", {
+    locale: nb,
+  });
+
   return (
     <div className="dashboard-layout">
       <NavAdmin />
@@ -18,7 +26,7 @@ const DashboardAdmin = () => {
         <div className="left-column">
           <div className="dashboard-header">
             <h1>Dagsoversikt</h1>
-            <p className="date-label">Mandag 10.10.25</p>
+            <p className="date-label">{formattedDate}</p>
             <DateSelector />
           </div>
           <div className="dashboard-grid">
