@@ -93,22 +93,7 @@
     justify-content: center;
   }
   
-  .login-submit {
-    background-color: #60AA3B;
-    color: black;
-    border: none;
-    border-radius: 999px;
-    padding: 10px 40px;
-    width: 160px; 
-    cursor: pointer;
-    align-self: center;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
-  }
-  
-  .login-submit:hover {
-    background-color: #48802C;
-  }
+
   
 
   

@@ -1,11 +1,16 @@
-.register-page {
+/* felles css for utfyllingsskjemaer i RegisterEmployee.jsx & EditEmployee.jsx */
+
+ /* input styling ligger i global.css, hvis vi kun bruker inputfelt og labels på register og edit kan vi flytte det også inn hit */
+
+/* skjema */
+.form-page {
     display: flex;
     min-height: 100vh;
     background-color: #fff;
   }
   
-  .register-content {
-    margin-left: 240px; /* gjøre plass til navigasjon */
+  .form-content {
+    margin-left: 230px; /* gjøre plass til navi */
     padding: 60px 120px; /* mer space på høyre og venstre */
     flex: 1;
   }
@@ -19,11 +24,6 @@
     padding-top: 40px;
   }
   
-  .section-heading {
-    color: #555;
-    margin-bottom: 25px;
-    font-size: 18px;
-  } /* har stylet denne , se om vi kan lage en felles styling for alle heading-overskrifter i global i stedet*/ 
   
   .two-column {
     display: flex;
@@ -40,17 +40,13 @@
     gap: 14px; 
   }
 
-  /* input styling ligger i global.css */
-  
-
-  
+  /* legg til bilde - bildedel øverst på siden(e) */
   .image-upload-container {
     margin-bottom: 40px;
     color: #555;
     margin-bottom: 10px;
     display: block;
   }
-  
   
   
   .image-box {
@@ -86,4 +82,30 @@
     height: 23px;
     cursor: pointer;
   }
+
+  /* checkbox - lisenser */ 
+  .checkbox-group {
+    display: flex;
+    gap: 60px;
+    margin-top: 20px;
+    margin-bottom: 70px;
+    flex-wrap: wrap;
+  }
   
+  .checkbox-group label {
+    font-weight: 500;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+  }
+  
+  
+  /* lagre og avbryt knapp - visning på siden */  
+  .form-buttons {
+    padding-top: 60px;
+    display: flex;
+    justify-content: center;
+    gap: 70px;
+  }

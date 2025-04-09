@@ -10,32 +10,29 @@ import defaultImage from "../assets/images/default-img.png";
 import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 
-
-
-const RegisterEmployee = () => {
+const EditEmployee = () => {
   return (
     <div className="form-page">
       <NavAdmin />
 
       <div className="form-content">
-      <BackButton />
-        <h1>Registrer ansatt</h1>
-        <div className="image-upload-container">
-        <h2 className="section-heading">Last opp bilde</h2> 
-    <div className="image-box">
-      <img src={defaultImage} alt="Profilbilde" className="profile-image" />
-      <div className="icon-buttons">
-        <img src={uploadIcon} alt="Last opp bilde" className="icon-button" title="Last opp bilde" />
-        <img src={trashIcon} alt="Fjern bilde" className="icon-button" title="Fjern bilde" />
-      </div>
-    </div>
-</div>
+        <BackButton />
+        <h1>Rediger ansatt</h1>
 
+        <div className="image-upload-container">
+          <h2 className="section-heading">Endre bilde</h2> 
+          <div className="image-box">
+            <img src={defaultImage} alt="Profilbilde" className="profile-image" />
+            <div className="icon-buttons">
+              <img src={uploadIcon} alt="Last opp bilde" className="icon-button" title="Last opp bilde" />
+              <img src={trashIcon} alt="Fjern bilde" className="icon-button" title="Fjern bilde" />
+            </div>
+          </div>
+        </div>
 
         {/* SECTION: PERSONLIA */}
         <div className="form-section">
           <h2 className="section-heading">Personalia</h2>
-
           <div className="two-column">
             <div className="column">
               <label>Fornavn og Etternavn</label>
@@ -124,22 +121,18 @@ const RegisterEmployee = () => {
       <input type="checkbox" name="access" value="Lisens 3" /> Eksempel Lisens 3
     </label>
     <label>
-    <input type="checkbox" name="access" value="Lisens 4" /> Eksempel Lisens 4
-    </label>
+    <input type="checkbox" name="access" value="Lisens 4" /> Eksempel lisens 4 </label>
   </div>
 </div>
 
-<div className="form-buttons">
-  <SaveButton className="button-green button" onClick={() => console.log("Lagrer ny ansatt")} />
-  <ExitButton className="button-red button" onClick={() => console.log("Avbryter registrering")} />
-</div>
-
+        <div className="form-buttons">
+          <SaveButton className="button-green button" onClick={() => console.log("Lagrer endringer")} />
+          <ExitButton className="button-red button" onClick={() => console.log("Avbryter redigering")} />
+        </div>
 
       </div>
     </div>
   );
 };
 
-export default RegisterEmployee;
-
-
+export default EditEmployee;
