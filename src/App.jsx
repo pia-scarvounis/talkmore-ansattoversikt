@@ -4,6 +4,8 @@ import DashBoardAdmin from "./pages/DashBoardAdmin";
 import ProfileCards from "./components/Employee/ProfileCards";
 import ProfileCardLists from "./pages/ProfileCardLists";
 import RegisterEmployee from "./pages/RegisterEmployee";
+import EditEmployee from "./pages/EditEmployee";
+
 import "./styles/global.css";
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
         <Route path="/profilecards" element={<ProfileCards />} />
         <Route path="/profilecardlists" element={<ProfileCardLists />} />
         <Route path="/register" element={<RegisterEmployee />} />
+        <Route path="/edit" element={<EditEmployee />} />
+
       </Routes>
     </Router>
   );

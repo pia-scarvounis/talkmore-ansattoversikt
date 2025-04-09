@@ -76,7 +76,7 @@ function Login() {
 
             {/* login-knapp nederst */}
             <div className="login-button">
-              <button type="submit" className="login-submit">Logg inn</button>
+              <button type="submit" className="button button-green">Logg inn</button>
             </div>
           </form>
         </div>
