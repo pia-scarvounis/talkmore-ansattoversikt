@@ -19,7 +19,7 @@ const RegisterEmployee = () => {
 
       <div className="form-content">
       <BackButton />
-        <h1>Registrer ansatt</h1>
+        <h1 className="pageContent-text">Registrer ansatt</h1>
         <div className="image-upload-container">
         <h2 className="section-heading">Last opp bilde</h2> 
     <div className="image-box">

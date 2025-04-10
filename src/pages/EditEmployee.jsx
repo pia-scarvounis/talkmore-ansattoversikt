@@ -17,7 +17,7 @@ const EditEmployee = () => {
 
       <div className="form-content">
         <BackButton />
-        <h1>Rediger ansatt</h1>
+        <h1 className="pageContent-text">Rediger ansatt</h1>
 
         <div className="image-upload-container">
           <h2 className="section-heading">Endre bilde</h2> 
