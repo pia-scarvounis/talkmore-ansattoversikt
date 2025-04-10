@@ -26,7 +26,7 @@ const DashboardAdmin = () => {
         <div className="left-column">
           <div className="dashboard-header">
             {/* <h1>Dagsoversikt</h1> */}
-            <p className="date-label">{formattedDate}</p>
+            <h1 className="pageContent-text">{formattedDate}</h1>
             <DateSelector />
           </div>
           <div className="dashboard-grid">
