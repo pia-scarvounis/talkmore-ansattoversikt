@@ -1,8 +1,8 @@
 import React from "react";
 import NavAdmin from "../components/navigation/NavAdmin";
 import BackButton from "../components/UI/BackButton";
-import SaveButton from "../components/UI/SaveButton";
-import ExitButton from "../components/UI/ExitButton";
+import GreenButton from "../components/UI/GreenButton";
+import ExitButton from "../components/UI/RedButton";
 
 import "../styles/global.css";
 import "../styles/form.css";
@@ -130,8 +130,8 @@ const RegisterEmployee = () => {
 </div>
 
 <div className="form-buttons">
-  <SaveButton className="button-green button" onClick={() => console.log("Lagrer ny ansatt")} />
-  <ExitButton className="button-red button" onClick={() => console.log("Avbryter registrering")} />
+  <GreenButton text= "Lagre" onClick={() => console.log("Lagrer ny ansatt")} />
+  <ExitButton text="Avbryt" onClick={() => console.log("Avbryter registrering")} />
 </div>
 
 

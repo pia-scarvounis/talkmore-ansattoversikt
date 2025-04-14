@@ -26,56 +26,6 @@ p {
 }
 
 
-/* alle knapper*/ 
-.button {
-  border: none;
-  border-radius: 999px;
-  padding: 10px 40px;
-  width: 160px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 15px;
-  align-self: center;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-/* BackButton - tilbakeknapp */
-.back-button {
-  background: none;
-  border: none;
-  color: #444;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 80px;
-  text-align: left;
-  display: flex;
-  align-items: center;
-}
-
-/* grønne knapper - lagre, login, legg til */
-.button-green {
-  background-color: #60AA3B;
-  border: 2px solid #60AA3B;
-  color: black;
-}
-
-.button-green:hover {
-  background-color: #48802C;
-  border: 2px solid #48802C;
-}
-
-/* knapper med rød border - avbryt, slett */
-.button-red {
-  background-color: white;
-  color: black;
-  border: 2px solid #BB0218;
-}
-
-.button-red:hover {
-  border-color: #60AA3B;
-}
-
 
 
 /*Lager en styling for profilkort listevisning med flex som skal gjelde alle sidene med profilkort lister*/

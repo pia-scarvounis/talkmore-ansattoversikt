@@ -1,8 +1,8 @@
 import React from "react";
 import NavAdmin from "../components/navigation/NavAdmin";
 import BackButton from "../components/UI/BackButton";
-import SaveButton from "../components/UI/SaveButton";
-import ExitButton from "../components/UI/ExitButton";
+import GreenButton from "../components/UI/GreenButton";
+import RedButton from "../components/UI/RedButton";
 
 import "../styles/global.css";
 import "../styles/form.css";
@@ -126,8 +126,8 @@ const EditEmployee = () => {
 </div>
 
         <div className="form-buttons">
-          <SaveButton className="button-green button" onClick={() => console.log("Lagrer endringer")} />
-          <ExitButton className="button-red button" onClick={() => console.log("Avbryter redigering")} />
+          <GreenButton text="Lagre" onClick={() => console.log("Lagrer endringer")} />
+          <RedButton text="Avbryt" onClick={() => console.log("Avbryter redigering")} />
         </div>
 
       </div>

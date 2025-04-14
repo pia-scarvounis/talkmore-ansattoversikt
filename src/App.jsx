@@ -8,6 +8,7 @@ import RegisterEmployee from "./pages/RegisterEmployee";
 import EditEmployee from "./pages/EditEmployee";
 
 import "./styles/global.css";
+import './styles/buttons.css';
 
 function App() {
   return (
