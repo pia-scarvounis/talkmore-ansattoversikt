@@ -1,6 +1,5 @@
 import React from "react";
 import "../../styles/dashboard.css";
-import "../../styles/global.css";
 
 const StatBox = ({ title, value, unit, highlight, className, icon }) => {
   return (

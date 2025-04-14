@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/images/tm-logo.png";
-import "../../styles/global.css";
 import "../../styles/nav.css";
 
 const NavReadOnly = () => {

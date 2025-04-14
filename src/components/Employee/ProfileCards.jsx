@@ -1,10 +1,8 @@
 import React from 'react'
-import "../../styles/global.css"
 
 //importere css for profilkort
 
 import "../../styles/profilecards.css"
-
 import profileImage from "../../assets/images/default-img.png"
 
 const ProfileCards = () => {

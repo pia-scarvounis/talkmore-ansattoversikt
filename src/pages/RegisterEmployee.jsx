@@ -4,7 +4,6 @@ import BackButton from "../components/UI/BackButton";
 import GreenButton from "../components/UI/GreenButton";
 import ExitButton from "../components/UI/RedButton";
 
-import "../styles/global.css";
 import "../styles/form.css";
 import defaultImage from "../assets/images/default-img.png";
 import trashIcon from "../assets/icons/trash.svg";

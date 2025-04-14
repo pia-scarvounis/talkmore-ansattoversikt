@@ -1,4 +1,3 @@
-import '../styles/global.css';
 import '../styles/login.css';
 import logo from '../assets/images/tm-logo.png';
 
