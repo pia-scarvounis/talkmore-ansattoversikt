@@ -1,7 +1,8 @@
 import React from "react";
 import NavAdmin from "../components/navigation/NavAdmin";
 import AlertBox from "../components/UI/AlertBox";
-import BackButton from "../components/UI/BackButton";
+import PageHeader from "../components/UI/PageHeader";
+
 import GreenButton from "../components/UI/GreenButton";
 import RedButton from "../components/UI/RedButton";
 import WhiteButton from "../components/UI/WhiteButton";
@@ -15,10 +16,11 @@ const RegisterEmployee = () => {
   return (
     <div className="form-page">
       <NavAdmin />
-
+      
       <div className="form-content">
-        <BackButton />
-        <h1 className="pageContent-text">Registrer ansatt</h1>
+    <PageHeader title="Registrer ansatt" />
+  
+    
 
           <div className="image-upload-container">
             <h2 className="section-heading">Last opp bilde</h2>
@@ -166,8 +168,8 @@ const RegisterEmployee = () => {
             onClick={() => console.log("Avbryter registrering")}
           />
         </div>
-      </div>
-
+     
+        </div>
       </div>
    
   );

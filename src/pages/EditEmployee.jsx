@@ -1,6 +1,6 @@
 import React from "react";
 import NavAdmin from "../components/navigation/NavAdmin";
-import BackButton from "../components/UI/BackButton";
+import PageHeader from "../components/UI/PageHeader";
 import GreenButton from "../components/UI/GreenButton";
 import RedButton from "../components/UI/RedButton";
 
@@ -15,8 +15,9 @@ const EditEmployee = () => {
       <NavAdmin />
 
       <div className="form-content">
-        <BackButton />
-        <h1 className="pageContent-text">Rediger ansatt</h1>
+    <PageHeader title="Rediger ansatt" />
+  
+        
 
         <div className="image-upload-container">
           <h2 className="section-heading">Endre bilde</h2> 

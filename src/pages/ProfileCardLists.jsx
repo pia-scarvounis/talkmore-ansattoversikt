@@ -1,14 +1,15 @@
 import React from 'react'
 import ProfileCards from '../components/Employee/ProfileCards'
 import NavAdmin from "../components/navigation/NavAdmin"
+import PageHeader from "../components/UI/PageHeader";
 import FilterOption from '../components/Employee/FilterOption'
 
 const ProfileCardLists = () => {
   return (
     <div>     
-        <div className='pageContent-text'>
-            <h1>Alle ansatte (eksempel) </h1>
-        </div>
+       <div className="page-header-wrapper">
+        <PageHeader title="Alle ansatte" />
+      </div>
     <FilterOption/>
         <div className='profilePages-container'>
          

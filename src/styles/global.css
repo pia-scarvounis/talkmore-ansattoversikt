@@ -19,11 +19,22 @@ p {
   font-size: 14px;
 }
 /* felles heading for alle sider, eks: EditEmployee, EmployeeDetails, register, edit... */
-.section-heading {
-  color: #555;
-  margin-bottom: 25px;
-  font-size: 18px;
+
+/* Wrapper som gjør at header alltid følger layouten uansett side */
+.page-header-wrapper {
+  margin-left: 200px; /* plass til nav */
+  padding: 40px 120px 0 120px;
 }
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Viktig! Posisjonerer til venstre */
+  gap: 20px;
+  margin-bottom: 50px;
+}
+
+
 
 
 
@@ -38,12 +49,7 @@ p {
   gap: 15px;
   margin-left: 383px;
 }
-/*Hovedtekst på sidene som forteller hvor man er på siden*/
-.pageContent-text{
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-left: 400px;
-}
+
 /* Styling for posisjon for filtrering systemet på alle sidene*/
 .filter-section{
   flex-wrap: wrap;
