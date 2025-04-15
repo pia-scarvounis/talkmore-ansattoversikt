@@ -26,16 +26,18 @@ p {
 /* Wrapper som gjør at header alltid følger layouten uansett side */
 .page-header-wrapper {
   margin-left: 200px; /* plass til nav */
-  padding: 40px 120px 0 120px;
+  padding: 10px 120px 0 120px;
 }
 
-.page-header {
+.page-header{
+  margin-inline-start: 30px;
   display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Viktig! Posisjonerer til venstre */
-  gap: 20px;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 50px;
 }
+
 
 
 

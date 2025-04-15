@@ -5,7 +5,7 @@ export default function BackButton() {
 
   return (
     <button className="back-button" onClick={() => navigate(-1)}>
-      &larr; Tilbake
+      <span className="back-arrow">&larr;</span> Tilbake
     </button>
   );
 }
