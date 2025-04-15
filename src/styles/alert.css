@@ -1,0 +1,51 @@
+/* felles stil for alle alerts */
+.alert-box {
+    padding: 40px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin: 30px auto;
+    font-family: "Circular Pro Book", sans-serif;
+    text-align: center; /* sentrerer all tekst */
+    max-width: 500px;
+  }
+  
+  /* overskrift i alerten */
+  .alert-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* meldingstekst */
+  .alert-message {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  /* ulike typer alerts */
+  .success {
+    background-color: #DDF5D2;
+    border: 2px solid #60AA3B;
+    color: #000000;
+  }
+  
+  .error {
+    background-color: #F9E1E4;
+    border: 2px solid #B8DAFF;
+    color: #BB0218;
+  }
+  
+  .confirmation {
+    background-color: #ffffff;
+    border: 2px solid #707070;
+    color: #000000;
+  }
+
+  /* knapper */
+  .alert-buttons {
+    display: flex;
+    gap: 65px;
+    justify-content: center;
+    padding-top: 80px;
+  }
+  

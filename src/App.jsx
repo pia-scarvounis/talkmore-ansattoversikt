@@ -9,6 +9,7 @@ import EditEmployee from "./pages/EditEmployee";
 
 import "./styles/global.css";
 import './styles/buttons.css';
+import './styles/alert.css';
 
 function App() {
   return (

@@ -10,9 +10,10 @@
   }
   
   .form-content {
-    margin-left: 230px; /* gjøre plass til navi */
+    margin-left: 200px; /* gjøre plass til navi */
     padding: 60px 120px; /* mer space på høyre og venstre */
     flex: 1;
+  
   }
   
   h1 {
