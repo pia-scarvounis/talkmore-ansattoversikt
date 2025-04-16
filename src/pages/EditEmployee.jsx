@@ -13,9 +13,9 @@ const EditEmployee = () => {
   return (
     <div className="form-page">
       <NavAdmin />
-
-      <div className="form-content">
-    <PageHeader title="Rediger ansatt" />
+      <div className="form-content page-header-wrapper">
+      <PageHeader title="Rediger ansatt" />
+   
   
         
 

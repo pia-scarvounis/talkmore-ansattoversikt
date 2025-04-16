@@ -17,7 +17,7 @@ const RegisterEmployee = () => {
     <div className="form-page">
       <NavAdmin />
       
-      <div className="form-content">
+      <div className="form-content page-header-wrapper">
     <PageHeader title="Registrer ansatt" />
   
     
