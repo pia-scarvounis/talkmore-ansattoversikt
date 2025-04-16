@@ -17,4 +17,4 @@ connection.connect((err) =>{
     console.log('Connected to MySql');
 });
 
-export default connection; 
+export default connection;
