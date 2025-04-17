@@ -41,10 +41,10 @@
     color: #000000;
   }
 
-  /* knapper */
+  /* knappevisning i alertboksene */
   .alert-buttons {
     display: flex;
-    gap: 65px;
+    gap: 50px;
     justify-content: center;
     padding-top: 80px;
   }
