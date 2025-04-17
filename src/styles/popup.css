@@ -1,0 +1,31 @@
+  
+  
+  /* selve boksen */
+  .popup-box {
+    background-color: white;
+    border: 3px solid #8FD1EF;
+    border-radius: 30px;
+    padding: 50px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* overskrift */
+  .popup-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  /* knappene */
+  .popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 40px;
+  }
+  
+
+  

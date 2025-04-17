@@ -40,7 +40,6 @@ p {
 
 
 
-
 /*Lager en styling for profilkort listevisning med flex som skal gjelde alle sidene med profilkort lister*/
 .profilePages-container {
   display: flex;
@@ -78,4 +77,19 @@ label {
   margin-bottom: 5px;
   font-size: 14px;
   font-weight: 500;
+}
+
+/* popup-bakgrunn (halvtransparent) for alle popups og alertbokser */
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(102, 102, 102, 0.5); /* halvtransparent grå */
+  z-index: 2000; /* høyere enn nav */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
