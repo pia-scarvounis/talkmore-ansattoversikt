@@ -1,111 +1,114 @@
 /* felles css for utfyllingsskjemaer i RegisterEmployee.jsx & EditEmployee.jsx */
 
- /* input styling ligger i global.css, hvis vi kun bruker inputfelt og labels på register og edit kan vi flytte det også inn hit */
+/* input styling ligger i global.css, hvis vi kun bruker inputfelt og labels på register og edit kan vi flytte det også inn hit */
 
 /* skjema */
 .form-page {
-    display: flex;
-    min-height: 100vh;
-    background-color: #fff;
-  }
-  
-  .form-content {
-    margin-left: 200px; /* gjøre plass til navi */
-    padding: 60px 120px; /* mer space på høyre og venstre */
-    flex: 1;
-  
-  }
-  
-  h1 {
-    margin-bottom: 50px;
-  }
-  
-  .form-section {
-    margin-top: 40px;
-    padding-top: 40px;
-  }
-  
-  
-  .two-column {
-    display: flex;
-    gap: 100px; /* mer space mellom venstre og høyre kolonne */
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .column {
-    flex: 1;
-    max-width: 350px; /* gjør kolonnene smalere */
-    display: flex;
-    flex-direction: column;
-    gap: 14px; 
-  }
+  display: flex;
+  min-height: 100vh;
+  background-color: #fff;
+}
 
-  /* legg til bilde - bildedel øverst på siden(e) */
-  .image-upload-container {
-    margin-bottom: 40px;
-    margin-bottom: 10px;
-    display: block;
-  }
-  
-  
-  .image-box {
-    position: relative;
-    display: inline-block;
-    background-color: #f8f8f8;
-    border-radius: 30px;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .profile-image {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    object-fit: cover;
-    background-color: #eaeaea;
-  }
-  
-  .icon-buttons {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 100px;
-    margin-bottom: 10px;
-  }
-  
-  .icon-button {
-    width: 23px;
-    height: 23px;
-    cursor: pointer;
-  }
+.form-content {
+  margin-left: 200px; /* gjøre plass til navi */
+  padding: 60px 120px; /* mer space på høyre og venstre */
+  flex: 1;
+}
 
-  /* checkbox - lisenser */ 
-  .checkbox-group {
-    display: flex;
-    gap: 60px;
-    margin-top: 20px;
-    margin-bottom: 70px;
-    flex-wrap: wrap;
-  }
-  
-  .checkbox-group label {
-    font-weight: 500;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-  }
-  
-  
-  /* lagre og avbryt knapp - visning på siden */  
-  .form-buttons {
-    padding-top: 60px;
-    display: flex;
-    justify-content: center;
-    gap: 70px;
-  }
+h1 {
+  margin-bottom: 50px;
+}
+
+.form-section {
+  margin-top: 40px;
+  padding-top: 40px;
+}
+
+.two-column {
+  display: flex;
+  gap: 100px; /* mer space mellom venstre og høyre kolonne */
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.column {
+  flex: 1;
+  max-width: 350px; /* gjør kolonnene smalere */
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* legg til bilde - bildedel øverst på siden(e) */
+.image-upload-container {
+  margin-bottom: 40px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.image-box {
+  position: relative;
+  display: inline-block;
+  background-color: #f8f8f8;
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-image {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #eaeaea;
+}
+
+.icon-buttons {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 100px;
+  margin-bottom: 10px;
+}
+
+.icon-button {
+  width: 23px;
+  height: 23px;
+  cursor: pointer;
+}
+
+/* checkbox - lisenser */
+.checkbox-group {
+  display: flex;
+  gap: 60px;
+  margin-top: 20px;
+  margin-bottom: 70px;
+  flex-wrap: wrap;
+}
+
+.checkbox-group label {
+  font-weight: 500;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+/* lagre og avbryt knapp - visning på siden */
+.form-buttons {
+  padding-top: 60px;
+  display: flex;
+  justify-content: center;
+  gap: 70px;
+}
+
+.team-box {
+  border: 1px solid #60aa3b;
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 60px;
+}

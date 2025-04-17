@@ -6,16 +6,16 @@ import ProfileCards from "./components/Employee/ProfileCards";
 import ProfileCardLists from "./pages/ProfileCardLists";
 import RegisterEmployee from "./pages/RegisterEmployee";
 import EditEmployee from "./pages/EditEmployee";
+import ManageTeams from "./pages/ManageTeams";
 
 import "./styles/global.css";
-import './styles/buttons.css';
-import './styles/alert.css';
+import "./styles/buttons.css";
+import "./styles/alert.css";
 
 function App() {
   return (
     <Router>
       <Routes>
-
         <Route path="/" element={<Login />} />
         <Route path="/admin-dashboard" element={<DashBoardAdmin />} />
         <Route path="/readonly-dashboard" element={<DashboardReadOnly />} />
@@ -23,7 +23,10 @@ function App() {
         <Route path="/profilecardlists" element={<ProfileCardLists />} />
         <Route path="/register" element={<RegisterEmployee />} />
         <Route path="/edit" element={<EditEmployee />} />
-
+        <Route
+          path="/admin-dashboard/manage-team"
+          element={<ManageTeams />}
+        />{" "}
       </Routes>
     </Router>
   );

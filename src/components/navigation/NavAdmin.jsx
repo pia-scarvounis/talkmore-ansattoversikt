@@ -57,7 +57,10 @@ const NavAdmin = () => {
         </div>
 
         <div className="section">
-          <NavLink to="Administrer Team" className="nav-link main-link">
+          <NavLink
+            to="/admin-dashboard/manage-team"
+            className="nav-link main-link"
+          >
             {" "}
             Administrer team
           </NavLink>
