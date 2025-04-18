@@ -1,6 +1,9 @@
-import { Router } from "express";
-import db from "../config/db";
+import { application, json, Router } from "express";
+import dBpool from "../config/db.js";
 import dotenv from "dotenv";
+import pool from "../config/db.js";
+import axios from "axios";
+import {getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js'
 //vi skal importere en autentisering middleware for alle brukere av vårt verktøy
 
 //Disse rutene skal gjelde for begge brukere av vårt verktøy (admin + teamleder)
@@ -9,9 +12,9 @@ dotenv.config();
 
 const router = Router();
 
- //funksjon random id fra tabell (fk)
+ //funksjon random id fra en tabell (fk)
 async function getRandomId(table, idField){
-    const[rows] =  db.query(`SELECT ${idField} FROM ${table}`);
+    const [rows] = await pool.query(`SELECT ${idField} FROM ${table}`);
     if(rows.length === 0) throw new Error(`Ingen rader i ${table}`);
     const randomRow = rows[Math.floor(Math.random()* rows.length)];
     return randomRow[idField];
@@ -20,46 +23,43 @@ const formOptions = ['Fast', 'Innleid'];
 
 //funksjon sjekk om employee er Admin,Teamleder eller KA, Admin+Teamledere skal ha deafult 100% stilling
 async function getRandomWorkPosistionTitle(){
-    const [rows] = db.query(`SELECT workPosistion_id, posistion_title FROM workPosistion `);
+    const [rows] = await pool.query(`SELECT workPosistion_id, posistion_title FROM workPosistion `);
+    console.log('Rows from database:', rows);
     if(rows.length === 0) throw new Error('Ingen stillinger i databasen');
     const randomRow = rows[Math.floor(Math.random()*rows.length)];
     return randomRow;
 }
-const workPos = getRandomWorkPosistionTitle();
-const workPosistion_id = workPos.workPosistion_id;
-const title = workPos.posistion_title;
-
-let employee_percentages = 100;
-
-if(title === 'kundeAgent'){
-    employee_percentages = Math.floor(Math.random() * 51) + 50;
-}
 
 //Hente ut alle brukere fra API genesys og vår database
 router.get('/', async (req, res) => {
-   
     try{
         //hente brukere fra ekstern API Genesys med api nøkkel
-    const {data: genesysApiEmployees} = await axios.get('https://api.mypurecloud.de/api/v2/users', {
+        const accessTokenGen = await getOAuthToken();
+
+    const response = await axios.get('https://api.mypurecloud.de/api/v2/users', {
         headers: {
-            Authorization: 'Bearer ${process.env.API_KEY}'
+            Authorization: `Bearer ${accessTokenGen}`,
+            'Content-Type': 'application/json'
           }
     });
+    // sjekke respons og hva som skal hentes ut
+    console.log('Genesys API respons:', response.data);
+    const genesysApiEmployees = response.data.entities;
+   
     //Sjekk om ansatt finnes i databasen
     const employees = await Promise.all(
         genesysApiEmployees.map(async (employee) => {
-            const[rows] =  db.query(
-                `SELECT id, name FROM employee WHERE epost = ?`, [employee.email]
+            const[rows] = await pool.query(
+                `SELECT employee_id, employee_name FROM employee WHERE epost = ?`, [employee.email]
             );
             //Hvis epost finnes returnerer den fra databasen
-
             if(rows.length > 0){
                 return{
                     ...employee,
                     ...rows[0]
                 };
             }
-            //Hvis ikke bruker matcher /finnes i databasen opprett tillegssinformasjon
+            //Hvis ikke ansatt matcher eller finnes i databasen opprett tillegssinformasjon
             const randomPhone = `+45${Math.floor(10000000 + Math.random() * 8999999)}`;
             const randomBirthday = () => new Date(1980 + Math.random() * 21, Math.random() * 12, Math.random() * 28 | 0)
                     .toISOString().split('T')[0];
@@ -71,16 +71,25 @@ router.get('/', async (req, res) => {
 
             //gyldig id fra tabeller FK foreign key (parametere til getRandomId(idField, table))
             const team_id = getRandomId('team','team_id');
-           
-            //dette skal settes inn i tabell Employee (databasen)
-            const[result] = db.query(
 
+            const workPos =  await getRandomWorkPosistionTitle();
+            const workPosistion_id = workPos.workPosistion_id;
+            const title = workPos.posistion_title;
+
+            let employee_percentages = 100;
+
+            if(title === 'kundeAgent'){
+                employee_percentages = Math.floor(Math.random() * 51) + 50;
+            }
+
+            //Legge til random tileggsinformasjon til ansatte i databasen for test
+            //dette skal settes inn i tabell Employee (databasen)
+            const[result] = await pool.query(
                 `INSERT INTO employee(
                     employee_name, epost, phoneNr, birthdate, image_url, start_date, end_date,
                     form_of_employeement, employeeNr_Talkmore, employeeNr_Telenor, 
                     employee_percentages, is_test, team_id, workPosistion_id
                 ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,[
-    
                     employee.name,
                     employee.email,
                     randomPhone,
@@ -117,6 +126,7 @@ router.get('/', async (req, res) => {
             };
         })
     );
+        res.status(200).json(employees);
 
     }catch(err){
         console.error('Feil i synkroniseringen:',err);
@@ -124,6 +134,4 @@ router.get('/', async (req, res) => {
     }
 });
 
-
-//Legge til random tileggsinformasjon til ansatte for test
-module.exports = router;
+export default router;
