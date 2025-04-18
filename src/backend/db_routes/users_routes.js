@@ -2,6 +2,9 @@ import { application, json, Router } from "express";
 import dBpool from "../config/db.js";
 import dotenv from "dotenv";
 import pool from "../config/db.js";
+const [dbResult] = await pool.query("SELECT DATABASE() AS db");
+console.log("🧠 Koden kjører mot databasen:", dbResult[0].db);
+
 import axios from "axios";
 import {getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js'
 //vi skal importere en autentisering middleware for alle brukere av vårt verktøy
@@ -23,6 +26,7 @@ const formOptions = ['Fast', 'Innleid'];
 
 //funksjon sjekk om employee er Admin,Teamleder eller KA, Admin+Teamledere skal ha deafult 100% stilling
 async function getRandomWorkPosistionTitle(){
+
     const [rows] = await pool.query(`SELECT workPosistion_id, posistion_title FROM workPosistion `);
     console.log('Rows from database:', rows);
     if(rows.length === 0) throw new Error('Ingen stillinger i databasen');
@@ -63,6 +67,7 @@ router.get('/', async (req, res) => {
             const randomPhone = `+45${Math.floor(10000000 + Math.random() * 8999999)}`;
             const randomBirthday = () => new Date(1980 + Math.random() * 21, Math.random() * 12, Math.random() * 28 | 0)
                     .toISOString().split('T')[0];
+            
             const randomFormOfEmployement = formOptions[Math.floor(Math.random()*formOptions.length)];
             const randomStartDate = () => new Date(2010, 0, 1 + Math.random() * ((Date.now() - new Date(2010, 0, 1)) / 86400000) | 0).toISOString().split('T')[0];
             const randomEndDate = null;
