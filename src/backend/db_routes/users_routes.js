@@ -16,7 +16,7 @@ dotenv.config();
 const router = Router();
 
  //funksjon random id fra en tabell (fk)
-async function getRandomId(table, idField){
+async function getRandomId(idField, table){
     const [rows] = await pool.query(`SELECT ${idField} FROM ${table}`);
     if(rows.length === 0) throw new Error(`Ingen rader i ${table}`);
     const randomRow = rows[Math.floor(Math.random()* rows.length)];
@@ -67,15 +67,17 @@ router.get('/', async (req, res) => {
             const randomPhone = `+45${Math.floor(10000000 + Math.random() * 8999999)}`;
             const randomBirthday = () => new Date(1980 + Math.random() * 21, Math.random() * 12, Math.random() * 28 | 0)
                     .toISOString().split('T')[0];
-            
+            const birthdate = randomBirthday();
             const randomFormOfEmployement = formOptions[Math.floor(Math.random()*formOptions.length)];
             const randomStartDate = () => new Date(2010, 0, 1 + Math.random() * ((Date.now() - new Date(2010, 0, 1)) / 86400000) | 0).toISOString().split('T')[0];
+            const start_date = randomStartDate();
             const randomEndDate = null;
+            const end_date = randomEndDate;
             const employeNr_TM = Math.floor(Math.random()* 9000) + 1000;
             const employeNr_TN = Math.floor(Math.random()* 9000) + 1000;
 
             //gyldig id fra tabeller FK foreign key (parametere til getRandomId(idField, table))
-            const team_id = getRandomId('team','team_id');
+            const team_id = await getRandomId('team_id','team');
 
             const workPos =  await getRandomWorkPosistionTitle();
             const workPosistion_id = workPos.workPosistion_id;
@@ -98,10 +100,10 @@ router.get('/', async (req, res) => {
                     employee.name,
                     employee.email,
                     randomPhone,
-                    randomBirthday,
+                    birthdate,
                     null,
-                    randomStartDate,
-                    randomEndDate,
+                    start_date,
+                    end_date,
                     randomFormOfEmployement,
                     employeNr_TM,
                     employeNr_TN,
