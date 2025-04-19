@@ -1,0 +1,96 @@
+.notes-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+/* VENSTRE – ADD NOTE */
+.add-note-column {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.add-note-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.add-note-textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: 15px;
+  border-radius: 20px;
+  border: 1px solid #999;
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); /* myk og diskret skygge */
+}
+
+/* FELLES STYLING FOR KNAPPER UNDER */
+.note-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-top: 15px;
+}
+
+/* HØYRE – VISNING AV NOTATER */
+.notes-section {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  border-radius: 10px;
+  padding: 0;
+}
+
+.notes-title {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.notes-icon {
+  width: 24px;
+  height: 24px;
+  padding-right: 10px;
+}
+
+.note-item {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.note-icons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.note-icons img {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.note-icons img:hover {
+  opacity: 1;
+}
+
+
+
+  
+  

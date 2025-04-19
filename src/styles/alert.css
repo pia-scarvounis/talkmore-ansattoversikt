@@ -4,7 +4,6 @@
     border-radius: 20px;
     font-size: 14px;
     margin: 30px auto;
-    font-family: "Circular Pro Book", sans-serif;
     text-align: center; /* sentrerer all tekst */
     max-width: 500px;
   }
@@ -26,7 +25,7 @@
   .success {
     background-color: #DDF5D2;
     border: 2px solid #60AA3B;
-    color: #000000;
+  
   }
   
   .error {
@@ -38,13 +37,13 @@
   .confirmation {
     background-color: #ffffff;
     border: 2px solid #707070;
-    color: #000000;
+   
   }
 
-  /* knapper */
+  /* knappevisning i alertboksene */
   .alert-buttons {
     display: flex;
-    gap: 65px;
+    gap: 50px;
     justify-content: center;
     padding-top: 80px;
   }
