@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setDate } from "../../redux/slices/dateSlice";
 import { registerLocale } from "react-datepicker";
 import { nb } from "date-fns/locale";
+import { format } from "date-fns";
+
 
 registerLocale("nb", nb);
 const DateSelector = () => {
@@ -20,6 +22,10 @@ const DateSelector = () => {
       datepickerRef.current.setOpen(true);
     }
   };
+
+  const formattedDate = format(new Date(selectedDate), "EEEE d. MMMM yyyy", {
+    locale: nb,
+  });
   return (
     <div className="date-selector">
       <DatePicker
@@ -27,9 +33,10 @@ const DateSelector = () => {
         selected={new Date(selectedDate)}
         onChange={(date) => dispatch(setDate(date))}
         dateFormat="dd.MM.yyyy"
-        className="custom-datepicker"
         locale="nb"
-      />
+        customInput={<span />}
+        wrapperClassName="datepicker-wrapper"
+        />
       <img
         src={calendarIcon}
         alt="Kalenderikon"

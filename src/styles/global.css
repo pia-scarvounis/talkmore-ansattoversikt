@@ -46,7 +46,7 @@ p {
 .page-header-search {
   display: flex;
   align-items: center;
-  margin-left: 650px;
+  gap: 10px;
 }
 
 /*Lager en styling for profilkort listevisning med flex som skal gjelde alle sidene med profilkort lister*/
@@ -73,7 +73,6 @@ p {
 input,
 select,
 textarea {
-  all: unset;
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
