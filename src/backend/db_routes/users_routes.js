@@ -13,7 +13,7 @@ dotenv.config();
 const router = Router();
 
 const [dbResult] = await pool.query("SELECT DATABASE() AS db");
-console.log("🧠 Koden kjører mot databasen:", dbResult[0].db);
+console.log("Koden kjører mot databasen:", dbResult[0].db);
 
  //funksjon random id fra en tabell (fk)
 async function getRandomId(idField, table){
