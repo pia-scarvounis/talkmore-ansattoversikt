@@ -64,6 +64,7 @@ p {
 input,
 select,
 textarea {
+  all: unset;
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;

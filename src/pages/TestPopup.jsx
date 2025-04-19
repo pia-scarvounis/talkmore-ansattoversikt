@@ -5,10 +5,16 @@ import EditHistoryPopup from "../components/UI/EditHistoryPopup";
 import AlertBox from "../components/UI/AlertBox";
 import WhiteButton from "../components/UI/WhiteButton";
 import RedButton from "../components/UI/RedButton";
+import Notes from "../components/Employee/Notes";
+import EditNotePopup from "../components/UI/EditNotePopup";
+
+
 
 const TestPopup = () => {
   const [popupType, setPopupType] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
+  const [showEditNote, setShowEditNote] = useState(false);
+
 
   return (
     <div style={{ padding: "100px" }}>
@@ -39,7 +45,18 @@ const TestPopup = () => {
           <WhiteButton text="Fortsett" onClick={() => console.log("Fortsetter")} />
           <RedButton text="Avbryt" onClick={() => setShowAlert(false)} />
         </AlertBox>
+    
       )}
+      <Notes />
+      <button onClick={() => setShowEditNote(true)}>Vis EditNotePopup</button>
+      {showEditNote && (
+  <EditNotePopup
+    initialText="Dette er notatet jeg vil endre"
+    onClose={() => setShowEditNote(false)}
+  />
+)}
+
+
     </div>
   );
 };

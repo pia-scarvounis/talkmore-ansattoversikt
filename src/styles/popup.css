@@ -2,6 +2,7 @@
   
   /* selve boksen */
   .popup-box {
+    all: unset;
     background-color: white;
     border: 3px solid #8FD1EF;
     border-radius: 30px;
