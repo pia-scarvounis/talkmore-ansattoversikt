@@ -29,16 +29,25 @@ p {
   padding: 10px 120px 0 120px;
 }
 
-.page-header{
-  margin-inline-start: 30px;
+.page-header {
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 50px;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-top: 24px;
+}
+.page-header-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 
+.page-header-search {
+  display: flex;
+  align-items: center;
+  margin-left: 650px;
+}
 
 /*Lager en styling for profilkort listevisning med flex som skal gjelde alle sidene med profilkort lister*/
 .profilePages-container {
@@ -52,7 +61,7 @@ p {
 }
 
 /* Styling for posisjon for filtrering systemet på alle sidene*/
-.filter-section{
+.filter-section {
   flex-wrap: wrap;
   margin-left: 290px;
   padding: 40px;
