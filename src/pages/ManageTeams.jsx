@@ -12,8 +12,12 @@ import "../styles/buttons.css";
 const ManageTeams = () => {
   const [showSaveAlert, setShowSaveAlert] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [saveType, setSaveType] = useState("");
 
-  const handleSave = () => setShowSaveAlert(true);
+  const handleSave = (type) => {
+    setSaveType(type);
+    setShowSaveAlert(true);
+  };
   const handleDelete = () => setShowDeleteAlert(true);
 
   const confirmSave = () => {
@@ -32,7 +36,6 @@ const ManageTeams = () => {
 
       <div className="form-content page-header-wrapper">
         <PageHeader title="Administer Team" />
-
         {/* === Endre Teamnavn === */}
         <div className="form-section team-box">
           <h2 className="section-heading">Endre Teamnavn</h2>
@@ -45,20 +48,18 @@ const ManageTeams = () => {
               </select>
             </div>
             <div className="column">
-              <label>Velg hvilket team (navn) du vil endre på</label>
+              <label>Velg team som skal endres</label>
               <select>
                 <option>Havana</option>
               </select>
             </div>
+            <div className="column">
+              <label>Skriv inn nytt navn for dette teamet</label>
+              <input type="text" />
+            </div>
           </div>
-
-          <div className="column">
-            <label>Skriv inn nytt navn for dette teamet</label>
-            <input type="text" />
-          </div>
-
           <div className="form-buttons">
-            <GreenButton text="Lagre" onClick={handleSave} />
+            <GreenButton text="Lagre" onClick={() => handleSave("lagre")} />{" "}
           </div>
         </div>
 
@@ -80,7 +81,10 @@ const ManageTeams = () => {
           </div>
 
           <div className="form-buttons">
-            <GreenButton text="Legg til" onClick={handleSave} />
+            <GreenButton
+              text="Legg til"
+              onClick={() => handleSave("leggtil")}
+            />{" "}
           </div>
         </div>
 
@@ -112,8 +116,14 @@ const ManageTeams = () => {
         {showSaveAlert && (
           <AlertBox
             type="confirmation"
-            title="Bekreft lagring"
-            message="Er du sikker på at du ønsker å lagre dette?"
+            title={
+              saveType === "lagre" ? "Bekreft lagring" : "Bekreft opprettelse"
+            }
+            message={
+              saveType === "lagre"
+                ? "Er du sikker på at du ønsker å lagre dette?"
+                : "Er du sikker på at du ønsker å opprette et nytt team?"
+            }
           >
             <WhiteButton text="Fortsett" onClick={confirmSave} />
             <RedButton text="Avbryt" onClick={() => setShowSaveAlert(false)} />
