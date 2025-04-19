@@ -1,10 +1,11 @@
 export default function AlertBox({ type, title, message, children }) {
     return (
+      <div className="popup-overlay">
       <div className={`alert-box ${type}`}>
         {title && <h3 className="alert-title">{title}</h3>}
         {message && <p className="alert-message">{message}</p>}
         {children && <div className="alert-buttons">{children}</div>}
-      </div>
+      </div></div>
     );
   }
   
