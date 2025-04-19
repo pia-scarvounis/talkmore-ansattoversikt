@@ -32,7 +32,6 @@ const ManageTeams = () => {
 
       <div className="form-content page-header-wrapper">
         <PageHeader title="Administer Team" />
-
         {/* === Endre Teamnavn === */}
         <div className="form-section team-box">
           <h2 className="section-heading">Endre Teamnavn</h2>
@@ -50,13 +49,12 @@ const ManageTeams = () => {
                 <option>Havana</option>
               </select>
             </div>
-          </div>
 
-          <div className="column">
-            <label>Skriv inn nytt navn for dette teamet</label>
-            <input type="text" />
+            <div className="column">
+              <label>Skriv inn nytt navn for dette teamet</label>
+              <input type="text" />
+            </div>
           </div>
-
           <div className="form-buttons">
             <GreenButton text="Lagre" onClick={handleSave} />
           </div>
