@@ -40,4 +40,6 @@ const employeeSlice = createSlice({
                 state.error = action.error.message;
             });
     }
-})
+});
+
+export default employeeSlice.reducer;
