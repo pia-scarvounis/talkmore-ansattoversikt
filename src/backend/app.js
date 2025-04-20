@@ -10,7 +10,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 //rutere crud og autentisering
+
+//rutere for alle brukere av verktøyet "admin" + "teamledere"
 app.use('/api/employees', userRoutes);
+
+//rutere kun for admin
 
 //starte serveren
 app.listen(3000, ()=>{

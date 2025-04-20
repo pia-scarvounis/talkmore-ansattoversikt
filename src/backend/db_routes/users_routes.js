@@ -8,6 +8,8 @@ import {getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js'
 //vi skal importere en autentisering middleware for alle brukere av vårt verktøy
 
 //Disse rutene skal gjelde for begge brukere av vårt verktøy (admin + teamleder)
+//Så det krever at vi setter inn authmiddleware i rutene her som sjekker om brukeren
+//har tilgang til ruterene dette kommer senere!!
 
 dotenv.config();
 
@@ -199,5 +201,27 @@ router.get('/', async (req, res) => {
         res.status(500).json({error: 'Noe gikk galt'});
     }
 });
+
+//NOTES rutere for opprette, endre og slette notater (admin og teamledere)
+router.post('/notes', async (req, res) => {
+
+    const {employee_id, note} = req.body;
+    if(!employee_id || !content){
+        return res.status(400).json({error: 'mangler data'});
+    }
+    try{
+        const [result] = await pool.query(
+            `INSERT INTO note (employee_id, note, last_modified)
+            VALUE(?, ?, NOW())`,
+            [employee_id, note]
+        );
+            res.status(201).json({note_id: result.insertId, employee_id, note});
+    }catch{
+       console.error('Feil ved lagring av notat', err);
+       res.status(500).json({error: 'Noe gikk galt'});
+    }
+});
+
+
 
 export default router;
