@@ -58,7 +58,8 @@ async function fetchAllGenEmployees(token){
 }
 
 //API Genesys implementasjon
-//Hente ut alle brukere fra API genesys og hvis det ikke ligger i vår database, legg dem til. 
+//Hente ut alle brukere fra API genesys og hvis det ikke ligger i vår database, legg dem til.
+//sammenligne email fra api med det som ligger i databasen epost 
 router.post('/', async (req, res) => {
     try{
         //hente brukere fra ekstern API Genesys med api nøkkel
