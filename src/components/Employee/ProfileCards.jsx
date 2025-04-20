@@ -8,23 +8,11 @@ import { fetchEmployees } from '../../redux/slices/employeeSlice';
 import "../../styles/profilecards.css"
 import profileImage from "../../assets/images/default-img.png"
 
-const ProfileCards = () => {
-    //Hente inn en ansatt
-    //Sette inn betingelser for farge på kortene om det blir rosa/blå bakgrunn
-    const dispatch = useDispatch();
-    //henter ut employees data, loading og error fra redux store -> emplouyeeSlice ->
-    const {data: employees, loading, error } = useSelector((state) => state.employees);
-
-    //leverer instruks på å gjøre en fetch i employeeSlice
-    useEffect(() =>{
-        dispatch(fetchEmployees());
-    }, [dispatch]);
-    
-    if (loading) return <p>Laster inn ansatte</p>;
-    if (error) return <p> Feil: {error} </p>;
+const ProfileCards = ({ employees }) => {
+    if (!Array.isArray(employees)) return <p>Ingen ansatte å vise</p>;
 
   return (
-    <div>
+    <>
     {employees.map((employee) =>(
             
     <div key ={employee.employee_id} className='profile-card'>
@@ -54,7 +42,7 @@ const ProfileCards = () => {
 
     </div>
     ))}
-    </div>
+    </>
   );
 }
 
