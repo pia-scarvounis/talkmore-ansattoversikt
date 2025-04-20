@@ -1,10 +1,18 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import userRoutes from '../backend/db_routes/users_routes.js';
+import cors from 'cors';
 
 //importere rutere for admin og begge(teamleder og admin)
 
 const app = express();
+
+
+app.use(cors({
+    origin: 'http://localhost:5173',  // juster om frontend kjører annet sted
+    credentials: true
+}));
+
 
 app.use(express.json());
 app.use(cookieParser());

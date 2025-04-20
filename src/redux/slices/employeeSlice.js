@@ -8,9 +8,16 @@ import axios from 'axios';
 
 export const fetchEmployees = createAsyncThunk(
     'employees/fetchEmployees',
-    async () => {
-        const response = await axios.get('/api/employes');
-        return response.data;
+    async (_, { rejectWithValue }) => {
+
+        try{
+            const response = await axios.get('http://localhost:3000/api/employees');
+            console.log('Respons fra API:', response.data);
+            return response.data;
+        }catch{
+            return rejectWithValue(error.response.data);
+        }
+        
     }
 );
 

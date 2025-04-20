@@ -6,7 +6,6 @@ import axios from "axios";
 //Token for API genesys
 import {getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js'
 //vi skal importere en autentisering middleware for alle brukere av vårt verktøy
-
 //Disse rutene skal gjelde for begge brukere av vårt verktøy (admin + teamleder)
 //Så det krever at vi setter inn authmiddleware i rutene her som sjekker om brukeren
 //har tilgang til ruterene dette kommer senere!!
@@ -60,12 +59,15 @@ async function fetchAllGenEmployees(token){
 
 //API Genesys implementasjon
 //Hente ut alle brukere fra API genesys og hvis det ikke ligger i vår database, legg dem til. 
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try{
         //hente brukere fra ekstern API Genesys med api nøkkel
         const accessTokenGen = await getOAuthToken();
 
         const genesysApiEmployees = await fetchAllGenEmployees(accessTokenGen);
+        console.log('Antall ansatte hentet fra Genesys:', genesysApiEmployees.length);
+        console.log('Første ansatt:', genesysApiEmployees[0]);
+
 
    
         //Sjekk om ansatt finnes i databasen
@@ -199,6 +201,25 @@ router.get('/', async (req, res) => {
         res.status(500).json({error: 'Noe gikk galt'});
     }
 });
+// router for å fetche employees fra databasen vår
+router.get('/', async (req, res) => {
+    try {
+      // Spørring for å hente alle ansatte fra database (endre til din egen tabellstruktur)
+      const [employees] = await pool.query('SELECT * FROM employee');
+      
+      // Sjekk om vi fant noen ansatte
+      if (employees.length === 0) {
+        return res.status(404).json({ message: 'Ingen ansatte funnet' });
+      }
+  
+      // Returner ansatte data som JSON
+      res.status(200).json(employees);
+    } catch (err) {
+      console.error('Feil ved henting av ansatte fra databasen:', err);
+      res.status(500).json({ message: 'Noe gikk galt', error: err.message });
+    }
+  });
+  
 
 //NOTES rutere for opprette, endre og slette notater (admin og teamledere)
 //NOTE POST - opprette notat

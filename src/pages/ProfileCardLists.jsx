@@ -12,8 +12,12 @@ const ProfileCardLists = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: employees, loading, error } = useSelector((state) => state.employees);
+  const {data: employees, loading, error } = useSelector((state) => state.employees);
+  console.log("Employees fra Redux:", employees);
 
+  useEffect(()=>{
+    dispatch(fetchEmployees());
+  },[dispatch]);
 
 
   return (
@@ -30,8 +34,11 @@ const ProfileCardLists = () => {
         <NavAdmin />
 
         <div className="profileList-container">
-
-        <ProfileCards employees={employees}/>
+        {
+          Array.isArray(employees)&&
+          (<ProfileCards employees={employees} loading={loading} error={error} />)
+        }
+      
          
         </div>
       </div>
