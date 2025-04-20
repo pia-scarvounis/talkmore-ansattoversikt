@@ -67,8 +67,6 @@ router.post('/', async (req, res) => {
         const genesysApiEmployees = await fetchAllGenEmployees(accessTokenGen);
         console.log('Antall ansatte hentet fra Genesys:', genesysApiEmployees.length);
         console.log('Første ansatt:', genesysApiEmployees[0]);
-
-
    
         //Sjekk om ansatt finnes i databasen
         const employees = await Promise.all(
@@ -204,16 +202,44 @@ router.post('/', async (req, res) => {
 // router for å fetche employees fra databasen vår
 router.get('/', async (req, res) => {
     try {
-      // Spørring for å hente alle ansatte fra database (endre til din egen tabellstruktur)
-      const [employees] = await pool.query('SELECT * FROM employee');
+        /**  // Spørring for å hente alle ansatte fra database (endre til din egen tabellstruktur)
+      const [employees] = await pool.query('SELECT * FROM employee');*/
+     
+        //Hente ut både ansatt info og pårørende felt
+        const [employee] = await pool.query(`
+                SELECT employee.*, 
+                    relative.relative_id, 
+                    relative.relative_name 
+                FROM employee
+                LEFT JOIN relative ON employee.employee_id = relative.employee_id
+        `)
       
       // Sjekk om vi fant noen ansatte
-      if (employees.length === 0) {
+      if (employee.length === 0) {
         return res.status(404).json({ message: 'Ingen ansatte funnet' });
       }
+      //gruppere employee og relative tabellen og lage en fin array i konsollen (gpt)
+      const groupedEmployees = employee.reduce((acc, employee) => {
+        const { employee_id, relative_id, relative_name, ...employeeData } = employee;
+        
+        if (!acc[employee_id]) {
+            acc[employee_id] = {
+                ...employeeData,
+                relative: []
+            };
+        }
+        
+        if (relative_id) {
+            acc[employee_id].relative.push({
+                relative_id: relative_id,
+                relative_name: relative_name,
+            });
+        }
+        return acc;
+    }, {});
   
       // Returner ansatte data som JSON
-      res.status(200).json(employees);
+      res.status(200).json(Object.values(groupedEmployees));
     } catch (err) {
       console.error('Feil ved henting av ansatte fra databasen:', err);
       res.status(500).json({ message: 'Noe gikk galt', error: err.message });
