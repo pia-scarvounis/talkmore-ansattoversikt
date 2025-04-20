@@ -118,7 +118,7 @@ router.get('/', async (req, res) => {
 
             let employee_percentages = 100;
             let form_of_employeement = 'Fast';
-            //Logikk til å sette fast på Admin og Teamleder mens kundeagenter skal få random
+            //Logikk til å sette fast på Admin og Teamleder mens kundeagenter skal få random fast/innleid
             //form_of_employeement
             if (workPos_title.toLowerCase() === "kundeagent") {
                 employee_percentages = Math.floor(Math.random() * 91) + 10; // 10–100
@@ -132,11 +132,9 @@ router.get('/', async (req, res) => {
                 form_of_employeement = "Fast";
               }
 
-
             if(workPos_title === 'kundeAgent'){
                 employee_percentages = Math.floor(Math.random() * 51) + 50;
             }
-
             //Legge til random tileggsinformasjon til ansatte i databasen for test
             //dette skal settes inn i tabell Employee (databasen)
             const[result] = await pool.query(
@@ -203,7 +201,8 @@ router.get('/', async (req, res) => {
 });
 
 //NOTES rutere for opprette, endre og slette notater (admin og teamledere)
-router.post('/notes', async (req, res) => {
+//NOTE POST - opprette notat
+router.post('/note', async (req, res) => {
 
     const {employee_id, note} = req.body;
     if(!employee_id || !content){
@@ -221,7 +220,62 @@ router.post('/notes', async (req, res) => {
        res.status(500).json({error: 'Noe gikk galt'});
     }
 });
+//NOTE PUT - endre notat
+router.put('/note/:id', async (req, res) =>{
+    //henter id fra url
+    const note_id = req.params.id;
+    //notat som endres i body (input)
+    const {note} = req.body;
 
+    if(!content) return res.status(400).json({ error: 'notat mangler'});
+
+    try{
+        await pool.query(
+            `UPDATE note SET note = ?, last_modified = NOW() WHERE note_id = ?`,
+            [note, note_id]
+        );
+        res.status(200).json({note_id, note});
+    }catch(err){
+        console.error('Feil ved oppdatering av notat', err);
+        res.status(500).json({error: 'Noe gikk galt'});
+    }
+});
+
+//NOTE GET - hente notat for en ansatt
+router.get('/:id/note', async (req, res) =>{
+    const employee_id = req.params.id;
+
+    try{
+        const [note] = await pool.query(
+            `SELECT * FROM note WHERE employee_id = ? ORDER BY last_modified DESC`,
+            [employee_id]
+        );
+        res.json(note);
+    }catch(err){
+        console.error('Feil ved henting av notater:', err);
+        res.status(500).json({error: 'Noe gikk galt'});
+    }
+});
+
+//NOTE DELETE - slette et notat
+router.delete('/note_id', async (req, res)=>{
+    const {note_id } = req.params;
+
+    try{
+        const [result] = await pool.query(
+            `DELETE FROM note WHERE note_id = ?`,
+            [note_id]
+            );
+
+            if(result.affectedRows === 0){
+                return res.status(404).json({error:'Notat ikke funnet'});
+            }
+            res.status(200).json({ok: 'Notat slettet'});
+    }catch(err){
+        console.error('Feil ved sletting av notat', err);
+        res.status(500).json({error: 'Noe gikk galt'});
+    }
+})
 
 
 export default router;
