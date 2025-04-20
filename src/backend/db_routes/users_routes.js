@@ -3,6 +3,7 @@ import dBpool from "../config/db.js";
 import dotenv from "dotenv";
 import pool from "../config/db.js";
 import axios from "axios";
+//Token for API genesys
 import {getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js'
 //vi skal importere en autentisering middleware for alle brukere av vårt verktøy
 
@@ -12,6 +13,7 @@ dotenv.config();
 
 const router = Router();
 
+//Denne sjekker hvilken database navn vi bruker
 const [dbResult] = await pool.query("SELECT DATABASE() AS db");
 console.log("Koden kjører mot databasen:", dbResult[0].db);
 
@@ -33,34 +35,58 @@ async function getRandomWorkPosistionTitle(){
     return randomRow;
 }
 
-//Hente ut alle brukere fra API genesys og vår database
+async function fetchAllGenEmployees(token){
+    let allGenEmployees = [];
+    //Start uri, bruker next uri for å hente alle ansatte fra genesys uten å håndtere sidetelling
+    let nextUri = '/api/v2/users?pageSize=25&pageNumber=1';
+
+    while(nextUri){
+        const response = await axios.get(`https://api.mypurecloud.de${nextUri}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        }); 
+        console.log('Genesys API respons:', response.data);
+        //legger inn ansatte som er hentet til listen []
+        allGenEmployees= allGenEmployees.concat(response.data.entities);
+        // oppdaterer neste uri
+        nextUri = response.data.nextUri;
+    }
+    return allGenEmployees;
+}
+
+//API Genesys implementasjon
+//Hente ut alle brukere fra API genesys og hvis det ikke ligger i vår database, legg dem til. 
 router.get('/', async (req, res) => {
     try{
         //hente brukere fra ekstern API Genesys med api nøkkel
         const accessTokenGen = await getOAuthToken();
 
-    const response = await axios.get('https://api.mypurecloud.de/api/v2/users', {
-        headers: {
-            Authorization: `Bearer ${accessTokenGen}`,
-            'Content-Type': 'application/json'
-          }
-    });
-    // sjekke respons og hva som skal hentes ut
-    console.log('Genesys API respons:', response.data);
-    const genesysApiEmployees = response.data.entities;
+        const genesysApiEmployees = await fetchAllGenEmployees(accessTokenGen);
+
    
-    //Sjekk om ansatt finnes i databasen
-    const employees = await Promise.all(
-        genesysApiEmployees.map(async (employee) => {
-            const[rows] = await pool.query(
+        //Sjekk om ansatt finnes i databasen
+        const employees = await Promise.all(
+            genesysApiEmployees.map(async (employee) => {
+                const[rows] = await pool.query(
                 `SELECT employee_id, employee_name FROM employee WHERE epost = ?`, [employee.email]
             );
-            //Hvis epost finnes returnerer den fra databasen
+            //Hvis epost/ ansatte finnes returnerer den fra databasen
             if(rows.length > 0){
+                //hente employee id fra ansatt hvis den finnes
+                const employee_id = rows[0].employee_id;
+
+                //hente employee id velge employee fra databasen
+                const[relative] = await pool.query(
+                    `SELECT*FROM relative WHERE employee_id = ?`,
+                    [employee_id]
+                );
                 return{
                     ...employee,
-                    ...rows[0]
-                };
+                    ...rows[0],
+                    relative: relative || []
+                };  
             }
             //Hvis ikke ansatt matcher eller finnes i databasen opprett tillegssinformasjon
             const randomPhone = `+45${Math.floor(10000000 + Math.random() * 8999999)}`;
@@ -133,10 +159,15 @@ router.get('/', async (req, res) => {
                     team_id,
                     workPosistion_id,
                     team_name,
-                    workPos_title
-                    
+                    workPos_title    
                 ]
             );
+            const employee_id = result.insertId;
+            //hente relative for nye ansatte (tom liste)
+            const [relative] = await pool.query(
+                `SELECT * FROM relative WHERE employee_id = ?`,
+                [employee_id]
+              );
 
             return{
                 ...employee,
@@ -156,7 +187,8 @@ router.get('/', async (req, res) => {
                 team_id: team_id,
                 team_name: team_name,
                 workPosistion_id: workPosistion_id,
-                workPos_title: workPos_title
+                workPos_title: workPos_title,
+                relative: relative || []
             };
         })
     );
