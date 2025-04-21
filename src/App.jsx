@@ -29,7 +29,9 @@ function App() {
         <Route
           path="/admin-dashboard/manage-team"
           element={<ManageTeams />}
-        />{" "}
+        />
+        <Route path="/admin-dashboard/manage-team" element={<ManageTeams />} />
+        <Route path="/employee-info" element={<EmployeeInfo />} />
       </Routes>
     </Router>
   );
