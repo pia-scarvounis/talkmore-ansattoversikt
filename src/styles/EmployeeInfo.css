@@ -1,0 +1,91 @@
+/*STYLING FOR ANSATTDETALIJER SIDER*/
+
+.page-wrapper {
+  padding-left: 360px;
+  padding-right: 120px;
+}
+
+/* EMPLOYEE INFO STYLING */
+.employee-detail-container {
+  border: 1px solid #ffffff;
+  border-radius: 12px;
+}
+
+.employee-detail-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 2px solid #8fd1ef;
+  border-radius: 16px;
+  padding: 0;
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.employee-info {
+  background-color: #8fd1ef;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+.employee-info-inner,
+.employee-position-inner,
+.employee-emergency-inner {
+  padding: 24px;
+}
+
+.employee-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+
+.employee-info-text {
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 200px;
+}
+
+.employee-info,
+.employee-position-info,
+.employee-emergency-access {
+  height: 100%;
+  border-radius: 0;
+}
+
+.access-checkboxes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.access-checkboxes label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  position: relative;
+  top: 1px;
+}
+
+.employee-emergency-inner h4:nth-of-type(2) {
+  margin-top: 40px; /* Øker avstanden før "Tilganger" */
+}
+
+.employee-info-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.employee-info-notes-wrapper {
+  margin-top: 32px;
+}

@@ -9,7 +9,7 @@
 .add-note-column {
   flex: 1;
   min-width: 300px;
-  max-width: 400px;
+  max-width: 600px;
 }
 
 .add-note-title {
@@ -43,7 +43,7 @@
 .notes-section {
   flex: 1;
   min-width: 300px;
-  max-width: 400px;
+  max-width: 600px;
   border-radius: 10px;
   padding: 0;
 }
@@ -89,8 +89,3 @@
 .note-icons img:hover {
   opacity: 1;
 }
-
-
-
-  
-  

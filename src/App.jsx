@@ -7,6 +7,7 @@ import ProfileCardLists from "./pages/ProfileCardLists";
 import RegisterEmployee from "./pages/RegisterEmployee";
 import EditEmployee from "./pages/EditEmployee";
 import ManageTeams from "./pages/ManageTeams";
+import EmployeeInfo from "./pages/EmployeeInfo";
 
 import "./styles/global.css";
 import "./styles/buttons.css";
@@ -27,6 +28,7 @@ function App() {
           path="/admin-dashboard/manage-team"
           element={<ManageTeams />}
         />{" "}
+        <Route path="/employee-info" element={<EmployeeInfo />} />
       </Routes>
     </Router>
   );
