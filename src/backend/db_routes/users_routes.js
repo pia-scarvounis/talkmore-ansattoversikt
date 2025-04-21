@@ -3,15 +3,18 @@ import dBpool from "../config/db.js";
 import dotenv from "dotenv";
 import pool from "../config/db.js";
 import axios from "axios";
+//Token for API genesys
 import {getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js'
 //vi skal importere en autentisering middleware for alle brukere av vårt verktøy
-
 //Disse rutene skal gjelde for begge brukere av vårt verktøy (admin + teamleder)
+//Så det krever at vi setter inn authmiddleware i rutene her som sjekker om brukeren
+//har tilgang til ruterene dette kommer senere!!
 
 dotenv.config();
 
 const router = Router();
 
+//Denne sjekker hvilken database navn vi bruker
 const [dbResult] = await pool.query("SELECT DATABASE() AS db");
 console.log("Koden kjører mot databasen:", dbResult[0].db);
 
@@ -33,34 +36,60 @@ async function getRandomWorkPosistionTitle(){
     return randomRow;
 }
 
-//Hente ut alle brukere fra API genesys og vår database
-router.get('/', async (req, res) => {
+async function fetchAllGenEmployees(token){
+    let allGenEmployees = [];
+    //Start uri, bruker next uri for å hente alle ansatte fra genesys uten å håndtere sidetelling
+    let nextUri = '/api/v2/users?pageSize=25&pageNumber=1';
+
+    while(nextUri){
+        const response = await axios.get(`https://api.mypurecloud.de${nextUri}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        }); 
+        console.log('Genesys API respons:', response.data);
+        //legger inn ansatte som er hentet til listen []
+        allGenEmployees= allGenEmployees.concat(response.data.entities);
+        // oppdaterer neste uri
+        nextUri = response.data.nextUri;
+    }
+    return allGenEmployees;
+}
+
+//API Genesys implementasjon
+//Hente ut alle brukere fra API genesys og hvis det ikke ligger i vår database, legg dem til.
+//sammenligne email fra api med det som ligger i databasen epost 
+router.post('/', async (req, res) => {
     try{
         //hente brukere fra ekstern API Genesys med api nøkkel
         const accessTokenGen = await getOAuthToken();
 
-    const response = await axios.get('https://api.mypurecloud.de/api/v2/users', {
-        headers: {
-            Authorization: `Bearer ${accessTokenGen}`,
-            'Content-Type': 'application/json'
-          }
-    });
-    // sjekke respons og hva som skal hentes ut
-    console.log('Genesys API respons:', response.data);
-    const genesysApiEmployees = response.data.entities;
+        const genesysApiEmployees = await fetchAllGenEmployees(accessTokenGen);
+        console.log('Antall ansatte hentet fra Genesys:', genesysApiEmployees.length);
+        console.log('Første ansatt:', genesysApiEmployees[0]);
    
-    //Sjekk om ansatt finnes i databasen
-    const employees = await Promise.all(
-        genesysApiEmployees.map(async (employee) => {
-            const[rows] = await pool.query(
+        //Sjekk om ansatt finnes i databasen
+        const employees = await Promise.all(
+            genesysApiEmployees.map(async (employee) => {
+                const[rows] = await pool.query(
                 `SELECT employee_id, employee_name FROM employee WHERE epost = ?`, [employee.email]
             );
-            //Hvis epost finnes returnerer den fra databasen
+            //Hvis epost/ ansatte finnes returnerer den fra databasen
             if(rows.length > 0){
+                //hente employee id fra ansatt hvis den finnes
+                const employee_id = rows[0].employee_id;
+
+                //hente employee id velge employee fra databasen
+                const[relative] = await pool.query(
+                    `SELECT*FROM relative WHERE employee_id = ?`,
+                    [employee_id]
+                );
                 return{
                     ...employee,
-                    ...rows[0]
-                };
+                    ...rows[0],
+                    relative: relative || []
+                };  
             }
             //Hvis ikke ansatt matcher eller finnes i databasen opprett tillegssinformasjon
             const randomPhone = `+45${Math.floor(10000000 + Math.random() * 8999999)}`;
@@ -90,7 +119,7 @@ router.get('/', async (req, res) => {
 
             let employee_percentages = 100;
             let form_of_employeement = 'Fast';
-            //Logikk til å sette fast på Admin og Teamleder mens kundeagenter skal få random
+            //Logikk til å sette fast på Admin og Teamleder mens kundeagenter skal få random fast/innleid
             //form_of_employeement
             if (workPos_title.toLowerCase() === "kundeagent") {
                 employee_percentages = Math.floor(Math.random() * 91) + 10; // 10–100
@@ -104,11 +133,9 @@ router.get('/', async (req, res) => {
                 form_of_employeement = "Fast";
               }
 
-
             if(workPos_title === 'kundeAgent'){
                 employee_percentages = Math.floor(Math.random() * 51) + 50;
             }
-
             //Legge til random tileggsinformasjon til ansatte i databasen for test
             //dette skal settes inn i tabell Employee (databasen)
             const[result] = await pool.query(
@@ -133,10 +160,15 @@ router.get('/', async (req, res) => {
                     team_id,
                     workPosistion_id,
                     team_name,
-                    workPos_title
-                    
+                    workPos_title    
                 ]
             );
+            const employee_id = result.insertId;
+            //hente relative for nye ansatte (tom liste)
+            const [relative] = await pool.query(
+                `SELECT * FROM relative WHERE employee_id = ?`,
+                [employee_id]
+              );
 
             return{
                 ...employee,
@@ -156,7 +188,8 @@ router.get('/', async (req, res) => {
                 team_id: team_id,
                 team_name: team_name,
                 workPosistion_id: workPosistion_id,
-                workPos_title: workPos_title
+                workPos_title: workPos_title,
+                relative: relative || []
             };
         })
     );
@@ -167,5 +200,130 @@ router.get('/', async (req, res) => {
         res.status(500).json({error: 'Noe gikk galt'});
     }
 });
+// router for å fetche employees fra databasen vår
+router.get('/', async (req, res) => {
+    try {
+        /**  // Spørring for å hente alle ansatte fra database (endre til din egen tabellstruktur)
+      const [employees] = await pool.query('SELECT * FROM employee');*/
+     
+        //Hente ut både ansatt info og pårørende felt
+        const [employee] = await pool.query(`
+                SELECT employee.*, 
+                    relative.relative_id, 
+                    relative.relative_name 
+                FROM employee
+                LEFT JOIN relative ON employee.employee_id = relative.employee_id
+        `)
+      
+      // Sjekk om vi fant noen ansatte
+      if (employee.length === 0) {
+        return res.status(404).json({ message: 'Ingen ansatte funnet' });
+      }
+      //gruppere employee og relative tabellen og lage en fin array i konsollen (gpt)
+      const groupedEmployees = employee.reduce((acc, employee) => {
+        const { employee_id, relative_id, relative_name, ...employeeData } = employee;
+        
+        if (!acc[employee_id]) {
+            acc[employee_id] = {
+                ...employeeData,
+                relative: []
+            };
+        }
+        
+        if (relative_id) {
+            acc[employee_id].relative.push({
+                relative_id: relative_id,
+                relative_name: relative_name,
+            });
+        }
+        return acc;
+    }, {});
+  
+      // Returner ansatte data som JSON
+      res.status(200).json(Object.values(groupedEmployees));
+    } catch (err) {
+      console.error('Feil ved henting av ansatte fra databasen:', err);
+      res.status(500).json({ message: 'Noe gikk galt', error: err.message });
+    }
+  });
+  
+
+//NOTES rutere for opprette, endre og slette notater (admin og teamledere)
+//NOTE POST - opprette notat
+router.post('/note', async (req, res) => {
+
+    const {employee_id, note} = req.body;
+    if(!employee_id || !content){
+        return res.status(400).json({error: 'mangler data'});
+    }
+    try{
+        const [result] = await pool.query(
+            `INSERT INTO note (employee_id, note, last_modified)
+            VALUE(?, ?, NOW())`,
+            [employee_id, note]
+        );
+            res.status(201).json({note_id: result.insertId, employee_id, note});
+    }catch{
+       console.error('Feil ved lagring av notat', err);
+       res.status(500).json({error: 'Noe gikk galt'});
+    }
+});
+//NOTE PUT - endre notat
+router.put('/note/:id', async (req, res) =>{
+    //henter id fra url
+    const note_id = req.params.id;
+    //notat som endres i body (input)
+    const {note} = req.body;
+
+    if(!content) return res.status(400).json({ error: 'notat mangler'});
+
+    try{
+        await pool.query(
+            `UPDATE note SET note = ?, last_modified = NOW() WHERE note_id = ?`,
+            [note, note_id]
+        );
+        res.status(200).json({note_id, note});
+    }catch(err){
+        console.error('Feil ved oppdatering av notat', err);
+        res.status(500).json({error: 'Noe gikk galt'});
+    }
+});
+
+//NOTE GET - hente notat for en ansatt
+router.get('/:id/note', async (req, res) =>{
+    const employee_id = req.params.id;
+
+    try{
+        const [note] = await pool.query(
+            `SELECT * FROM note WHERE employee_id = ? ORDER BY last_modified DESC`,
+            [employee_id]
+        );
+        res.json(note);
+    }catch(err){
+        console.error('Feil ved henting av notater:', err);
+        res.status(500).json({error: 'Noe gikk galt'});
+    }
+});
+
+//NOTE DELETE - slette et notat
+router.delete('/note_id', async (req, res)=>{
+    const {note_id } = req.params;
+
+    try{
+        const [result] = await pool.query(
+            `DELETE FROM note WHERE note_id = ?`,
+            [note_id]
+            );
+
+            if(result.affectedRows === 0){
+                return res.status(404).json({error:'Notat ikke funnet'});
+            }
+            res.status(200).json({ok: 'Notat slettet'});
+    }catch(err){
+        console.error('Feil ved sletting av notat', err);
+        res.status(500).json({error: 'Noe gikk galt'});
+    }
+})
+
 
 export default router;
