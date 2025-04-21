@@ -38,4 +38,4 @@ const ProfileCards = () => {
   );
 }
 
-export default ProfileCards
+export default ProfileCards;
