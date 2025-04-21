@@ -9,7 +9,7 @@ const FilterOption = () => {
         <div className="select-group">
           {/* Dropdown-rad */}
           <select
-            value="Fast/Innleid"
+            defaultValue="Fast/Innleid"
             className="options-section" /**value={filters.fixedOrHired} onChange={handleChange}**/
           >
             <option value="">Fast eller innleid</option>
@@ -17,7 +17,7 @@ const FilterOption = () => {
             <option value="hired">Innleid</option>
           </select>
           <select
-            value="Stillingstittel"
+            defaultValue="Stillingstittel"
             className="options-section" /**value={filters.fixedOrHired} onChange={handleChange}**/
           >
             <option value="">Stillingstittel</option>
@@ -26,7 +26,7 @@ const FilterOption = () => {
             <option value="Admin">Admin</option>
           </select>
           <select
-            value="Permisjon%"
+            defaultValue="Permisjon %"
             className="options-section" /**value={filters.fixedOrHired} onChange={handleChange}**/
           >
             <option value="">Velg %</option>

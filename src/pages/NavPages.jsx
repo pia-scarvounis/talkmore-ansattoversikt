@@ -1,85 +1,89 @@
 // src/pages/NavPages.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEmployees } from "../redux/slices/employeeSlice";
 import ProfilePageTemplate from "./ProfilePageTemplate";
 
-// Dummydata – realistisk tilpasset databasen
-const dummyEmployees = [
-  {
-    employee_name: "Ola Nordmann",
-    employeeNr_Talkmore: 12345,
-    employeeNr_Telenor: 54321,
-    form_of_employeement: "Fast",
-    employee_percentages: 100,
-    team_name: "Brooklyn",
-    department_name: "Privat",
-    workPosistion_title: "Teamleder",
-    image_url: "default-img.png",
-  },
-  {
-    employee_name: "Kari Hansen",
-    employeeNr_Talkmore: 23456,
-    employeeNr_Telenor: 65432,
-    form_of_employeement: "Innleid",
-    employee_percentages: 80,
-    team_name: "Casablanca",
-    department_name: "Privat",
-    workPosistion_title: "KundeAgent",
-    image_url: "default-img.png",
-  },
-  {
-    employee_name: "Arne Admin",
-    employeeNr_Talkmore: 34567,
-    employeeNr_Telenor: 76543,
-    form_of_employeement: "Fast",
-    employee_percentages: 100,
-    team_name: "Caymanisland",
-    department_name: "Bedrift",
-    workPosistion_title: "Admin",
-    image_url: "default-img.png",
-  },
-  {
-    employee_name: "Lea Linje",
-    employeeNr_Talkmore: 45678,
-    employeeNr_Telenor: 87654,
-    form_of_employeement: "Innleid",
-    employee_percentages: 60,
-    team_name: "Olympia",
-    department_name: "2.Linje",
-    workPosistion_title: "KundeAgent",
-    image_url: "default-img.png",
-  },
-];
-
 const NavPages = () => {
-  const { team } = useParams(); // f.eks. "privat", "brooklyn", "bedrift"
-  let title = "";
-  let filteredData = [];
-
+  const dispatch = useDispatch();
+  const { team } = useParams(); // feks /nav/springfield
   const lowerTeam = team.toLowerCase();
 
-  if (["privat", "bedrift", "2.linje"].includes(lowerTeam)) {
-    // Navigasjonslenke som viser alle i en avdeling
-    title = team.charAt(0).toUpperCase() + team.slice(1);
-    filteredData = dummyEmployees.filter(
-      (emp) => emp.department_name.toLowerCase() === lowerTeam
-    );
-  } else {
-    // Enkeltside for team
-    title = team.charAt(0).toUpperCase() + team.slice(1);
-    filteredData = dummyEmployees.filter(
-      (emp) => emp.team_name.toLowerCase() === lowerTeam
-    );
-  }
+  const { data: employees, loading, error } = useSelector(
+    (state) => state.employees
+  );
+
+  const [filteredData, setFilteredData] = useState([]);
+
+  // hent alle ansatte når komponenten laster første gang
+  useEffect(() => {
+    dispatch(fetchEmployees());
+  }, [dispatch]);
+
+  // Når ansatte eller team endres – filtrer ansatte
+  useEffect(() => {
+    if (!employees || !Array.isArray(employees)) return;
+
+    console.log("TEAM FRA URL:", lowerTeam);
+    console.log("Før filtrering, ansatte:", employees.map(e => ({
+      name: e.employee_name,
+      team: e.team_name,
+      department: e.department_name
+    })));
+
+    let result = [];
+
+    if (lowerTeam === "alleansatte") {
+      result = employees;
+    } else if (["privat", "bedrift", "2.linje"].includes(lowerTeam)) {
+      result = employees.filter((emp) => {
+        if (!emp.department_name) return false;
+
+        const department = emp.department_name
+          .toLowerCase()
+          .replace(/\s/g, "")
+          .replace(".", "");
+        const teamParam = lowerTeam.replace(/\s/g, "").replace(".", "");
+
+        console.log("Sammenligner department:", department, "med teamParam:", teamParam);
+        return department === teamParam;
+      });
+    } else {
+      result = employees.filter(
+        (emp) => emp.team_name?.toLowerCase() === lowerTeam
+      );
+    }
+
+    console.log("Resultat etter filtrering:", result);
+    setFilteredData(result);
+  }, [employees, team]);
+
+  // Overskrift – vis pen tittel med mellomrom ++
+  const titleMap = {
+    alleansatte: "Alle ansatte",
+    cayman: "Cayman Island",
+    bedrift: "Bedrift",
+    privat: "Privat",
+    "2.linje": "2. linje",
+    olympia: "Olympia",
+    brooklyn: "Brooklyn",
+    havana: "Havana",
+    casablanca: "Casablanca",
+    springfield: "Springfield",
+  };
+
+  const title = titleMap[lowerTeam] || team.charAt(0).toUpperCase() + team.slice(1);
 
   return (
     <ProfilePageTemplate
       title={title}
-      showStandardFilter={true}
       data={filteredData}
+      loading={loading}
+      error={error}
+      showStandardFilter={true}
     />
   );
 };
 
 export default NavPages;
-

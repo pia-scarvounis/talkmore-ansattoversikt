@@ -1,20 +1,22 @@
-// ProfilePageTemplate.jsx – felles mal for profilsider
+// src/pages/ProfilePageTemplate.jsx – felles mal for profilsider
 
 import React, { useState, useEffect } from "react";
 import PageHeader from "../components/UI/PageHeader";
 import DateCount from "../components/UI/DateCount";
 import NavAdmin from "../components/navigation/NavAdmin";
 import ProfileCards from "../components/Employee/ProfileCards";
-import FilterOption from "../components/Employee/FilterOption"; // standard filter
+import FilterOption from "../components/Employee/FilterOption";
 
 /**
- * Denne komponenten er en mal for alle profilsidene (Teamleder, Kundeansvarlig, osv.)
- *
+ * Denne komponenten brukes som mal for alle profilsider (f.eks. Brooklyn, Privat, Kundeansvarlig)
+ * 
  * Props:
  * - title: Tittel som vises i PageHeader
- * - showStandardFilter: Vis standardfilter (FilterOption.jsx)
- * - CustomFilterComponent: (valgfri) Send inn en annen filter-komponent dersom siden har egne filtre
- * - data: Liste over ansatte (bruk dummydata nå – byttes med redux senere)
+ * - showStandardFilter: Hvis true vises FilterOption-komponenten
+ * - CustomFilterComponent: (valgfri) for egne filter-komponenter (f.eks. FTE-graf senere)
+ * - data: Liste over ansatte
+ * - loading: true hvis vi venter på API-svar
+ * - error: melding hvis API-et feiler
  */
 
 const ProfilePageTemplate = ({
@@ -22,40 +24,59 @@ const ProfilePageTemplate = ({
   showStandardFilter = false,
   CustomFilterComponent = null,
   data = [],
+  loading = false,
+  error = null,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
 
-  // søkelogikk
+  // Søkelogikk basert på navn
   useEffect(() => {
-    if (!data) return;
+    if (!data || !Array.isArray(data)) return;
 
     const filtered = data.filter((employee) =>
-      employee.name.toLowerCase().includes(searchTerm.toLowerCase())
+      employee.employee_name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
     );
     setFilteredData(filtered);
   }, [searchTerm, data]);
 
+  // Lasting og feil vises før resten
+  if (loading) return <p>Laster inn ansatte...</p>;
+  if (error) return <p>Feil: {error}</p>;
+
   return (
     <div>
-      {/* header med søkefelt og dato/antall */}
+      {/* Header med søkefelt og dato/antall */}
       <div className="page-header-wrapper">
-        <PageHeader title={title} showSearch={true} onSearch={setSearchTerm} />
+        <PageHeader
+          title={title}
+          showSearch={true}
+          onSearch={setSearchTerm}
+        />
         <DateCount count={filteredData.length} />
       </div>
 
-      {/* filtrering */}
+      {/* Filtrering */}
       {showStandardFilter && <FilterOption />}
       {CustomFilterComponent && <CustomFilterComponent />}
 
-      {/* hovedinnhold: Navigasjon + liste med kort */}
+      {/* Navigasjon og profilkort */}
       <div className="profilePages-container">
         <NavAdmin />
-
         <div className="profileList-container">
-          {filteredData.map((employee, index) => (
-            <ProfileCards key={index} employee={employee} />
-          ))}
+        {filteredData.map((employee, index) => (
+ <ProfileCards
+ employees={filteredData}
+ loading={loading}
+ error={error}
+/>
+
+
+
+))}
+
         </div>
       </div>
     </div>
@@ -63,4 +84,5 @@ const ProfilePageTemplate = ({
 };
 
 export default ProfilePageTemplate;
+
 

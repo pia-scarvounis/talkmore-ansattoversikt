@@ -29,7 +29,7 @@ function App() {
           path="/admin-dashboard/manage-team"
           element={<ManageTeams />}
         />{" "}
-        <Route path="/:team" element={<NavPages />} />
+        <Route path="/nav/:team" element={<NavPages />} />
 
       </Routes>
     </Router>
