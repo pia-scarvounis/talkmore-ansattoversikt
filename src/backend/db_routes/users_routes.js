@@ -257,16 +257,24 @@ router.post('/note', async (req, res) => {
             VALUE(?, ?, NOW())`,
             [employee_id, note]
         );
-            res.status(201).json({note_id: result.insertId, employee_id, note});
+            //legger inn notat i arrayet. Nytt notat
+            const newNote = {
+                note_id: result.insertId,
+                employee_id: employee_id,
+                note,
+                last_modiefied: new Date()
+            }
+            res.status(201).json({newNote});
     }catch{
-       console.error('Feil ved lagring av notat', err);
+       console.error('Feil ved opprettelse av notat', err);
        res.status(500).json({error: 'Noe gikk galt'});
     }
 });
+
 //NOTE PUT - endre notat
-router.put('/note/:id', async (req, res) =>{
+router.put('/note/:noteId', async (req, res) =>{
     //henter id fra url
-    const note_id = req.params.id;
+    const noteId = req.params;
     //notat som endres i body (input)
     const {note} = req.body;
 
@@ -275,9 +283,9 @@ router.put('/note/:id', async (req, res) =>{
     try{
         await pool.query(
             `UPDATE note SET note = ?, last_modified = NOW() WHERE note_id = ?`,
-            [note, note_id]
+            [note, noteId]
         );
-        res.status(200).json({note_id, note});
+        res.status(200).json({noteId, note});
     }catch(err){
         console.error('Feil ved oppdatering av notat', err);
         res.status(500).json({error: 'Noe gikk galt'});
@@ -285,7 +293,7 @@ router.put('/note/:id', async (req, res) =>{
 });
 
 //NOTE GET - hente notat for en ansatt
-router.get('/:id/note', async (req, res) =>{
+router.get('/note/:employeeId', async (req, res) =>{
     const employee_id = req.params.id;
 
     try{
@@ -301,13 +309,13 @@ router.get('/:id/note', async (req, res) =>{
 });
 
 //NOTE DELETE - slette et notat
-router.delete('/note_id', async (req, res)=>{
-    const {note_id } = req.params;
+router.delete('/:noteId', async (req, res)=>{
+    const {noteId } = req.params;
 
     try{
         const [result] = await pool.query(
             `DELETE FROM note WHERE note_id = ?`,
-            [note_id]
+            [noteId]
             );
 
             if(result.affectedRows === 0){
