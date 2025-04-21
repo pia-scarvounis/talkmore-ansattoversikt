@@ -100,7 +100,8 @@ h1 {
 
 /* lagre og avbryt knapp - visning på siden */
 .form-buttons {
-  padding-top: 60px;
+  padding-top: 40px;
+  padding-bottom: 30px;
   display: flex;
   justify-content: center;
   gap: 70px;
