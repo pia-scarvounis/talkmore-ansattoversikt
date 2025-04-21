@@ -38,7 +38,6 @@ const ProfileCardLists = () => {
           Array.isArray(employees)&&
           (<ProfileCards employees={employees} loading={loading} error={error} />)
         }
-      
          
         </div>
       </div>

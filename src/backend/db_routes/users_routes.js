@@ -122,9 +122,8 @@ router.post('/', async (req, res) => {
             //Logikk til å sette fast på Admin og Teamleder mens kundeagenter skal få random fast/innleid
             //form_of_employeement
             if (workPos_title.toLowerCase() === "kundeagent") {
-                employee_percentages = Math.floor(Math.random() * 91) + 10; // 10–100
-                form_of_employeement =
-                  formOptions[Math.floor(Math.random() * formOptions.length)];
+                employee_percentages = (Math.floor(Math.random() * 10) + 1) * 10; // 10, 20,
+                form_of_employeement = formOptions[Math.floor(Math.random() * formOptions.length)];
               } else if (
                 workPos_title.toLowerCase() === "admin" ||
                 workPos_title.toLowerCase() === "teamleder"
@@ -132,10 +131,6 @@ router.post('/', async (req, res) => {
                 employee_percentages = 100;
                 form_of_employeement = "Fast";
               }
-
-            if(workPos_title === 'kundeAgent'){
-                employee_percentages = Math.floor(Math.random() * 51) + 50;
-            }
             //Legge til random tileggsinformasjon til ansatte i databasen for test
             //dette skal settes inn i tabell Employee (databasen)
             const[result] = await pool.query(
