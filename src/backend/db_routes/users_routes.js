@@ -122,9 +122,8 @@ router.post('/', async (req, res) => {
             //Logikk til å sette fast på Admin og Teamleder mens kundeagenter skal få random fast/innleid
             //form_of_employeement
             if (workPos_title.toLowerCase() === "kundeagent") {
-                employee_percentages = Math.floor(Math.random() * 91) + 10; // 10–100
-                form_of_employeement =
-                  formOptions[Math.floor(Math.random() * formOptions.length)];
+                employee_percentages = (Math.floor(Math.random() * 10) + 1) * 10; // 10, 20,
+                form_of_employeement = formOptions[Math.floor(Math.random() * formOptions.length)];
               } else if (
                 workPos_title.toLowerCase() === "admin" ||
                 workPos_title.toLowerCase() === "teamleder"
@@ -132,10 +131,6 @@ router.post('/', async (req, res) => {
                 employee_percentages = 100;
                 form_of_employeement = "Fast";
               }
-
-            if(workPos_title === 'kundeAgent'){
-                employee_percentages = Math.floor(Math.random() * 51) + 50;
-            }
             //Legge til random tileggsinformasjon til ansatte i databasen for test
             //dette skal settes inn i tabell Employee (databasen)
             const[result] = await pool.query(
@@ -203,43 +198,52 @@ router.post('/', async (req, res) => {
 // router for å fetche employees fra databasen vår
 router.get('/', async (req, res) => {
     try {
-        /**  // Spørring for å hente alle ansatte fra database (endre til din egen tabellstruktur)
-      const [employees] = await pool.query('SELECT * FROM employee');*/
-     
-        //Hente ut både ansatt info og pårørende felt
-        const [employee] = await pool.query(`
-                SELECT employee.*, 
-                    relative.relative_id, 
-                    relative.relative_name 
+      const [rows] = await pool.query(`
+                SELECT 
+                    employee.*,
+                    relative.relative_id,
+                    relative.relative_name,
+                    team.team_name,
+                    department.department_name,
+                    workPosistion.posistion_title as workPosistion_title
                 FROM employee
                 LEFT JOIN relative ON employee.employee_id = relative.employee_id
-        `)
-      
-      // Sjekk om vi fant noen ansatte
-      if (employee.length === 0) {
-        return res.status(404).json({ message: 'Ingen ansatte funnet' });
-      }
-      //gruppere employee og relative tabellen og lage en fin array i konsollen (gpt)
-      const groupedEmployees = employee.reduce((acc, employee) => {
-        const { employee_id, relative_id, relative_name, ...employeeData } = employee;
-        
-        if (!acc[employee_id]) {
-            acc[employee_id] = {
+                LEFT JOIN team ON employee.team_id = team.team_id
+                LEFT JOIN department ON team.department_id = department.department_id
+                LEFT JOIN workPosistion ON employee.workPosistion_id = workPosistion.workPosistion_id
+                `);
+ 
+                if (rows.length === 0) {
+                    return res.status(404).json({ message: 'Ingen ansatte funnet' });
+                }
+ 
+            // Gruppér ansatte + relatives som en array
+            const groupedEmployees = rows.reduce((acc, row) => {
+                const {
+                    employee_id,
+                    relative_id,
+                    relative_name,
+                    ...employeeData
+                    } = row;
+ 
+                if (!acc[employee_id]) {
+                acc[employee_id] = {
+                employee_id,
                 ...employeeData,
                 relative: []
-            };
-        }
-        
-        if (relative_id) {
-            acc[employee_id].relative.push({
-                relative_id: relative_id,
-                relative_name: relative_name,
-            });
-        }
-        return acc;
-    }, {});
-  
-      // Returner ansatte data som JSON
+                };
+            }
+            if (relative_id) {
+                acc[employee_id].relative.push({
+                  relative_id,
+                  relative_name
+                });
+              }
+         
+              return acc;
+            }, {});
+
+    
       res.status(200).json(Object.values(groupedEmployees));
     } catch (err) {
       console.error('Feil ved henting av ansatte fra databasen:', err);
@@ -262,16 +266,24 @@ router.post('/note', async (req, res) => {
             VALUE(?, ?, NOW())`,
             [employee_id, note]
         );
-            res.status(201).json({note_id: result.insertId, employee_id, note});
+            //legger inn notat i arrayet. Nytt notat
+            const newNote = {
+                note_id: result.insertId,
+                employee_id: employee_id,
+                note,
+                last_modiefied: new Date()
+            }
+            res.status(201).json({newNote});
     }catch{
-       console.error('Feil ved lagring av notat', err);
+       console.error('Feil ved opprettelse av notat', err);
        res.status(500).json({error: 'Noe gikk galt'});
     }
 });
+
 //NOTE PUT - endre notat
-router.put('/note/:id', async (req, res) =>{
+router.put('/note/:noteId', async (req, res) =>{
     //henter id fra url
-    const note_id = req.params.id;
+    const noteId = req.params;
     //notat som endres i body (input)
     const {note} = req.body;
 
@@ -280,9 +292,9 @@ router.put('/note/:id', async (req, res) =>{
     try{
         await pool.query(
             `UPDATE note SET note = ?, last_modified = NOW() WHERE note_id = ?`,
-            [note, note_id]
+            [note, noteId]
         );
-        res.status(200).json({note_id, note});
+        res.status(200).json({noteId, note});
     }catch(err){
         console.error('Feil ved oppdatering av notat', err);
         res.status(500).json({error: 'Noe gikk galt'});
@@ -290,7 +302,7 @@ router.put('/note/:id', async (req, res) =>{
 });
 
 //NOTE GET - hente notat for en ansatt
-router.get('/:id/note', async (req, res) =>{
+router.get('/note/:employeeId', async (req, res) =>{
     const employee_id = req.params.id;
 
     try{
@@ -306,13 +318,13 @@ router.get('/:id/note', async (req, res) =>{
 });
 
 //NOTE DELETE - slette et notat
-router.delete('/note_id', async (req, res)=>{
-    const {note_id } = req.params;
+router.delete('/:noteId', async (req, res)=>{
+    const {noteId } = req.params;
 
     try{
         const [result] = await pool.query(
             `DELETE FROM note WHERE note_id = ?`,
-            [note_id]
+            [noteId]
             );
 
             if(result.affectedRows === 0){
