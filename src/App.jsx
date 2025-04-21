@@ -24,10 +24,7 @@ function App() {
         <Route path="/profilecardlists" element={<ProfileCardLists />} />
         <Route path="/register" element={<RegisterEmployee />} />
         <Route path="/edit" element={<EditEmployee />} />
-        <Route
-          path="/admin-dashboard/manage-team"
-          element={<ManageTeams />}
-        />{" "}
+        <Route path="/admin-dashboard/manage-team" element={<ManageTeams />} />
         <Route path="/employee-info" element={<EmployeeInfo />} />
       </Routes>
     </Router>
