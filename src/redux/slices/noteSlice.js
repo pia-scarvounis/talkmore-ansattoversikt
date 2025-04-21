@@ -23,7 +23,7 @@ export const addNote = createAsyncThunk(
 export const editNote = createAsyncThunk(
     'note/editNote',
     async (noteId, note) => {
-        const res = await axios.put(`http://localhost:3000/api/employees/note/${noteId}`);
+        const res = await axios.put(`http://localhost:3000/api/employees/note/${noteId}`, { note });
         return res.data;
     }
 )
@@ -38,3 +38,52 @@ export const deleteNote = createAsyncThunk(
 
 //note SLICE og start STATE
 
+const noteSlice = createSlice({
+    name: 'notes',
+    initialState: {
+        notes: [],
+        loading: false,
+        error: null
+    },
+    reducers:{},
+    extraReducers: (builder) => {
+        builder
+            //fetch loader
+            .addCase(fetchNotesForEmployee.pending, (state) => {
+                state.loading = true;
+            })
+            //fetch ferdig suksess
+            .addCase(fetchNotesForEmployee.fulfilled, (state, action) => {
+                state.loading = false;
+                //henter state fra dispatch i komponent og sender den inn her som legger notater i arrayet notes: []
+                state.notes = action.payload;
+            })
+            //fetch feilet
+            .addCase(fetchNotesForEmployee.rejected,(state, action) => {
+                //setter state loading til false da fetchen feilet
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            //case for cruds på notater
+
+            //Legg til notat
+            .addCase(addNote.fulfilled, (state, action) => {
+                //pusher det som blir sent inn her(action.payload) fra et komponent
+                state.notes.push(action.payload);
+            })
+            //endre notat
+            .addCase(editNote.fulfilled, (state, action) =>{
+                const { noteId, note } = action.payload;
+                const notes = state.notes.find(n => n.note_id === noteId);
+                //hvis den finner note med id i notes [] lik som noteId som blir sendt inn i payload
+                if(notes){
+                    notes.note = note;
+                }
+            })
+            //slette notat
+            .addCase(deleteNote.fulfilled, (state, action) => {
+                //henter id til notat sjekker id mot id som blir sendt inn her payload og sletter den
+                state.notes = state.notes.filter(note => note.note_id !== action.payload);
+            })
+    }
+})
