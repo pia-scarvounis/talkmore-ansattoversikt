@@ -198,43 +198,52 @@ router.post('/', async (req, res) => {
 // router for å fetche employees fra databasen vår
 router.get('/', async (req, res) => {
     try {
-        /**  // Spørring for å hente alle ansatte fra database (endre til din egen tabellstruktur)
-      const [employees] = await pool.query('SELECT * FROM employee');*/
-     
-        //Hente ut både ansatt info og pårørende felt
-        const [employee] = await pool.query(`
-                SELECT employee.*, 
-                    relative.relative_id, 
-                    relative.relative_name 
+      const [rows] = await pool.query(`
+                SELECT 
+                    employee.*,
+                    relative.relative_id,
+                    relative.relative_name,
+                    team.team_name,
+                    department.department_name,
+                    workPosistion.posistion_title as workPosistion_title
                 FROM employee
                 LEFT JOIN relative ON employee.employee_id = relative.employee_id
-        `)
-      
-      // Sjekk om vi fant noen ansatte
-      if (employee.length === 0) {
-        return res.status(404).json({ message: 'Ingen ansatte funnet' });
-      }
-      //gruppere employee og relative tabellen og lage en fin array i konsollen (gpt)
-      const groupedEmployees = employee.reduce((acc, employee) => {
-        const { employee_id, relative_id, relative_name, ...employeeData } = employee;
-        
-        if (!acc[employee_id]) {
-            acc[employee_id] = {
+                LEFT JOIN team ON employee.team_id = team.team_id
+                LEFT JOIN department ON team.department_id = department.department_id
+                LEFT JOIN workPosistion ON employee.workPosistion_id = workPosistion.workPosistion_id
+                `);
+ 
+                if (rows.length === 0) {
+                    return res.status(404).json({ message: 'Ingen ansatte funnet' });
+                }
+ 
+            // Gruppér ansatte + relatives som en array
+            const groupedEmployees = rows.reduce((acc, row) => {
+                const {
+                    employee_id,
+                    relative_id,
+                    relative_name,
+                    ...employeeData
+                    } = row;
+ 
+                if (!acc[employee_id]) {
+                acc[employee_id] = {
+                employee_id,
                 ...employeeData,
                 relative: []
-            };
-        }
-        
-        if (relative_id) {
-            acc[employee_id].relative.push({
-                relative_id: relative_id,
-                relative_name: relative_name,
-            });
-        }
-        return acc;
-    }, {});
-  
-      // Returner ansatte data som JSON
+                };
+            }
+            if (relative_id) {
+                acc[employee_id].relative.push({
+                  relative_id,
+                  relative_name
+                });
+              }
+         
+              return acc;
+            }, {});
+
+    
       res.status(200).json(Object.values(groupedEmployees));
     } catch (err) {
       console.error('Feil ved henting av ansatte fra databasen:', err);
