@@ -86,4 +86,6 @@ const noteSlice = createSlice({
                 state.notes = state.notes.filter(note => note.note_id !== action.payload);
             })
     }
-})
+});
+
+export default noteSlice.reducer;
