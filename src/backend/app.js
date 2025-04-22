@@ -28,7 +28,7 @@ app.use('/api/employees', userRoutes);
 //ruter for notes CRUDS
 app.use('/api/note', noteRoutes );
 //rute for å hente tilgjengelige ansatte for dagen(dato)
-app.use('/api/available', availableEmployees);
+app.use('/api/availableemployees', availableEmployees);
 //rutere kun for admin
 
 //starte serveren

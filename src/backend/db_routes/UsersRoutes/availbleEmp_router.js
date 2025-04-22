@@ -69,8 +69,51 @@ router.get('/', async (req, res) => {
         //Gjør om dato til iso string
         const dateString = selectedDate.toISOString().split('T')[0];
 
-        
-    }catch{
+        const [rows] = await pool.query(`
+        SELECT 
+            e.employee_id,
+            e.name,
+            e.form_of_employeement,
+            e.employee_percentages,
+            e.workPosistion_id,
+            wp.posistion_title AS workPosistion_title,
+            e.team_id,
+            t.team_name,
+            l.leave_start_date,
+            l.leave_end_date
+        FROM employee e
+        LEFT JOIN workPosistion wp ON e.workPosistion_id = wp.workPosistion_id
+        LEFT JOIN team t ON e.team_id = t.team_id
+        LEFT JOIN employeeLeave l ON e.employee_id = l.employee_id
+    `);
 
+        const result = rows.map(row => {
+        const isOnLeave = row.leave_start_date && row.leave_end_date &&
+            new Date(dateString) >= new Date(row.leave_start_date) &&
+            new Date(dateString) <= new Date(row.leave_end_date);
+
+        const shouldWork = !isOnLeave && shouldWorkToday(row.employee_id, row.employee_percentages, selectedDate);
+        const isLoggedIn = shouldWork ? isLoggedInToday(row.employee_id, selectedDate) : false;
+
+        return {
+            employee_id: row.employee_id,
+            name: row.name,
+            form_of_employeement: row.form_of_employeement,
+            employee_percentages: row.employee_percentages,
+            workPosistion_title: row.workPosistion_title,
+            team_name: row.team_name,
+            is_on_leave: isOnLeave,
+            is_working_today: shouldWork,
+            is_logged_in: isLoggedIn
+      };
+    });
+
+        res.status(200).json(result);
+        console.log(`Employee ${employeeId} jobber disse dagene denne uka:`, workDays);
+
+
+    }catch(err){
+        console.error('Feil ved henting av tlgjengelige ansatte i dashbord ansatte', err);
+        res.status(500).json({message: 'Noe gikk galt', error: err.message});
     }
 })

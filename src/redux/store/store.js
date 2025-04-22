@@ -6,5 +6,6 @@ export const store = configureStore({
   reducer: {
     date: dateReducer,
     employees: employeeReducer,
+    availableEmployees: availableEmployeesReducer
   },
 });
