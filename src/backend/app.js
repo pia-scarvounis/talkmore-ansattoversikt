@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import userRoutes from '../backend/db_routes/users_routes.js';
+import userRoutes from './db_routes/UsersRoutes/getEmployees_routes.js';
+import noteRoutes from './db_routes/UsersRoutes/notes_routes';
 import cors from 'cors';
 
 //importere rutere for admin og begge(teamleder og admin)
@@ -21,7 +22,7 @@ app.use(cookieParser());
 
 //rutere for alle brukere av verktøyet "admin" + "teamledere"
 app.use('/api/employees', userRoutes);
-
+app.use('/api/note', noteRoutes );
 //rutere kun for admin
 
 //starte serveren

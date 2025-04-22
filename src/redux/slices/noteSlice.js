@@ -7,7 +7,7 @@ export const fetchNotesForEmployee = createAsyncThunk(
     'note/fetchNoteForEmployee',
     async (employeeId) => {
         //henter ruteren vår fra backend localhost:3000
-        const res = await axios.get(`http://localhost:3000/api/employees/note/${employeeId}`);
+        const res = await axios.get(`http://localhost:3000/api/note/${employeeId}`);
         return res.data;
     }
 );
@@ -15,7 +15,7 @@ export const fetchNotesForEmployee = createAsyncThunk(
 export const addNote = createAsyncThunk(
     'note/addNote',
     async({employee_id, note}) => {
-        const res = await axios.post(`http://localhost:3000/api/employees/note`,{employee_id, note});
+        const res = await axios.post(`http://localhost:3000/api/note`,{employee_id, note});
         return res.data;
     }
 )
@@ -23,7 +23,7 @@ export const addNote = createAsyncThunk(
 export const editNote = createAsyncThunk(
     'note/editNote',
     async (noteId, note) => {
-        const res = await axios.put(`http://localhost:3000/api/employees/note/${noteId}`, { note });
+        const res = await axios.put(`http://localhost:3000/api/note/${noteId}`, { note });
         return res.data;
     }
 )
@@ -31,7 +31,7 @@ export const editNote = createAsyncThunk(
 export const deleteNote = createAsyncThunk(
     'note/delete',
     async (noteId) => {
-        const res = await axios.delete(`http://localhost:3000/api/employees/${noteId}`);
+        const res = await axios.delete(`http://localhost:3000/api/note/${noteId}`);
         return noteId;
     }
 );
