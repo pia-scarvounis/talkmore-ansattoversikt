@@ -4,7 +4,7 @@ import "../../styles/notes.css";
 import editIcon from "../../assets/icons/edit.svg";
 import trashIcon from "../../assets/icons/trash.svg";
 import notesIcon from "../../assets/icons/notes.png";
-import EditNotePopup from "../UI/EditNotePopup";
+import EditNotePopup from "./EditNotePopup";
 import WhiteButton from "../UI/WhiteButton";
 import GreenButton from "../UI/GreenButton";
 

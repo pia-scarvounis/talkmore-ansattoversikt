@@ -14,44 +14,44 @@ const NavAdmin = () => {
         <NavLink to="/admin-dashboard" className="nav-link main-link">
           Dashboard
         </NavLink>
-        <NavLink to="/profilecardlists" className="nav-link main-link">
+        <NavLink to="/nav/alleansatte" className="nav-link main-link">
           Alle Ansatte
         </NavLink>
 
         <div className="section">
-          <NavLink to="Privat" className="nav-link main-link">
+          <NavLink to="/nav/privat" className="nav-link main-link">
             Privat
           </NavLink>
-          <NavLink to="/privat/brooklyn" className="nav-link sub-link">
+          <NavLink to="/nav/brooklyn" className="nav-link sub-link">
             Brooklyn
           </NavLink>
-          <NavLink to="/privat/havana" className="nav-link sub-link">
+          <NavLink to="/nav/havana" className="nav-link sub-link">
             Havana
           </NavLink>
-          <NavLink to="/privat/casablanca" className="nav-link sub-link">
+          <NavLink to="/nav/casablanca" className="nav-link sub-link">
             Casablanca
           </NavLink>
-          <NavLink to="/privat/springfield" className="nav-link sub-link">
+          <NavLink to="/nav/springfield" className="nav-link sub-link">
             Springfield
           </NavLink>
         </div>
 
         <div className="section">
-          <NavLink to="Bedrift" className="nav-link main-link">
+          <NavLink to="/nav/bedrift" className="nav-link main-link">
             {" "}
             Bedrift
           </NavLink>
-          <NavLink to="/bedrift/cayman" className="nav-link sub-link">
+          <NavLink to="/nav/cayman" className="nav-link sub-link">
             Cayman Island{" "}
           </NavLink>
         </div>
 
         <div className="section">
-          <NavLink to="2.Linje" className="nav-link main-link">
+          <NavLink to="/nav/2.Linje" className="nav-link main-link">
             {" "}
             2. linje
           </NavLink>
-          <NavLink to="/linje/olympia" className="nav-link sub-link">
+          <NavLink to="/nav/olympia" className="nav-link sub-link">
             Olympia
           </NavLink>
         </div>

@@ -7,7 +7,7 @@ import iconKSAdmin from "../assets/icons/ks-admin.svg";
 import iconKA from "../assets/icons/ka.svg";
 import iconFTE from "../assets/icons/fte.svg";
 import iconTL from "../assets/icons/tl.svg";
-import DateSelector from "../components/Dashboard/DateSelector";
+import DateSelector from "../components/UI/DateSelector";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";

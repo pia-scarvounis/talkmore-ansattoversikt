@@ -8,6 +8,8 @@ import RegisterEmployee from "./pages/RegisterEmployee";
 import EditEmployee from "./pages/EditEmployee";
 import ManageTeams from "./pages/ManageTeams";
 import EmployeeInfo from "./pages/EmployeeInfo";
+import NavPages from "./pages/NavPages";
+
 
 import "./styles/global.css";
 import "./styles/buttons.css";
@@ -24,8 +26,13 @@ function App() {
         <Route path="/profilecardlists" element={<ProfileCardLists />} />
         <Route path="/register" element={<RegisterEmployee />} />
         <Route path="/edit" element={<EditEmployee />} />
+        <Route
+          path="/admin-dashboard/manage-team"
+          element={<ManageTeams />}
+        />
         <Route path="/admin-dashboard/manage-team" element={<ManageTeams />} />
         <Route path="/employee-info" element={<EmployeeInfo />} />
+        <Route path="/nav/:team" element={<NavPages />} />
       </Routes>
     </Router>
   );
