@@ -19,7 +19,7 @@ const getWeek = (date) => {
   
 
 //hjelpefunksjoner til random innlogging fra Mandag-Lørdag 
-const workToday = (employeeId, percentage, date) => {
+const shouldWorkToday = (employeeId, percentage, date) => {
     //0= søndag, 1= mandag og 6= lørdag
     const weekday = date.getDay();
     if(weekday === 0) return false;
@@ -51,7 +51,9 @@ const workToday = (employeeId, percentage, date) => {
 
 //Simulert pålogging, if true betyr ansatt er tilgjengelig for den datoen
 const isLoggedInToday = (employeeId, date) => {
-    
+    const hash = (employeeId + date.toISOString()).replace(/\D/g, '').slice(0, 6);
+    const rand = parseInt(hash) % 100;
+    return rand < 85; // 85% sjanse hvis man skulle jobbet
 }
 
 
@@ -59,7 +61,16 @@ const isLoggedInToday = (employeeId, date) => {
 const [dbResult] = await pool.query("SELECT DATABASE() AS db");
 console.log("Koden kjører mot databasen:", dbResult[0].db);
 
-
+//Denne ruteren henter tilgjengelige ansatte for å vise i de gønne boksene på dashbordet
 router.get('/', async (req, res) => {
+    try{
+        //henter valgt dato i request eller ny valgt dato
+        const selectedDate = req.query.date ? new Date (req.query.date) : new Date ();
+        //Gjør om dato til iso string
+        const dateString = selectedDate.toISOString().split('T')[0];
 
+        
+    }catch{
+
+    }
 })
