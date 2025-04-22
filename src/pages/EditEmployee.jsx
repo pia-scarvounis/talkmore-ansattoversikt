@@ -8,7 +8,7 @@ import "../styles/form.css";
 import defaultImage from "../assets/images/default-img.png";
 import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
-import EditHistoryPopup from "../components/UI/EditHistoryPopup"; // for å teste EditHistoryPopupen
+import EditHistoryPopup from "../components/History/EditHistoryPopup"; // for å teste EditHistoryPopupen
 
 
 const EditEmployee = () => {

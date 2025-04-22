@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEmployees } from "../redux/slices/employeeSlice";
-import ProfilePageTemplate from "./ProfilePageTemplate";
+import EmployeeListTemplate from "../components/Employee/EmployeeListTemplate";
 
 const NavPages = () => {
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ const NavPages = () => {
   const title = titleMap[lowerTeam] || team.charAt(0).toUpperCase() + team.slice(1);
 
   return (
-    <ProfilePageTemplate
+    <EmployeeListTemplate
       title={title}
       data={filteredData}
       loading={loading}

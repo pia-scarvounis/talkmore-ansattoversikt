@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import RedButton from "./RedButton";
-import GreenButton from "./GreenButton";
+import RedButton from "../UI/RedButton";
+import GreenButton from "../UI/GreenButton";
 import "../../styles/popup.css";
 
 const EditNotePopup = ({ note, onClose, onSave }) => {

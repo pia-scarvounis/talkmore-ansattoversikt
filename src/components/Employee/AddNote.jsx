@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import GreenButton from "./GreenButton";
+import GreenButton from "../UI/GreenButton";
 import "../../styles/notes.css"; 
 
 const AddNote = ({ onAdd }) => {

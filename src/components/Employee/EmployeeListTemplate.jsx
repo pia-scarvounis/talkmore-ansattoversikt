@@ -1,11 +1,11 @@
 // src/pages/ProfilePageTemplate.jsx – felles mal for profilsider
 
 import React, { useState, useEffect } from "react";
-import PageHeader from "../components/UI/PageHeader";
-import DateCount from "../components/UI/DateCount";
-import NavAdmin from "../components/navigation/NavAdmin";
-import ProfileCards from "../components/Employee/ProfileCards";
-import FilterOption from "../components/Employee/FilterOption";
+import PageHeader from "../UI/PageHeader";
+import DateCount from "../UI/DateCount";
+import NavAdmin from "../navigation/NavAdmin";
+import ProfileCards from "./ProfileCards";
+import FilterOption from "./FilterOption";
 
 /**
  * Denne komponenten brukes som mal for alle profilsider (f.eks. Brooklyn, Privat, Kundeansvarlig)
@@ -19,7 +19,7 @@ import FilterOption from "../components/Employee/FilterOption";
  * - error: melding hvis API-et feiler
  */
 
-const ProfilePageTemplate = ({
+const EmployeeListTemplate = ({
   title,
   showStandardFilter = false,
   CustomFilterComponent = null,
@@ -83,6 +83,6 @@ const ProfilePageTemplate = ({
   );
 };
 
-export default ProfilePageTemplate;
+export default EmployeeListTemplate;
 
 
