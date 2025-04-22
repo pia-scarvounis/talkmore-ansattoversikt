@@ -117,3 +117,4 @@ router.get('/', async (req, res) => {
         res.status(500).json({message: 'Noe gikk galt', error: err.message});
     }
 })
+export default router;

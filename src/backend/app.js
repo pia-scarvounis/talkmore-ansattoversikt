@@ -1,8 +1,8 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import userRoutes from './db_routes/UsersRoutes/getEmployees_routes.js';
-import noteRoutes from './db_routes/UsersRoutes/notes_routes';
-import availableEmployees from './db_routes/UsersRoutes/availbleEmp_router';
+import noteRoutes from './db_routes/UsersRoutes/notes_routes.js';
+import availableEmployees from './db_routes/UsersRoutes/availableEmp_router.js';
 import cors from 'cors';
 
 //importere rutere for admin og begge(teamleder og admin)
