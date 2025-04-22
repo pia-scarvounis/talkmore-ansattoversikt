@@ -26,7 +26,6 @@ p {
 /* felles heading for alle sider, eks: EditEmployee, EmployeeDetails, register, edit... */
 
 /* Wrapper som gjør at header alltid følger layouten uansett side */
-
 /*pageheader.jsx*/ 
 .page-header-wrapper {
   margin-left: 200px; /* plass til nav */
@@ -120,6 +119,7 @@ label {
 .profileList-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  margin-left: 383px;
+  gap: 20px;
+  justify-content: center; /* midtstiller kortene */
+
 }
