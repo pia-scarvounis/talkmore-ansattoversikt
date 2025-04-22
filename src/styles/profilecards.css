@@ -1,14 +1,28 @@
 
-/*Profilkort kontainer*/
+/*Profilkort kontainer. rosa: #F29FC8*/
 .profile-card{
     position: relative;
-    border: 3px solid #8FD1EF;
     border-radius: 14px;
     height: 383px;
     width: 290px;
     text-align: center;
-    
-}
+} 
+.pink-bg {
+    background-color: #F29FC8;
+  }
+  
+  .blue-bg {
+    background-color: #8FD1EF; 
+  }
+  .pink-border {
+    border: 3px solid #F29FC8;
+  }
+  
+  .blue-border {
+    border: 3px solid #8FD1EF;
+  }
+  
+  
 /*Profilkort hover øker med 5% */
 .profile-card:hover{
    transform: scale(1.05);
@@ -22,7 +36,7 @@
     margin-top: -3px;
     height: 109px;
     width: 290px;
-    background-color: #8FD1EF;
+    
 }
 
 /*Profilkort bakgrunn med farge TEKST innhold container*/

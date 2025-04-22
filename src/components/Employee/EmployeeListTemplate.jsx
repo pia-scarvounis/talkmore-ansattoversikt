@@ -66,7 +66,6 @@ const EmployeeListTemplate = ({
       <div className="profilePages-container">
         <NavAdmin />
         <div className="profileList-container">
-        {filteredData.map((employee, index) => (
  <ProfileCards
  employees={filteredData}
  loading={loading}
@@ -75,7 +74,7 @@ const EmployeeListTemplate = ({
 
 
 
-))}
+
 
         </div>
       </div>

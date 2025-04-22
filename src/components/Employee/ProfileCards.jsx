@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
-//Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEmployees } from '../../redux/slices/employeeSlice';
-
-//importere css for profilkort
-
 import "../../styles/profilecards.css"
 import profileImage from "../../assets/images/default-img.png"
 
@@ -17,15 +13,23 @@ const ProfileCards = ({ employees, loading, error }) => {
     <>
     {employees.map((employee) =>(
             
-    <div key ={employee.employee_id} className='profile-card'>
-        {/**Tekstene under skal ha bakgrunn i sin egen div*/}
-        <div className='background-color'>
-            <div className='label-main'>
-                <h3> {employee.employee_name} </h3>
-                <p> Ansattnr(Talkmore){employee.employeeNr_Talkmore} </p>
-                <p> Ansattnr(Telenor) {employee.employeeNr_Telenor} </p>
-            </div>
-        </div>
+    <div key ={employee.employee_id} className={`profile-card ${
+        employee.workPosistion_title === "Admin" || employee.workPosistion_title === "Teamleder"
+          ? "pink-border"
+          : "blue-border"
+      }`}
+    >
+      <div className={`background-color ${
+  employee.workPosistion_title === "Admin" || employee.workPosistion_title === "Teamleder"
+    ? "pink-bg"
+    : "blue-bg"
+}`}>
+     <div className="label-main">
+      <h3>{employee.employee_name}</h3>
+      <p>Ansattnr (Talkmore): {employee.employeeNr_Talkmore}</p>
+      <p>Ansattnr (Telenor): {employee.employeeNr_Telenor}</p>
+    </div>
+        </div> 
         
         {/**Profilbilde*/}
         <div className='profile-img-container'>
