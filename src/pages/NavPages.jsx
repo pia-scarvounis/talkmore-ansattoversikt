@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchEmployees } from "../redux/slices/employeeSlice";
 import EmployeeListTemplate from "../components/Employee/EmployeeListTemplate";
 
+
 const NavPages = () => {
   const dispatch = useDispatch();
   const { team } = useParams(); // f.eks. /nav/springfield
@@ -14,6 +15,7 @@ const NavPages = () => {
     (state) => state.employees
   );
   const [filteredData, setFilteredData] = useState([]);
+
 
   useEffect(() => {
     dispatch(fetchEmployees());
@@ -61,6 +63,7 @@ const NavPages = () => {
       loading={loading}
       error={error}
       showStandardFilter={true}
+      showDate={false}
     />
   );
 };

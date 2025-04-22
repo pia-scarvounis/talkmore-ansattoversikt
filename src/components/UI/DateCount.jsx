@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 
-const DateCount = ({ count }) => {
+const DateCount = ({ count, hideDate = false  }) => {
   const selectedDate = useSelector((state) => state.date.selectedDate);
   const formattedDate = format(new Date(selectedDate), "EEEE d. MMMM yyyy", {
     locale: nb,
@@ -12,8 +12,8 @@ const DateCount = ({ count }) => {
 
   return (
     <div className="date-count">
-      <span className="date-text">{formattedDate}</span>
-      <span className="count-text">Totalt antall: {count}</span>
+        {!hideDate && <span className="date-text">{formattedDate}</span>}
+      <span className="count-text">Totalt: {count} ansatte</span>
     </div>
   );
 };

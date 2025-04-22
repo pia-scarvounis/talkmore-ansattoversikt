@@ -6,6 +6,8 @@ import DateCount from "../UI/DateCount";
 import NavAdmin from "../navigation/NavAdmin";
 import ProfileCards from "./ProfileCards";
 import FilterOption from "./FilterOption";
+import WhiteButton from "../UI/WhiteButton";
+
 
 /**
  * Denne komponenten brukes som mal for alle profilsider (f.eks. Brooklyn, Privat, Kundeansvarlig)
@@ -26,9 +28,11 @@ const EmployeeListTemplate = ({
   data = [],
   loading = false,
   error = null,
+  showDate = true
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [showAll, setShowAll] = useState(false);
 
   // Søkelogikk basert på navn
   useEffect(() => {
@@ -41,6 +45,7 @@ const EmployeeListTemplate = ({
     );
     setFilteredData(filtered);
   }, [searchTerm, data]);
+  const visibleData = showAll ? filteredData : filteredData.slice(0, 9);
 
   // Lasting og feil vises før resten
   if (loading) return <p>Laster inn ansatte...</p>;
@@ -55,7 +60,7 @@ const EmployeeListTemplate = ({
           showSearch={true}
           onSearch={setSearchTerm}
         />
-        <DateCount count={filteredData.length} />
+        <DateCount count={filteredData.length} hideDate={!showDate} />
       </div>
 
       {/* Filtrering */}
@@ -67,15 +72,16 @@ const EmployeeListTemplate = ({
         <NavAdmin />
         <div className="profileList-container">
  <ProfileCards
- employees={filteredData}
+ employees={visibleData}
  loading={loading}
  error={error}
+ 
 />
-
-
-
-
-
+  {/* Last flere / Vis færre knapp */}
+  <WhiteButton
+  text={showAll ? "Vis færre" : "Last flere"}
+  onClick={() => setShowAll(!showAll)}
+/>
         </div>
       </div>
     </div>
