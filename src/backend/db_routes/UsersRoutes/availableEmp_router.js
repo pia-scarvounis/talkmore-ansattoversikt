@@ -22,6 +22,7 @@ const getWeek = (date) => {
 const shouldWorkToday = (employeeId, percentage, date) => {
     //0= søndag, 1= mandag og 6= lørdag
     const weekday = date.getDay();
+
     if(weekday === 0) return false;
 
     // Hvor mange dager i uka som kan jobbes, 
@@ -32,15 +33,17 @@ const shouldWorkToday = (employeeId, percentage, date) => {
         return weekday >= 1 && weekday <= 5; // Mandag–fredag
     }
     
-    const week = getWeek(date);
+    //Hvis prosentandelen er mindre enn 100%, arbeid på random dager mellom man-lørdag
+    const workDaysPerWeek = Math.floor((percentage / 100) * 6); //beregn antall arbeidstid 50% =3 dager
 
+    const week = getWeek(date);
    // Generer "stabile" pseudo-random dager basert på uke og ansatt-ID
     const hash = (employeeId + '-' + week).replace(/\D/g, '').slice(0, 8);
     const seed = parseInt(hash, 10);
 
     // Lag en liste over dagene 1–6 (man–lør)
     const allDays = [1, 2, 3, 4, 5, 6];
-    const daysPerWeek = 6;
+
 
     // Bland dagene "tilfeldig" men konsistent for samme uke og ID
     const shuffled = [...allDays].sort((a, b) => {
@@ -49,7 +52,7 @@ const shouldWorkToday = (employeeId, percentage, date) => {
     return valA - valB;
     });
 
-    const workDays = shuffled.slice(0, daysPerWeek); // Velg f.eks. 3 av 6 dager
+    const workDays = shuffled.slice(0,  workDaysPerWeek); // Velg f.eks. 3 av 6 dager
 
     return workDays.includes(weekday);
 }
