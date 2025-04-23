@@ -11,6 +11,19 @@ const NavPages = () => {
   const { team } = useParams(); // f.eks. /nav/springfield
   const lowerTeam = team.toLowerCase();
 
+  const titleMap = {
+    alleansatte: "Alle ansatte",
+    caymanisland: "Cayman Island",
+    bedrift: "Bedrift",
+    privat: "Privat",
+    "2.linje": "2. linje",
+    olympia: "Olympia",
+    brooklyn: "Brooklyn",
+    havana: "Havana",
+    casablanca: "Casablanca",
+    springfield: "Springfield",
+  }; // ikke bra løsnong. fiks senere
+
   const { data: employees, loading, error } = useSelector(
     (state) => state.employees
   );
@@ -41,18 +54,6 @@ const NavPages = () => {
     setFilteredData(result);
   }, [employees, team]);
 
-  const titleMap = {
-    alleansatte: "Alle ansatte",
-    cayman: "Cayman Island",
-    bedrift: "Bedrift",
-    privat: "Privat",
-    "2.linje": "2. linje",
-    olympia: "Olympia",
-    brooklyn: "Brooklyn",
-    havana: "Havana",
-    casablanca: "Casablanca",
-    springfield: "Springfield",
-  }; // ikke bra løsnong. fiks senere
 
   const title = titleMap[lowerTeam] || team.charAt(0).toUpperCase() + team.slice(1);
 
