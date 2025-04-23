@@ -26,7 +26,7 @@ const DashboardAdmin = () => {
   const selectedDate = new Date(selectedDateString);
   const {data: employees, loading } = useSelector((state) => state.availableEmployees);
 
-  const rawDate = format(new Date(selectedDate), "EEEE d. MMMM yyyy", {
+  const rawDate = format(selectedDate, "EEEE d. MMMM yyyy", {
     locale: nb,
   });
 
