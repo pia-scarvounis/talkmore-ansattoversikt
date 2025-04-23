@@ -142,4 +142,19 @@ label {
     color: #666;
   }
   
+  /* load more knapp på alle profilsider, under profilkort - plasserig */ 
+  .load-more-wrap {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px;
+    min-height: 60px;
+  }
+
+  /* Usynlig placeholder for å ikke fucke opp profilkort layout */
+.button-placeholder {
+  visibility: hidden;
+  height: 48px;
+}
+  
 

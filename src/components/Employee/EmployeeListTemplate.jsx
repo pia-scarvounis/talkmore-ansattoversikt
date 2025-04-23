@@ -78,14 +78,22 @@ const EmployeeListTemplate = ({
  
 />
   {/* Last flere / Vis færre knapp */}
+  <div className="load-more-wrap">
+  {filteredData.length > 9 && visibleData.length > 0 ? (
   <WhiteButton
   text={showAll ? "Vis færre" : "Last flere"}
   onClick={() => setShowAll(!showAll)}
 />
+  ) : (
+    <div className="button-placeholder" />
+  )}
+  </div>
         </div>
+        
       </div>
     </div>
   );
+
 };
 
 export default EmployeeListTemplate;
