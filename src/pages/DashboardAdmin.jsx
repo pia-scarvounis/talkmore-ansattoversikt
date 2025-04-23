@@ -48,10 +48,15 @@ const DashboardAdmin = () => {
   
 
   //tester denne gpt snittet + sjekk av om employees er array og ikke undefined
+  //den skal telle antall fte med 100% = 1 fte
   const totalFTE = Array.isArray(employees)
-  ? employees.reduce((acc, employee) => acc + employee.employee_percentages, 0)
+  ? employees.reduce((acc, employee) => {
+      const pct = Number(employee.employee_percentages);
+      return acc + (isNaN(pct) ? 0 : pct / 100); // <- Legg til som FTE, ikke %
+    }, 0)
   : 0;
-  const formattedFTE = totalFTE.toFixed(2);
+
+  const formattedFTE = totalFTE.toFixed(2); // Eks: 107.00
 
 
 
