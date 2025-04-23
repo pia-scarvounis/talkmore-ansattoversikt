@@ -78,14 +78,18 @@ const EmployeeListTemplate = ({
  
 />
   {/* Last flere / Vis færre knapp */}
+  <div className="load-more-wrap">
   <WhiteButton
   text={showAll ? "Vis færre" : "Last flere"}
   onClick={() => setShowAll(!showAll)}
 />
+
+        </div>
         </div>
       </div>
     </div>
   );
+
 };
 
 export default EmployeeListTemplate;

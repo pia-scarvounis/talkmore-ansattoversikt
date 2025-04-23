@@ -1,5 +1,5 @@
 
-/*Profilkort kontainer. rosa: #F29FC8*/
+/* Profilkort kontainer */
 .profile-card{
     position: relative;
     border-radius: 14px;
@@ -55,8 +55,6 @@
 .profile-img-container{
     margin: 10px auto;
 }
-
-/* Legge til css for rosa kort Admin+teamledere*/
 
 /*Profilkort bilde size*/
 .profile-img {
