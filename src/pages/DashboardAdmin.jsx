@@ -34,14 +34,17 @@ const DashboardAdmin = () => {
 
   //henter fetch for tilgjengelige ansatte og setter inn availableemployee slicen
   useEffect(()=>{
+
     //sender inn valgt dato til fetchen
-    dispatch(fetchAvailableEmployees(selectedDate));
-  },[dispatch,selectedDate]);
+    dispatch(fetchAvailableEmployees(selectedDateString));
+  },[dispatch,selectedDateString]);
 
   //sjekker at employees er et array
-  const getCount = (filterFn) =>
-  Array.isArray(employees) ? employees.filter(filterFn).length : 0;
-
+  const getCount = (filterFn) => {
+    if (!Array.isArray(employees)) return 0;
+    return employees.filter(filterFn).length;
+  };
+  
 
   //tester denne gpt snittet + sjekk av om employees er array og ikke undefined
   const totalFTE = Array.isArray(employees)
