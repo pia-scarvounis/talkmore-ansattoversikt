@@ -15,7 +15,7 @@ export const fetchAvailableEmployees = createAsyncThunk(
 );
 
 const availableEmployeesSlice = createSlice({
-    name: 'availableEmployees',
+    name: 'availableEmployees', 
     initialState: {
         data:[],
         loading: false,
