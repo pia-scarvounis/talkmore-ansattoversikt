@@ -28,7 +28,11 @@ const shouldWorkToday = (employeeId, percentage, date) => {
     //100% stillinger = fast hver dag man-fre
     //under 100% stillinger, eks 50% = 3 dager random plassert mellom man-fre
     // kilde GPT
-    const daysPerWeek = percentage === 100 ? 5 : Math.round((percentage / 100) * 6)
+    if (percentage === 100) {
+        return weekday >= 1 && weekday <= 5; // Mandag–fredag
+    }
+    
+    const week = getWeek(date);
 
    // Generer "stabile" pseudo-random dager basert på uke og ansatt-ID
     const hash = (employeeId + '-' + week).replace(/\D/g, '').slice(0, 8);
@@ -36,6 +40,7 @@ const shouldWorkToday = (employeeId, percentage, date) => {
 
     // Lag en liste over dagene 1–6 (man–lør)
     const allDays = [1, 2, 3, 4, 5, 6];
+    const daysPerWeek = 6;
 
     // Bland dagene "tilfeldig" men konsistent for samme uke og ID
     const shuffled = [...allDays].sort((a, b) => {
@@ -56,11 +61,6 @@ const isLoggedInToday = (employeeId, date) => {
     return rand < 85; // 85% sjanse hvis man skulle jobbet
 }
 
-
-//Denne sjekker hvilken database navn vi bruker
-const [dbResult] = await pool.query("SELECT DATABASE() AS db");
-console.log("Koden kjører mot databasen:", dbResult[0].db);
-
 //Denne ruteren henter tilgjengelige ansatte for å vise i de gønne boksene på dashbordet
 router.get('/', async (req, res) => {
     try{
@@ -72,7 +72,7 @@ router.get('/', async (req, res) => {
         const [rows] = await pool.query(`
         SELECT 
             e.employee_id,
-            e.name,
+            e.employee_name,
             e.form_of_employeement,
             e.employee_percentages,
             e.workPosistion_id,
@@ -94,10 +94,13 @@ router.get('/', async (req, res) => {
 
         const shouldWork = !isOnLeave && shouldWorkToday(row.employee_id, row.employee_percentages, selectedDate);
         const isLoggedIn = shouldWork ? isLoggedInToday(row.employee_id, selectedDate) : false;
+        
+        
+        console.log(`Employee ${row.employee_id} skal jobbe ${shouldWork ? 'idag' : 'ikke idag'}`);
 
         return {
             employee_id: row.employee_id,
-            name: row.name,
+            name: row.employee_name,
             form_of_employeement: row.form_of_employeement,
             employee_percentages: row.employee_percentages,
             workPosistion_title: row.workPosistion_title,
@@ -107,10 +110,7 @@ router.get('/', async (req, res) => {
             is_logged_in: isLoggedIn
       };
     });
-
         res.status(200).json(result);
-        console.log(`Employee ${employeeId} jobber disse dagene denne uka:`, workDays);
-
 
     }catch(err){
         console.error('Feil ved henting av tlgjengelige ansatte i dashbord ansatte', err);

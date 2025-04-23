@@ -17,6 +17,7 @@ export const fetchAvailableEmployees = createAsyncThunk(
 const availableEmployeesSlice = createSlice({
     name: 'availableEmployees', 
     initialState: {
+        //Data som skal holde på tilgjengelige ansatte etter dispatch fetch i komponentet
         data:[],
         loading: false,
         error: null

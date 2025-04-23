@@ -1,26 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavAdmin from "../components/navigation/NavAdmin";
 import StatBox from "../components/Dashboard/StatBox";
 import EventBox from "../components/Dashboard/EventBox";
+
 import "../styles/dashboard.css";
 import iconKSAdmin from "../assets/icons/ks-admin.svg";
 import iconKA from "../assets/icons/ka.svg";
 import iconFTE from "../assets/icons/fte.svg";
 import iconTL from "../assets/icons/tl.svg";
+
+import { fetchAvailableEmployees } from "../redux/slices/availableemployeesSlice";
 import DateSelector from "../components/UI/DateSelector";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import SearchField from "../components/Filters/SearchField";
+import { daysInWeek } from "date-fns/constants";
 
 const DashboardAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const selectedDate = useSelector((state) => state.date.selectedDate);
+
+  //redux 
+  const dispatch = useDispatch();
+  const selectedDateString = useSelector((state) => state.date.selectedDate);
+  const selectedDate = new Date(selectedDateString);
+  const {data: employees, loading } = useSelector((state) => state.availableEmployees);
+
   const rawDate = format(new Date(selectedDate), "EEEE d. MMMM yyyy", {
     locale: nb,
   });
 
   const formattedDate = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
+
+  //henter fetch for tilgjengelige ansatte og setter inn availableemployee slicen
+  useEffect(()=>{
+    //sender inn valgt dato til fetchen
+    dispatch(fetchAvailableEmployees(selectedDate));
+  },[dispatch,selectedDate]);
+
+  //sjekker at employees er et array
+  const getCount = (filterFn) =>
+  Array.isArray(employees) ? employees.filter(filterFn).length : 0;
+
+
+  //tester denne gpt snittet + sjekk av om employees er array og ikke undefined
+  const totalFTE = Array.isArray(employees)
+  ? employees.reduce((acc, employee) => acc + employee.employee_percentages, 0)
+  : 0;
+  const formattedFTE = totalFTE.toFixed(2);
+
+
 
   return (
     <div className="dashboard-layout">
@@ -40,63 +69,68 @@ const DashboardAdmin = () => {
 
       <div className="dashboard-wrapper">
         <div className="left-column">
+          {loading ? (
+            <p>Laster tilgjengelige ansatte</p>
+            
+          ) : (
           <div className="dashboard-grid">
             <StatBox
               title="TEAMLEDERE"
-              value={6}
+              value={getCount((e)=> e.workPosistion_title === 'teamleder' && e.is_logged_in)}
               unit="Tilgjengelig"
               icon={iconTL}
             />
             <StatBox
               title="KS ADMIN"
-              value={7}
+              value={getCount((e) => e.workPosistion_title === 'Admin' && e.is_logged_in)}
               unit="Tilgjengelig"
               icon={iconKSAdmin}
             />
             <StatBox
               title="KUNDEANSVARLIG"
-              value={40}
+              value={getCount((e) => e.workPosistion_title === 'kundeagent' && e.is_logged_in)}
               unit="Tilgjengelig"
               icon={iconKA}
             />
 
             <StatBox
               title="TELENORANSATTE"
-              value={35}
+              value={getCount((e) => e.form_of_employeement === 'Fast' && e.is_logged_in)}
               unit="Tilgjengelig"
               icon={iconKA}
             />
             <StatBox
               title="INNLEID"
-              value={5}
+              value={getCount((e) =>e.form_of_employeement === 'Innleid' && e.is_logged_in)}
               unit="Tilgjengelig"
               icon={iconKA}
             />
 
             <StatBox
               title="HELTID"
-              value={35}
+              value={getCount((e) =>e.employee_percentages === 100 && e.is_logged_in)}
               unit="Tilgjengelig"
               icon={iconKA}
             />
             <StatBox
               title="DELTID"
-              value={5}
+              value={getCount((e) => e.employee_percentages < 100 && e.is_logged_in)}
               unit="Tilgjengelig"
               icon={iconKA}
             />
 
             <StatBox
               title="FULLTIDSEKVIVALENTER"
-              value="37,5"
+              //setter en 100 % stilling = 1
+              value={formattedFTE}
               unit="FTE (KA)"
               highlight
               className="fte"
               icon={iconFTE}
             />
           </div>
+          )}
         </div>
-
         <div className="right-column">
           <EventBox />
         </div>

@@ -10,6 +10,8 @@ import ManageTeams from "./pages/ManageTeams";
 import EmployeeInfo from "./pages/EmployeeInfo";
 import NavPages from "./pages/NavPages";
 
+import ErrorBoundry from './ErrorBoundry';
+
 
 import "./styles/global.css";
 import "./styles/buttons.css";
@@ -17,6 +19,7 @@ import "./styles/alert.css";
 
 function App() {
   return (
+    <ErrorBoundry>
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -35,6 +38,7 @@ function App() {
         <Route path="/nav/:team" element={<NavPages />} />
       </Routes>
     </Router>
+    </ErrorBoundry>
   );
 }
 
