@@ -6,7 +6,7 @@ router.get('/:id', async (req, res) =>{
     const {id} = req.params;
 
     try{
-        //Henter brukerna
+        //Henter bruker sin historikk med admin navn og id som har endret sortert etter siste endring
         const [history] =await pool.query(`
             SELECT
                 cl.*,
