@@ -18,23 +18,6 @@ const router = Router();
 const [dbResult] = await pool.query("SELECT DATABASE() AS db");
 console.log("Koden kjører mot databasen:", dbResult[0].db);
 
- //funksjon random id fra en tabell (fk)
-async function getRandomId(idField, table){
-    const [rows] = await pool.query(`SELECT ${idField} FROM ${table}`);
-    if(rows.length === 0) throw new Error(`Ingen rader i ${table}`);
-    const randomRow = rows[Math.floor(Math.random()* rows.length)];
-    return randomRow[idField];
-}
-
-
-//funksjon sjekk om employee er Admin,Teamleder eller KA, Admin+Teamledere skal ha deafult 100% stilling
-async function getRandomWorkPosistionTitle(){
-    const [rows] = await pool.query(`SELECT workPosistion_id, posistion_title FROM workPosistion `);
-    console.log('Rows from database:', rows);
-    if(rows.length === 0) throw new Error('Ingen stillinger i databasen');
-    const randomRow = rows[Math.floor(Math.random()*rows.length)];
-    return randomRow;
-}
 
 async function fetchAllGenEmployees(token){
     let allGenEmployees = [];
@@ -83,14 +66,19 @@ router.post('/', async (req, res) => {
   
       let teamIndex = 0;
       const employees = [];
-  
+      
+      //Maks 8 admin skal bli fordelt per testbruker, 1 teamleder per team, og resten tildeles kundeagenter
+      //må bruke denne istedenfor promise da den fortsatte å hente inn nye admin og teamledere
+      //bruker det fordi det krever en nøyaktig rekkefølge og kontroll på tildeling av tilstand
+      //gpt for å justere promise
       for (const employee of genesysApiEmployees) {
         const team_id = shuffledTeamIds[teamIndex % shuffledTeamIds.length];
         teamIndex++;
   
         const [teamRows] = await pool.query('SELECT team_name FROM team WHERE team_id = ?', [team_id]);
         const team_name = teamRows[0]?.team_name || 'Ukjent team';
-  
+
+        //sjekker eksisterende ansatt om den finnes i databasen
         const [existing] = await pool.query(
           `SELECT employee_id, employee_name FROM employee WHERE epost = ?`, [employee.email]
         );
@@ -123,7 +111,7 @@ router.post('/', async (req, res) => {
         let form_of_employeement = 'Fast';
         let employee_percentages = 100;
   
-        // --- Tildel rolle basert på logikk ---
+        // --- Tildel rolle basert på logikk hjelp med gpt ---
         if (!teamLeadersAssigned.has(team_id)) {
           workPosistion_title = 'Teamleder';
           const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Teamleder'`);
