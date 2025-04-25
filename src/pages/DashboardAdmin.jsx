@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavAdmin from "../components/navigation/NavAdmin";
 import StatBox from "../components/Dashboard/StatBox";
 import EventBox from "../components/Dashboard/EventBox";
@@ -21,6 +22,10 @@ const DashboardAdmin = () => {
 
   //redux 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleBoxClick = (filterKey) => {
+    navigate(`/dashboardlist/${filterKey}`);
+  }; // statbox trigges når den trykkes og sender videre til riktig sted
   const selectedDateString = useSelector((state) => state.date.selectedDate);
   const selectedDate = new Date(selectedDateString); 
     const {data: employees, loading } = useSelector((state) => state.dayOverviewEmployees);
@@ -84,18 +89,21 @@ const DashboardAdmin = () => {
               value={getCount((e)=> e.workPosistion_title === 'Teamleder')}
               unit="Tilgjengelig"
               icon={iconTL}
+              onClick={() => handleBoxClick("teamleder")}
             />
             <StatBox
               title="KS ADMIN"
               value={getCount((e) => e.workPosistion_title === 'Admin')}
               unit="Tilgjengelig"
               icon={iconKSAdmin}
+              onClick={() => handleBoxClick("admin")}
             />
             <StatBox
               title="KUNDEANSVARLIG"
               value={getCount((e) => e.workPosistion_title === 'Kundeagent')}
               unit="Tilgjengelig"
               icon={iconKA}
+              onClick={() => handleBoxClick("kundeagent")}
             />
 
             <StatBox
@@ -103,25 +111,28 @@ const DashboardAdmin = () => {
               value={getCount((e) => e.form_of_employeement === 'Fast')}
               unit="Tilgjengelig"
               icon={iconKA}
+              onClick={()=> handleBoxClick("fast")}
             />
             <StatBox
               title="INNLEID"
               value={getCount((e) =>e.form_of_employeement === 'Innleid')}
               unit="Tilgjengelig"
               icon={iconKA}
+              onClick={()=> handleBoxClick("innleid")}
             />
 
             <StatBox
               title="HELTID"
               value={getCount((e) =>e.employee_percentages === 100)}
               unit="Tilgjengelig"
-              icon={iconKA}
+              icon={iconKA}onClick={() => handleBoxClick("heltid")}
             />
             <StatBox
               title="DELTID"
               value={getCount((e) => e.employee_percentages < 100)}
               unit="Tilgjengelig"
               icon={iconKA}
+              onClick={() => handleBoxClick("deltid")}
             />
 
             <StatBox

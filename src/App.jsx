@@ -9,6 +9,7 @@ import EditEmployee from "./pages/EditEmployee";
 import ManageTeams from "./pages/ManageTeams";
 import EmployeeInfo from "./pages/EmployeeInfo";
 import NavPages from "./pages/NavPages";
+import DashboardPages from "./pages/DashboardPages";
 
 import ErrorBoundry from './ErrorBoundry';
 
@@ -37,6 +38,8 @@ function App() {
         <Route path="/employee-info" element={<EmployeeInfo />} />
         <Route path="/nav/:team" element={<NavPages />} />
        
+        <Route path="/dashboardlist/:filterKey" element={<DashboardPages />} />
+
       </Routes>
     </Router>
     </ErrorBoundry>

@@ -1,10 +1,10 @@
 import React from "react";
 import "../../styles/dashboard.css";
 
-const StatBox = ({ title, value, unit, highlight, className, icon }) => {
+const StatBox = ({ title, value, unit, highlight, className, icon, onClick }) => {
   return (
     <div
-      className={`stat-box ${highlight ? "highlight" : ""} ${className || ""}`}
+      className={`stat-box ${highlight ? "highlight" : ""} ${className || ""}`}onClick={onClick}
     >
       <div className="statbox-top">
         <h4>{title}</h4>

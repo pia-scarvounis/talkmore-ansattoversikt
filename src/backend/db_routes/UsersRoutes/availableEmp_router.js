@@ -101,7 +101,7 @@ router.get('/', async (req, res) => {
         
         console.log(`Employee ${row.employee_id} skal jobbe ${shouldWork ? 'idag' : 'ikke idag'}`);
 
-        return {
+        return /* {
             employee_id: row.employee_id,
             name: row.employee_name,
             form_of_employeement: row.form_of_employeement,
@@ -111,7 +111,22 @@ router.get('/', async (req, res) => {
             is_on_leave: isOnLeave,
             is_working_today: shouldWork,
             is_logged_in: isLoggedIn
+      };*/
+      return { /* kommenterte ut koden over, måtte legge til denne istedet, for at kortene på dashboars skal vises riktig: */
+        employee_id: row.employee_id,
+        employee_name: row.employee_name, // brukes i ProfileCards
+        employeeNr_Talkmore: row.employee_id, // midlertidig Talkmore-nummer
+        employeeNr_Telenor: null, //  placeholder – kan endres hvis vi har dette i databasen
+      form_of_employeement: row.form_of_employeement,
+        employee_percentages: row.employee_percentages,
+        workPosistion_title: row.workPosistion_title,
+        team_name: row.team_name,
+      
+        is_on_leave: isOnLeave,
+        is_working_today: shouldWork,
+        is_logged_in: isLoggedIn
       };
+      
     });
         res.status(200).json(result);
 

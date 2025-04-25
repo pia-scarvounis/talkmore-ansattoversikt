@@ -1,4 +1,4 @@
-// src/pages/ProfilePageTemplate.jsx – felles mal for profilsider
+//  felles mal for alle profilkortsider
 
 import React, { useState, useEffect } from "react";
 import PageHeader from "../UI/PageHeader";
