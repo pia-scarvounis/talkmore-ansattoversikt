@@ -33,13 +33,11 @@ const Notes = ({ employeeId }) => {
   }, [dispatch, employeeId]);
 
   // Opprett nytt notat
-  const handleAddNote = () => {
-    if (newNote.trim() !== "") {
-      dispatch(addNote({ employee_id: employeeId, note: newNote }));
-      setNewNote(""); // Nullstill feltet
+  const handleAddNote = (text) => {
+    if (text.trim() !== "") {
+      dispatch(addNote({ employee_id: employeeId, note: text }));
     }
   };
-
   // rediger notat
 
   const handleSave = (updatedText) => {

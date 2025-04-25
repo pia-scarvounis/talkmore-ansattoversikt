@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import EmployeeDetail from "../components/Employee/EmployeeDetail";
 import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
@@ -9,6 +9,8 @@ import "../styles/EmployeeInfo.css";
 
 const EmployeeInfo = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const employeeId = parseInt(id, 10);
   return (
     <div className="employee-info-page">
       <NavAdmin />
@@ -22,7 +24,7 @@ const EmployeeInfo = () => {
         </div>
 
         <div className="employee-info-notes-wrapper">
-          <Notes />
+          <Notes employeeId={id} />
         </div>
       </div>
     </div>

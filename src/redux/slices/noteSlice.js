@@ -15,11 +15,13 @@ export const fetchNotesForEmployee = createAsyncThunk(
 export const addNote = createAsyncThunk(
   "note/addNote",
   async ({ employee_id, note }) => {
+    console.log("Sender til backend:", { employee_id, note });
+
     const res = await axios.post(`http://localhost:3000/api/note`, {
       employee_id,
       note,
     });
-    return res.data.newNote;
+    return res.data;
   }
 );
 
