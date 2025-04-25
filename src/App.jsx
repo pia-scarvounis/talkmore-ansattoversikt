@@ -11,8 +11,7 @@ import EmployeeInfo from "./pages/EmployeeInfo";
 import NavPages from "./pages/NavPages";
 import DashboardPages from "./pages/DashboardPages";
 
-import ErrorBoundry from './ErrorBoundry';
-
+import ErrorBoundry from "./ErrorBoundry";
 
 import "./styles/global.css";
 import "./styles/buttons.css";
@@ -21,27 +20,32 @@ import "./styles/alert.css";
 function App() {
   return (
     <ErrorBoundry>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/admin-dashboard" element={<DashBoardAdmin />} />
-        <Route path="/readonly-dashboard" element={<DashboardReadOnly />} />
-        <Route path="/profilecards" element={<ProfileCards />} />
-        <Route path="/profilecardlists" element={<ProfileCardLists />} />
-        <Route path="/register" element={<RegisterEmployee />} />
-        <Route path="/edit" element={<EditEmployee />} />
-        <Route
-          path="/admin-dashboard/manage-team"
-          element={<ManageTeams />}
-        />
-        <Route path="/admin-dashboard/manage-team" element={<ManageTeams />} />
-        <Route path="/employee-info" element={<EmployeeInfo />} />
-        <Route path="/nav/:team" element={<NavPages />} />
-       
-        <Route path="/dashboardlist/:filterKey" element={<DashboardPages />} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/admin-dashboard" element={<DashBoardAdmin />} />
+          <Route path="/readonly-dashboard" element={<DashboardReadOnly />} />
+          <Route path="/profilecards" element={<ProfileCards />} />
+          <Route path="/profilecardlists" element={<ProfileCardLists />} />
+          <Route path="/register" element={<RegisterEmployee />} />
+          <Route path="/edit" element={<EditEmployee />} />
+          <Route
+            path="/admin-dashboard/manage-team"
+            element={<ManageTeams />}
+          />
+          <Route
+            path="/admin-dashboard/manage-team"
+            element={<ManageTeams />}
+          />
+          <Route path="/employee-info" element={<EmployeeInfo />} />
+          <Route path="/nav/:team" element={<NavPages />} />
 
-      </Routes>
-    </Router>
+          <Route
+            path="/dashboardlist/:filterKey"
+            element={<DashboardPages />}
+          />
+        </Routes>
+      </Router>
     </ErrorBoundry>
   );
 }
