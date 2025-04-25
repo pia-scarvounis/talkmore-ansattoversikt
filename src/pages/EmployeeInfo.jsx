@@ -24,7 +24,7 @@ const EmployeeInfo = () => {
         </div>
 
         <div className="employee-info-notes-wrapper">
-          <Notes employeeId={id} />
+          <Notes employeeId={employeeId} />
         </div>
       </div>
     </div>

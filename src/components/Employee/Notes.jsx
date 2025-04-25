@@ -20,6 +20,7 @@ const Notes = ({ employeeId }) => {
 
   // henter state fra redux-storen
   const { notes, loading, error } = useSelector((state) => state.notes);
+  console.log("Notater i Redux store:", notes);
 
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [showAll, setShowAll] = useState(false);
@@ -33,11 +34,21 @@ const Notes = ({ employeeId }) => {
   }, [dispatch, employeeId]);
 
   // Opprett nytt notat
-  const handleAddNote = (text) => {
+  const handleAddNote = async (text) => {
     if (text.trim() !== "") {
-      dispatch(addNote({ employee_id: employeeId, note: text }));
+      try {
+        await dispatch(
+          addNote({ employee_id: employeeId, note: text })
+        ).unwrap();
+
+        await dispatch(fetchNotesForEmployee(employeeId)).unwrap();
+        setNewNote("");
+      } catch (error) {
+        console.error("Feil ved lagring av notat:", error);
+      }
     }
   };
+
   // rediger notat
 
   const handleSave = (updatedText) => {

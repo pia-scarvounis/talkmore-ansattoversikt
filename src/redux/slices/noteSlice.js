@@ -8,6 +8,7 @@ export const fetchNotesForEmployee = createAsyncThunk(
   async (employeeId) => {
     //henter ruteren vår fra backend localhost:3000
     const res = await axios.get(`http://localhost:3000/api/note/${employeeId}`);
+    console.log("Notater fra backend:", res.data);
     return res.data;
   }
 );
@@ -79,7 +80,7 @@ const noteSlice = createSlice({
 
       //Legg til notat
       .addCase(addNote.fulfilled, (state, action) => {
-        state.notes.unshift(action.payload); //Bruker unshift for å legge det først
+        state.notes.unshift(action.payload.newNote); //Bruker unshift for å legge det først
       })
 
       //endre notat

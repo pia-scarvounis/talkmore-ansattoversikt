@@ -37,9 +37,8 @@ function App() {
             path="/admin-dashboard/manage-team"
             element={<ManageTeams />}
           />
-          <Route path="/employee-info" element={<EmployeeInfo />} />
+          <Route path="/employee-info/:id" element={<EmployeeInfo />} />{" "}
           <Route path="/nav/:team" element={<NavPages />} />
-
           <Route
             path="/dashboardlist/:filterKey"
             element={<DashboardPages />}
