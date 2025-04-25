@@ -9,7 +9,8 @@ import iconKA from "../assets/icons/ka.svg";
 import iconFTE from "../assets/icons/fte.svg";
 import iconTL from "../assets/icons/tl.svg";
 
-import { fetchAvailableEmployees } from "../redux/slices/availableemployeesSlice";
+//import { fetchAvailableEmployees } from "../redux/slices/availableemployeesSlice";
+import {fetchDayOverviewEmployees} from "../redux/slices/dayOverviewEmpSlice";
 import DateSelector from "../components/UI/DateSelector";
 import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
@@ -23,9 +24,9 @@ const DashboardAdmin = () => {
   //redux 
   const dispatch = useDispatch();
   const selectedDateString = useSelector((state) => state.date.selectedDate);
-  const selectedDate = new Date(selectedDateString);
-  const {data: employees, loading } = useSelector((state) => state.availableEmployees);
-  console.log("Tilgjengelige ansatte:", employees);
+  const selectedDate = new Date(selectedDateString); 
+    const {data: employees, loading } = useSelector((state) => state.dayOverviewEmployees);
+  console.log("dagsoversikt:", employees);
 
   const rawDate = format(selectedDate, "EEEE d. MMMM yyyy", {
     locale: nb,
@@ -37,7 +38,7 @@ const DashboardAdmin = () => {
   useEffect(()=>{
 
     //sender inn valgt dato til fetchen
-    dispatch(fetchAvailableEmployees(selectedDateString));
+    dispatch(fetchDayOverviewEmployees(selectedDateString));
   },[dispatch,selectedDateString]);
 
   //sjekker at employees er et array
@@ -85,45 +86,45 @@ const DashboardAdmin = () => {
           <div className="dashboard-grid">
             <StatBox
               title="TEAMLEDERE"
-              value={getCount((e)=> e.workPosistion_title === 'Teamleder' && e.is_logged_in)}
+              value={getCount((e)=> e.workPosistion_title === 'Teamleder')}
               unit="Tilgjengelig"
               icon={iconTL}
             />
             <StatBox
               title="KS ADMIN"
-              value={getCount((e) => e.workPosistion_title === 'Admin' && e.is_logged_in)}
+              value={getCount((e) => e.workPosistion_title === 'Admin')}
               unit="Tilgjengelig"
               icon={iconKSAdmin}
             />
             <StatBox
               title="KUNDEANSVARLIG"
-              value={getCount((e) => e.workPosistion_title === 'Kundeagent' && e.is_logged_in)}
+              value={getCount((e) => e.workPosistion_title === 'Kundeagent')}
               unit="Tilgjengelig"
               icon={iconKA}
             />
 
             <StatBox
               title="TELENORANSATTE"
-              value={getCount((e) => e.form_of_employeement === 'Fast' && e.is_logged_in)}
+              value={getCount((e) => e.form_of_employeement === 'Fast')}
               unit="Tilgjengelig"
               icon={iconKA}
             />
             <StatBox
               title="INNLEID"
-              value={getCount((e) =>e.form_of_employeement === 'Innleid' && e.is_logged_in)}
+              value={getCount((e) =>e.form_of_employeement === 'Innleid')}
               unit="Tilgjengelig"
               icon={iconKA}
             />
 
             <StatBox
               title="HELTID"
-              value={getCount((e) =>e.employee_percentages === 100 && e.is_logged_in)}
+              value={getCount((e) =>e.employee_percentages === 100)}
               unit="Tilgjengelig"
               icon={iconKA}
             />
             <StatBox
               title="DELTID"
-              value={getCount((e) => e.employee_percentages < 100 && e.is_logged_in)}
+              value={getCount((e) => e.employee_percentages < 100)}
               unit="Tilgjengelig"
               icon={iconKA}
             />

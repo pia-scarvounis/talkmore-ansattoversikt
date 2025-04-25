@@ -2,7 +2,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 
 //fetch for backend url /api/dayOverviewEmployees
-export const fetchAvailableEmployees = createAsyncThunk(
+export const fetchDayOverviewEmployees = createAsyncThunk(
     'availableEmployees/fetchAvailableEmployees',
         async(selectedDate, thunkAPI) =>{
             try{
