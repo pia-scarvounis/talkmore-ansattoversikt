@@ -4,7 +4,7 @@ import searchIcon from "../../assets/icons/search.svg";
 
 const SearchField = ({
   onSearch,
-  placeholder = "Søk etter fornavn, epost, stilling, mail, permisjon",
+  placeholder = "Søk etter navn, e-post, rolle, team, permisjon",
 }) => {
   const [searchValue, setSearchValue] = useState("");
 
