@@ -1,6 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import userRoutes from './db_routes/UsersRoutes/getEmployees_routes.js';
+import employeeRoutes from './db_routes/UsersRoutes/getEmployees_routes.js';
 import noteRoutes from './db_routes/UsersRoutes/notes_routes.js';
 import availableEmployees from './db_routes/UsersRoutes/availableEmp_router.js';
 import cors from 'cors';
@@ -23,9 +23,8 @@ app.use(cookieParser());
 //rutere crud og autentisering
 
 //rutere for alle brukere av verktøyet "admin" + "teamledere" skal se eller gjøre
-
 //ruten api/employees i user routes er for å hente og vise alle ansatte
-app.use('/api/employees', userRoutes);
+app.use('/api/employees', employeeRoutes);
 //ruter for notes CRUDS
 app.use('/api/note', noteRoutes );
 //rute for å hente tilgjengelige ansatte for dagen(dato)
