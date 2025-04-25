@@ -34,15 +34,24 @@ const EmployeeListTemplate = ({
   const [filteredData, setFilteredData] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
-  // Søkelogikk basert på navn
+  // Søkelogikk 
   useEffect(() => {
     if (!data || !Array.isArray(data)) return;
 
-    const filtered = data.filter((employee) =>
-      employee.employee_name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
+    const filtered = data.filter((employee) => {
+      const term = searchTerm.toLowerCase();
+      
+      return (
+        employee.employee_name?.toLowerCase().includes(term) ||
+        employee.epost?.toLowerCase().includes(term) ||
+        employee.form_of_employeement?.toLowerCase().includes(term) ||
+        employee.workPosistion_title?.toLowerCase().includes(term) ||
+        employee.team_name?.toLowerCase().includes(term) ||
+        employee.employeeNr_Talkmore?.toString().includes(term) ||
+        employee.employeeNr_Telenor?.toString().includes(term) ||
+        (employee.is_on_leave && "permisjon".includes(term))
+      );
+    });
     setFilteredData(filtered);
   }, [searchTerm, data]);
   const visibleData = showAll ? filteredData : filteredData.slice(0, 9);
@@ -77,6 +86,12 @@ const EmployeeListTemplate = ({
  error={error}
  
 />
+{!loading && !error && visibleData.length === 0 && (
+  <p className="no-results-message">
+    Ingen ansatte matcher søket ditt.
+  </p>
+)}
+
   {/* Last flere / Vis færre knapp */}
   <div className="load-more-wrap">
   {filteredData.length > 9 && visibleData.length > 0 ? (

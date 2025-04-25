@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import NavAdmin from "../components/navigation/NavAdmin";
 import StatBox from "../components/Dashboard/StatBox";
 import EventBox from "../components/Dashboard/EventBox";
@@ -15,11 +15,9 @@ import DateSelector from "../components/UI/DateSelector";
 import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
-import SearchField from "../components/Filters/SearchField";
 import { daysInWeek } from "date-fns/constants";
 
 const DashboardAdmin = () => {
-  const [searchTerm, setSearchTerm] = useState("");
 
   //redux 
   const dispatch = useDispatch();
@@ -70,9 +68,6 @@ const DashboardAdmin = () => {
           <div className="dashboard-dategroup">
             <span className="pageContent-text">{formattedDate}</span>
             <DateSelector />
-          </div>
-          <div className="dashboard-search">
-            <SearchField onSearch={(value) => setSearchTerm(value)} />
           </div>
         </div>
       </div>
