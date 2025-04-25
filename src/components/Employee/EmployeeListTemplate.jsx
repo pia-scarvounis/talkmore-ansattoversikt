@@ -86,6 +86,12 @@ const EmployeeListTemplate = ({
  error={error}
  
 />
+{!loading && !error && visibleData.length === 0 && (
+  <p className="no-results-message">
+    Ingen ansatte matcher søket ditt.
+  </p>
+)}
+
   {/* Last flere / Vis færre knapp */}
   <div className="load-more-wrap">
   {filteredData.length > 9 && visibleData.length > 0 ? (
