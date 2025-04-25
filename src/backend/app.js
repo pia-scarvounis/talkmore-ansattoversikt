@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import employeeRoutes from './db_routes/UsersRoutes/getEmployees_routes.js';
 import noteRoutes from './db_routes/UsersRoutes/notes_routes.js';
 import availableEmployees from './db_routes/UsersRoutes/availableEmp_router.js';
-import employeeHistory from './db_routes/UsersRoutes/getEmpHistory_router';
+//import employeeHistory from './db_routes/UsersRoutes/getEmpHistory_router';
 import cors from 'cors';
 
 //importere rutere for admin og begge(teamleder og admin)
@@ -28,7 +28,7 @@ app.use('/api/note', noteRoutes );
 //rute for å hente tilgjengelige ansatte for dagen(dato)
 app.use('/api/availableemployees', availableEmployees);
 //hente og vise historikken per ansatt
-app.use('/api/employee/history', employeeHistory);
+//app.use('/api/employee/history', employeeHistory);
 
 //rutere kun for admin
 
