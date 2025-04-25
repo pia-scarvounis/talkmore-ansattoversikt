@@ -3,7 +3,7 @@ import axios from 'axios';
 
 //fetch for backend url /api/dayOverviewEmployees
 export const fetchDayOverviewEmployees = createAsyncThunk(
-    'availableEmployees/fetchAvailableEmployees',
+    'dayOverviewEmployees/fetchDayOverviewEmployees',
         async(selectedDate, thunkAPI) =>{
             try{
                 const response = await axios.get(`http://localhost:3000/api/dayOverviewEmployees?date=${selectedDate}`);
@@ -25,15 +25,15 @@ const dayOverviewEmployees = createSlice({
     reducers:{},
     extraReducers: (builder) => {
         builder
-        .addCase(fetchAvailableEmployees.pending, (state) => {
+        .addCase(fetchDayOverviewEmployees.pending, (state) => {
             state.loading = true;
             state.error = null;
           })
-          .addCase(fetchAvailableEmployees.fulfilled, (state, action) => {
+          .addCase(fetchDayOverviewEmployees.fulfilled, (state, action) => {
             state.data = action.payload;
             state.loading = false;
           })
-          .addCase(fetchAvailableEmployees.rejected, (state, action) => {
+          .addCase(fetchDayOverviewEmployees.rejected, (state, action) => {
             state.error = action.payload || 'Noe gikk galt';
             state.loading = false;
           });     

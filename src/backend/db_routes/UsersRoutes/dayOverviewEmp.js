@@ -28,14 +28,14 @@ router.get('/dayOverviewEmployees', async (req, res) =>{
                 e.epost,
                 e.birthdate,
                 e.form_of_employeement,
-                e.employee_percentage,
+                e.employee_percentages,
                 e.employeeNr_Talkmore,
                 e.employeeNr_Telenor,
                 e.end_date,
                 wp.posistion_title AS workPosistion_title,
                 t.team_name,
                 l.leave_start_date,
-                l.leave_end_date,
+                l.leave_end_date
             FROM employee e
             LEFT JOIN workPosistion wp ON e.workPosistion_id = wp.workPosistion_id
             LEFT JOIN team t ON e.team_id = t.team_id
@@ -70,7 +70,7 @@ router.get('/dayOverviewEmployees', async (req, res) =>{
             epost: row.epost,
             birthdate: row.birthdate,
             form_of_employeement: row.form_of_employeement,
-            employee_percentage: row.employee_percentage,
+            employee_percentages: row.employee_percentages,
             employeeNr_Talkmore: row.employeeNr_Talkmore,
             employeeNr_Telenor: row.employeeNr_Telenor,
             workPosistion_title: row.workPosistion_title,
