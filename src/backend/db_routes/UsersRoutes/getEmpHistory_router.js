@@ -1,5 +1,10 @@
+import { Router } from "express";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
+
+dotenv.config();
+
+const router = Router();
 
 //hente historikken til den valgte ansatte
 router.get('/:id', async (req, res) =>{
@@ -26,3 +31,5 @@ router.get('/:id', async (req, res) =>{
         res.status(500).json({error: 'kunne ikke hente historikk'});
     }
 })
+
+export default router;

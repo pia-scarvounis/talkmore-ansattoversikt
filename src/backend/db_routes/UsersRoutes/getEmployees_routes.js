@@ -139,8 +139,9 @@ router.post('/', async (req, res) => {
             employee_name, epost, phoneNr, birthdate, image_url, start_date, end_date,
             form_of_employeement, employeeNr_Talkmore, employeeNr_Telenor,
             employee_percentages, is_test, team_id, workPosistion_id,
-            team_name, workPosistion_title
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
+            team_name, workPosistion_title,
+            genesys_user_id, genesys_version, genesys_self_uri
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
             employee.name,
             employee.email,
             randomPhone,
@@ -156,7 +157,10 @@ router.post('/', async (req, res) => {
             team_id,
             workPosistion_id,
             team_name,
-            workPosistion_title
+            workPosistion_title,
+            employee.id,
+            employee.version,
+            employee.selfUri
           ]
         );
   
@@ -165,24 +169,7 @@ router.post('/', async (req, res) => {
   
         employees.push({
           ...employee,
-          dbId: result.id,
-          name: employee.name,
-          epost: employee.email,
-          phoneNr: randomPhone,
-          birthdate,
-          image_url: null,
-          start_date,
-          end_date: null,
-          form_of_employeement,
-          employeeNr_Talkmore: employeNr_TM,
-          employeeNr_Telenor: employeNr_TN,
-          employee_percentages,
-          is_test: true,
-          team_id,
-          team_name,
-          workPosistion_id,
-          workPosistion_title,
-          relative: relative || []
+          dbId: result.id
         });
       }
   
