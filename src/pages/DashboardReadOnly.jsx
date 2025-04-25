@@ -11,10 +11,8 @@ import DateSelector from "../components/UI/DateSelector";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
-import SearchField from "../components/Filters/SearchField";
 
 const DashboardReadOnly = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const selectedDate = useSelector((state) => state.date.selectedDate);
   const rawDate = format(new Date(selectedDate), "EEEE d. MMMM yyyy", {
     locale: nb,
@@ -31,9 +29,6 @@ const DashboardReadOnly = () => {
           <div className="dashboard-dategroup">
             <span className="pageContent-text">{formattedDate}</span>
             <DateSelector />
-          </div>
-          <div className="dashboard-search">
-            <SearchField onSearch={(value) => setSearchTerm(value)} />
           </div>
         </div>
       </div>
