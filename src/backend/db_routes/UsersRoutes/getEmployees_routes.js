@@ -167,8 +167,8 @@ router.post('/', async (req, res) => {
         //legge til lisenser på alle testbrukere hentet fra api genesys 
         const employee_id = result.insertId;
 
-        const[license] = await pool.query(` SELECT license_id FROM license`);
-        for(const license of license){
+        const[licenses] = await pool.query(` SELECT license_id FROM license`);
+        for(const license of licenses){
           await pool.query(`
             INSERT INTO employee_license(employee_id, license_id) 
             VALUES (?, ?)
@@ -206,21 +206,21 @@ router.get('/', async (req, res) => {
                     department.department_name,
                     workPosistion.posistion_title as workPosistion_title,
                     l.license_id,
-                    l.licence_title
+                    l.license_title
                 FROM employee
                 LEFT JOIN relative ON employee.employee_id = relative.employee_id
                 LEFT JOIN team ON employee.team_id = team.team_id
                 LEFT JOIN department ON team.department_id = department.department_id
-                LEFT JOIN workPosistion ON employee.workPosistion_id = workPosistion.workPosistion_id,
-                LEFT JOIN employee_license el ON employee.employee_id = el.employee_id,
-                LEFT JOIN license l ON el.license_id = l.licence_id
+                LEFT JOIN workPosistion ON employee.workPosistion_id = workPosistion.workPosistion_id
+                LEFT JOIN employee_license el ON employee.employee_id = el.employee_id
+                LEFT JOIN license l ON el.license_id = l.license_id
                 `);
  
                 if (rows.length === 0) {
                     return res.status(404).json({ message: 'Ingen ansatte funnet' });
                 }
  
-            // Gruppér ansatte + relatives som en array
+            // Gruppér ansatte + relatives som en array //hjlep med gpt
             const groupedEmployees = rows.reduce((acc, row) => {
                 const {
                     employee_id,
@@ -248,9 +248,9 @@ router.get('/', async (req, res) => {
 
               if(license_id && license_title){
                 //sjekker om lisens finnes og ikke får duplikater i lisenser
-                const existingLicense = acc[employee_id].license.find(l => l.license_id === license_id);
+                const existingLicense = acc[employee_id].licenses.find(l => l.license_id === license_id);
                 if(!existingLicense){
-                  acc[employee_id].license.push({
+                  acc[employee_id].licenses.push({
                     license_id,
                     license_title: license_title
                   });
