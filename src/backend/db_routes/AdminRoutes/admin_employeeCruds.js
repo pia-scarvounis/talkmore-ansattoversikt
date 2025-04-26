@@ -26,8 +26,9 @@ router.put('employee/:id', async (req, res) => {
         if(existingResult.length === 0) {
             return res.status(404).json({error: 'Ansatt ikke funnet'});
         }
+        //henter originale ansatte er de ansatte som finnes i employee tabellen /før endring
         const original = existingResult[0];
-
+        //Oppdater employee
         await pool.query(`
             UPDATE employee
             SET 
@@ -37,9 +38,62 @@ router.put('employee/:id', async (req, res) => {
                 employee_percentages = ?, team_id = ? , workPosistion_id
             WHERE employee_id = ?
         `, [
+            //Setter || denne for hvis ikke ny info er lagt inn bruk originale info å sett inn databasen
+            updatedData.employee_name || original.employee_name,
+            updatedData.epost || original.epost,
+            updatedData.epost_Telenor || original.epost_Telenor,
+            updatedData.phoneNr ||original.phoneNr,
+            updatedData.birthdate || original.birthdate,
+            updatedData.image_url || original.image_url,
+            updatedData.start_date || original.start_date,
+            updatedData.end_date || original.end_date,
+            updatedData.form_of_employeement || original.form_of_employeement,
+            updatedData.employeeNr_Talkmore || original.employeeNr_Talkmore,
+            updatedData.employeeNr_Telenor || original.employeeNr_Telenor,
+            updatedData.employee_percentages || original.employee_percentages,
+            updatedData.team_id || original.team_id,
+            updatedData.workPosistion_id || original.workPosistion_id,
+            id
+        ]);
+        //Oppdater pårørende (relative)
+        if(Array.isArray(updatedData.relative)){
+            //Fjerner tidligere relativ maks 1 pårørende per ansatt
+            await pool.query(`DELETE FROM relative WHERE employee_id = ?`,[id]);
+            for(const r of updatedData.relative){
+                await pool.query(
+                    `INSERT INTO relative (employee_id, relative_name)
+                    VALUES (?, ?)`,[id, r.relative_name]
+                );
+            }
+        }
+        //Oppdater permisjon (employeeLeave)
+        if(updatedData.leave){
+            //Fjerner tidligere permisjon hvis endringer
+            await pool.query(`DELETE FROM employeeLeave WHERE employee_id = ?`, [id]);
 
-        ])
-
+            await pool.query(
+                `INSERT INTO employeeLeave (employee_id, leave_percentage, leave_start_date, leave_end_date)
+                VALUES (?, ?, ?, ?)`
+                ,[
+                    id, 
+                    updatedData.leave.leave_percentages,
+                    updatedData.leave.leave_start_date,
+                    updatedData.leave.leave_end_date
+                ]
+            );
+        }
+        //oppdatere lisenser for ansatt
+        if(Array.isArray(updatedData.licenses)){
+            //fjerner lisenser og setter inn nye
+            await pool.query(`DELETE FROM employee_license WHERE employee_id = ?`,[id]);
+            for(const license of updatedData.licenses){
+                await pool.query(
+                    `INSERT INTO employee_license (employee_id, license_id)
+                    VALUES (?, ?)`,
+                    [id, license.license_id]
+                );
+            }
+        }
 
 
     }catch{

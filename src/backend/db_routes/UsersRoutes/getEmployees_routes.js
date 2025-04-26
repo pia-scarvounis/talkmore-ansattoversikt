@@ -220,7 +220,7 @@ router.get('/', async (req, res) => {
                     return res.status(404).json({ message: 'Ingen ansatte funnet' });
                 }
  
-            // Gruppér ansatte + relatives som en array //hjlep med gpt
+            // Gruppér ansatte + relatives + lisens + permisjon(må fikse snart) som en array //hjlep med gpt
             const groupedEmployees = rows.reduce((acc, row) => {
                 const {
                     employee_id,
