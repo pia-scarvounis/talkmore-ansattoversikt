@@ -25,7 +25,7 @@ const ProfileCards = ({ employees, loading, error }) => {
     : "blue-bg"
 }`}>
      <div className="label-main">
-      <h3>{employee.name}</h3>
+      <h3>{employee.employee_name ||employee.name}</h3>
       <p>Ansattnr (Talkmore): {employee.employeeNr_Talkmore}</p>
       <p>Ansattnr (Telenor): {employee.employeeNr_Telenor}</p>
     </div>
