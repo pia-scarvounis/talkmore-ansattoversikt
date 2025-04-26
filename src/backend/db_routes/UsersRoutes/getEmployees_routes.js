@@ -163,10 +163,19 @@ router.post('/', async (req, res) => {
             employee.selfUri
           ]
         );
-  
+
+        //legge til lisenser på alle testbrukere hentet fra api genesys 
         const employee_id = result.insertId;
-        const [relative] = await pool.query(`SELECT * FROM relative WHERE employee_id = ?`, [employee_id]);
-  
+
+        const[license] = await pool.query(` SELECT license_id FROM license`);
+        for(const license of license){
+          await pool.query(`
+            INSERT INTO employee_license(employee_id, license_id) 
+            VALUES (?, ?)
+          `, [employee_id, license.license_id]
+          );
+        }
+
         employees.push({
           ...employee,
           dbId: result.id
@@ -187,6 +196,7 @@ router.post('/', async (req, res) => {
 // router for å fetche employees fra databasen vår
 router.get('/', async (req, res) => {
     try {
+      //henter ut aly vi trenger i employee json objektet
       const [rows] = await pool.query(`
                 SELECT 
                     employee.*,
@@ -194,13 +204,16 @@ router.get('/', async (req, res) => {
                     relative.relative_name,
                     team.team_name,
                     department.department_name,
-
-                    workPosistion.posistion_title as workPosistion_title
+                    workPosistion.posistion_title as workPosistion_title,
+                    l.license_id,
+                    l.licence_title
                 FROM employee
                 LEFT JOIN relative ON employee.employee_id = relative.employee_id
                 LEFT JOIN team ON employee.team_id = team.team_id
                 LEFT JOIN department ON team.department_id = department.department_id
-                LEFT JOIN workPosistion ON employee.workPosistion_id = workPosistion.workPosistion_id
+                LEFT JOIN workPosistion ON employee.workPosistion_id = workPosistion.workPosistion_id,
+                LEFT JOIN employee_license el ON employee.employee_id = el.employee_id,
+                LEFT JOIN license l ON el.license_id = l.licence_id
                 `);
  
                 if (rows.length === 0) {
@@ -213,6 +226,8 @@ router.get('/', async (req, res) => {
                     employee_id,
                     relative_id,
                     relative_name,
+                    license_id,
+                    license_title,
                     ...employeeData
                     } = row;
  
@@ -220,7 +235,8 @@ router.get('/', async (req, res) => {
                 acc[employee_id] = {
                 employee_id,
                 ...employeeData,
-                relative: []
+                relative: [],
+                licenses: []
                 };
             }
             if (relative_id) {
@@ -229,6 +245,18 @@ router.get('/', async (req, res) => {
                   relative_name
                 });
               }
+
+              if(license_id && license_title){
+                //sjekker om lisens finnes og ikke får duplikater i lisenser
+                const existingLicense = acc[employee_id].license.find(l => l.license_id === license_id);
+                if(!existingLicense){
+                  acc[employee_id].license.push({
+                    license_id,
+                    license_title: license_title
+                  });
+                }
+              }
+              
          
               return acc;
             }, {});
