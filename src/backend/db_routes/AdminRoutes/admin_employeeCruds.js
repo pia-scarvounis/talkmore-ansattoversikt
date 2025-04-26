@@ -95,9 +95,36 @@ router.put('employee/:id', async (req, res) => {
             }
         }
 
+        //Oppdatere ansatt i api genesys hvis endring i navn eller epost
+        //genesys_user_id link mellom api og databasen
+        if(original.genesys_user_id){
+            //henter inn token
+            const accessTokenGen = await getOAuthToken();
+            apiInstance.setAccessToken(accessTokenGen);
 
-    }catch{
+            const updateUser = {
+                version: original.genesys_version,
+                name: updatedData.employee_name || original.employee_name,
+                email: updatedData.epost || original.epost
+            };
+            //variabel som holder på den oppdaterte ansatte
+            const updatedUser = await usersApi.patchUser(original.genesys_user_id, updateUser);
+            console.log(`Oppdatert i Genesys: ${original.genesys_user_id}`);
 
+            //oppdater genesys_verision id i databasen med den oppdaterte verdien i version
+            await pool.query(`
+                UPDATE employee
+                SET genesys_version = ?
+                WHERE employee_id = ?
+            `,[updatedUser.version, id]);
+        }
+        res.status(200).json({message:'Ansatt, pårørendende, permisjon og genesys oppdatert'});
+
+    }catch(err){
+        console.error('Feil ved oppdatering av ansatt:', err);
+        res.status(500).json({error: 'Kunne ikke oppdatere ansatt'});
     }
 
-})
+});
+
+export default router;
