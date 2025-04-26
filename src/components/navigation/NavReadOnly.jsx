@@ -55,7 +55,7 @@ const NavReadOnly = () => {
           </NavLink>
         </div>
 
-        <div className="section">
+        <div className="logout-section">
           <NavLink to="logout" className="nav-link main-link">
             Logg ut
           </NavLink>

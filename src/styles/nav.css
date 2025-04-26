@@ -91,3 +91,8 @@
   flex-direction: column;
   gap: 8px;
 }
+
+.logout-section {
+  margin-top: auto;
+  padding-top: 20px;
+}
