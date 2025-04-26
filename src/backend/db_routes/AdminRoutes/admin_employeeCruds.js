@@ -66,12 +66,14 @@ router.put('employee/:id', async (req, res) => {
                 );
             }
         }
-        //Oppdater permisjon (employeeLeave)
+        //Oppdater permisjon (employeeLeave) hvis finnes
+        let leaveId = null;
         if(updatedData.leave){
             //Fjerner tidligere permisjon hvis endringer
             await pool.query(`DELETE FROM employeeLeave WHERE employee_id = ?`, [id]);
 
-            await pool.query(
+
+            const [leaveResult] = await pool.query(
                 `INSERT INTO employeeLeave (employee_id, leave_percentage, leave_start_date, leave_end_date)
                 VALUES (?, ?, ?, ?)`
                 ,[
@@ -81,6 +83,14 @@ router.put('employee/:id', async (req, res) => {
                     updatedData.leave.leave_end_date
                 ]
             );
+            leaveId = leaveResult.insertId; // får ny id
+        }else{
+            //hvis ikke ny hent eksisterende
+            const [leaveResult] = await pool.query(`
+                SELECT * FROM employeeLeave WHERE employee_id = ?`, [id]);
+                if(leaveResult.length > 0){
+                    leaveId = leaveResult[0].leave_id;
+                }
         }
         //oppdatere lisenser for ansatt
         if(Array.isArray(updatedData.licenses)){
