@@ -94,6 +94,33 @@ router.put('employee/:id', async (req, res) => {
                 );
             }
         }
+        //Denne skal insert inn i changelog tabellen /historikk for ansatt
+        await pool.query(`
+            INSERT INTO changeLog (
+                employee_id, admin_id, 
+                employeeNr_Talkmore, employeeNr_Telenor, 
+                department_id, team_id, workPosistion_id,
+                form_of_employement, employee_percentages,
+                start_date, end_date,
+                leave_id, leave_percentages, leave_start_date, leave_end_date
+                )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?)
+        `,[
+            id,
+            amdinId,
+            updatedData.employeeNr_Talkmore || original.employeeNr_Talkmore,
+            updatedData.employeeNr_Telenor || original.employeeNr_Telenor,
+            updatedData.department_id || original.department_id,
+            updatedData.team_id || original.team_id,
+            updatedData.workPosistion_id || original.workPosistion_id,
+            updatedData.employee_percentages || original.employee_percentages,
+            updatedData.start_date || original.start_date,
+            updatedData.end_date || original.end_date,
+            updatedData.leave_id || original.leave_id,
+            updatedData.leave_percentages || original.leave_percentages,
+            updatedData.leave_start_date || original.leave_start_date,
+            updatedData.leave_end_date || original.leave_end_date
+        ]);
 
         //Oppdatere ansatt i api genesys hvis endring i navn eller epost
         //genesys_user_id link mellom api og databasen
