@@ -1,14 +1,20 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEmployees } from '../../redux/slices/employeeSlice';
 import "../../styles/profilecards.css"
 import profileImage from "../../assets/images/default-img.png"
 
 const ProfileCards = ({ employees, loading, error }) => {
+  const navigate = useNavigate();
+
     if (!Array.isArray(employees)) return <p>Ingen ansatte å vise</p>;
 
     if (loading) return <p>Laster inn ansatte...</p>;
     if (error) return <p>Feil: {error}</p>;
+
+    const handleClick = (employeeId) => {
+      navigate(`/employee-info/${employeeId}`);}
   return (
     <>
     {employees.map((employee) =>(
@@ -23,7 +29,9 @@ const ProfileCards = ({ employees, loading, error }) => {
   employee.workPosistion_title === "Admin" || employee.workPosistion_title === "Teamleder"
     ? "pink-bg"
     : "blue-bg"
-}`}>
+}`}
+onClick={() => handleClick(employee.employee_id)} //  gjør kortene klikkbare
+>
      <div className="label-main">
       <h3>{employee.employee_name ||employee.name}</h3>
       <p>Ansattnr (Talkmore): {employee.employeeNr_Talkmore}</p>
