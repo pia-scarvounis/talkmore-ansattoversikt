@@ -12,7 +12,7 @@ export const fetchEmployees = createAsyncThunk(
 
         try{
             const response = await axios.get('http://localhost:3000/api/employees');
-            console.log('Respons fra API:', response.data);
+            console.log('Respons fra API fetchEmployee:', response.data);
             return response.data;
         }catch{
             return rejectWithValue(error.response.data);
