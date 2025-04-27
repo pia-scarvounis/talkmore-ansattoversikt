@@ -5,6 +5,7 @@ import noteRoutes from './db_routes/UsersRoutes/notes_routes.js';
 import dayOverviewEmployees from './db_routes/UsersRoutes/dayOverviewEmp.js';
 import availableEmployees from './db_routes/UsersRoutes/availableEmp_router.js';
 import employeeHistory from './db_routes/UsersRoutes/getEmpHistory_router.js';
+import adminEmployeeCruds from './db_routes/AdminRoutes/admin_employeeCruds';
 import cors from 'cors';
 
 //importere rutere for admin og begge(teamleder og admin)
@@ -24,14 +25,19 @@ app.use(cookieParser());
 
 //rutere for å hente og vise alle ansatte
 app.use('/api/employees', employeeRoutes);
-//rutere for admin, post, put, delete employees
+
+//rutere for admin: post, put, delete employees
+app.use('/api/employee', adminEmployeeCruds);
 
 //ruter for notes CRUDS
 app.use('/api/note', noteRoutes );
+
 //Rute for hente dagoversikt ansatte som ikke har permisjon eller har sluttet + tot FTE
 app.use('/api', dayOverviewEmployees);
+
 //rute for å hente tilgjengelige ansatte for dagen som er logget inn(ikke bruk nå)(dato)
 app.use('/api/availableemployees', availableEmployees);
+
 //hente og vise historikken per ansatt
 app.use('/api/employee/history', employeeHistory);
 

@@ -14,7 +14,7 @@ const apiInstance = platformClient.ApiClient.instance;
 
 //Ruter for å endre en ansatt og sette endringene og verdiene i historikken til den endrede ansatte
 //Kilder til å endre ansatt i api genesys også er hentet fra GPT
-router.put('employee/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
     const { id } = req.params;
     //ny info fra body 
     const updatedData = req.body;
