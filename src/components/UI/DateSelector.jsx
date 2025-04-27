@@ -9,7 +9,6 @@ import { registerLocale } from "react-datepicker";
 import { nb } from "date-fns/locale";
 import { format } from "date-fns";
 
-
 registerLocale("nb", nb);
 const DateSelector = () => {
   const dispatch = useDispatch();
@@ -31,12 +30,12 @@ const DateSelector = () => {
       <DatePicker
         ref={datepickerRef}
         selected={new Date(selectedDate)}
-        onChange={(date) => dispatch(setDate(date))}
+        onChange={(date) => dispatch(setDate(date.toISOString().split("T")[0]))}
         dateFormat="dd.MM.yyyy"
         locale="nb"
         customInput={<span />}
         wrapperClassName="datepicker-wrapper"
-        />
+      />
       <img
         src={calendarIcon}
         alt="Kalenderikon"

@@ -3,11 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 const dateSlice = createSlice({
   name: "date",
   initialState: {
-    selectedDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD,
+    selectedDate: new Date().toISOString().split("T")[0], // YYYY-MM-DD,
   },
   reducers: {
     setDate: (state, action) => {
-      state.selectedDate = action.payload;
+      if (action.payload instanceof Date) {
+        state.selectedDate = action.payload.toISOString().split("T")[0];
+      } else {
+        state.selectedDate = action.payload;
+      }
     },
   },
 });

@@ -1,57 +1,232 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import "../../styles/optionSection.css";
 
-const FilterOption = () => {
+const FilterOption = ({ employees, onFilterChange }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Lokale state for å lagre unike alternativer
+  const [departments, setDepartments] = useState([]);
+  const [positions, setPositions] = useState([]);
+  const [percentages, setPercentages] = useState([]);
+
+  // State for å lagre brukerens filtervalg
+  const [filters, setFilters] = useState({
+    formOfEmployment: "", // Fast/Innleid
+    position: "", // Stilling
+    percentage: "", // Prosent
+    department: "", // Avdeling
+    fullTime: false, // Heltid checkbox
+    partTime: false, // Deltid checkbox
+  });
+
+  // Når komponenten laster: hent filtervalg fra URL
+  useEffect(() => {
+    const initialFilters = {
+      formOfEmployment: searchParams.get("form") || "",
+      position: searchParams.get("position") || "",
+      percentage: searchParams.get("percentage") || "",
+      department: searchParams.get("department") || "",
+      fullTime: searchParams.get("fullTime") === "true",
+      partTime: searchParams.get("partTime") === "true",
+    };
+    setFilters(initialFilters);
+  }, []); // <-- Kun en gang
+
+  useEffect(() => {
+    if (employees.length > 0) {
+      const uniqueDepartments = [
+        ...new Set(employees.map((emp) => emp.department_name)),
+      ].filter(Boolean);
+      const uniquePositions = [
+        ...new Set(employees.map((emp) => emp.workPosistion_title)),
+      ].filter(Boolean);
+      const uniquePercentages = [
+        ...new Set(employees.map((emp) => emp.employee_percentages)),
+      ]
+        .filter(Boolean)
+        .sort((a, b) => b - a);
+
+      setDepartments(uniqueDepartments);
+      setPositions(uniquePositions);
+      setPercentages(uniquePercentages);
+    }
+  }, [employees]);
+
+  // Når filtrene endres, send dem tilbake til EmployeeListTemplate
+  useEffect(() => {
+    onFilterChange(filters);
+
+    // Oppdater URL med de valgte filtrene
+    const newParams = new URLSearchParams();
+
+    if (filters.formOfEmployment)
+      newParams.set("form", filters.formOfEmployment);
+    if (filters.position) newParams.set("position", filters.position);
+    if (filters.percentage) newParams.set("percentage", filters.percentage);
+    if (filters.department) newParams.set("department", filters.department);
+    if (filters.fullTime) newParams.set("fullTime", "true");
+    if (filters.partTime) newParams.set("partTime", "true");
+
+    setSearchParams(newParams);
+  }, [filters, onFilterChange]);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  // Nullstill alle filtre
+  const resetFilters = () => {
+    // Nullstill valgt filter i state
+    setFilters({
+      formOfEmployment: "",
+      position: "",
+      percentage: "",
+      department: "",
+      fullTime: false,
+      partTime: false,
+    });
+
+    // Nullstill URL-parametre også
+    setSearchParams({});
+  };
+
+  // Funksjon for å filtrere ansatte basert på valgt filter
+  const getFilteredEmployees = () => {
+    return employees.filter((emp) => {
+      const matchesForm = filters.formOfEmployment
+        ? emp.form_of_employeement === filters.formOfEmployment
+        : true;
+
+      const matchesPosition = filters.position
+        ? emp.workPosistion_title === filters.position
+        : true;
+
+      const matchesPercentage = filters.percentage
+        ? String(emp.employee_percentages) === filters.percentage
+        : true;
+
+      const matchesDepartment = filters.department
+        ? emp.department_name === filters.department
+        : true;
+
+      const matchesFullTime = filters.fullTime
+        ? emp.employee_percentages === 100
+        : true;
+
+      const matchesPartTime = filters.partTime
+        ? emp.employee_percentages < 100
+        : true;
+
+      return (
+        matchesForm &&
+        matchesPosition &&
+        matchesPercentage &&
+        matchesDepartment &&
+        matchesFullTime &&
+        matchesPartTime
+      );
+    });
+  };
+
+  // Sjekk om noen filtervalg er aktivt
+  const isAnyFilterActive = () => {
+    return (
+      filters.formOfEmployment ||
+      filters.position ||
+      filters.percentage ||
+      filters.department ||
+      filters.fullTime ||
+      filters.partTime
+    );
+  };
+
   return (
-    /** Filter option og select box med dummydata*/
     <div className="content-container">
       <div className="filter-wrapper">
         <div className="select-group">
-          {/* Dropdown-rad */}
           <select
-            defaultValue="Fast/Innleid"
-            className="options-section" /**value={filters.fixedOrHired} onChange={handleChange}**/
+            name="formOfEmployment"
+            value={filters.formOfEmployment}
+            onChange={handleChange}
+            className="options-section"
           >
-            <option value="">Fast eller innleid</option>
-            <option value="fixed">Fast</option>
-            <option value="hired">Innleid</option>
+            <option value="">Fast eller Innleid</option>
+            <option value="Fast">Fast</option>
+            <option value="Innleid">Innleid</option>
           </select>
+
           <select
-            defaultValue="Stillingstittel"
-            className="options-section" /**value={filters.fixedOrHired} onChange={handleChange}**/
+            name="position"
+            value={filters.position}
+            onChange={handleChange}
+            className="options-section"
           >
             <option value="">Stillingstittel</option>
-            <option value="KA">KA</option>
-            <option value="TeamLeader">Teamleder</option>
-            <option value="Admin">Admin</option>
+            {positions.map((position, index) => (
+              <option key={index} value={position}>
+                {position}
+              </option>
+            ))}
           </select>
+
           <select
-            defaultValue="Permisjon %"
-            className="options-section" /**value={filters.fixedOrHired} onChange={handleChange}**/
+            name="percentage"
+            value={filters.percentage}
+            onChange={handleChange}
+            className="options-section"
           >
             <option value="">Velg %</option>
-            <option value="100%">100%</option>
-            <option value="90%">90%</option>
-            <option value="80%">80%</option>
-            <option value="70%">70%</option>
-            <option value="60%">60%</option>
-            <option value="50%">50%</option>
-            <option value="40%">40%</option>
-            <option value="30%">30%</option>
-            <option value="20%">20%</option>
-            <option value="10%">10%</option>
+            {percentages.map((percentage, index) => (
+              <option key={index} value={percentage}>
+                {percentage}%
+              </option>
+            ))}
           </select>
-        </div>
 
-        {/* Checkbox-rad */}
+          <select
+            name="department"
+            value={filters.department}
+            onChange={handleChange}
+            className="options-section"
+          >
+            <option value="">Avdeling</option>
+            {departments.map((department, index) => (
+              <option key={index} value={department}>
+                {department}
+              </option>
+            ))}
+          </select>
+          {isAnyFilterActive() && (
+            <button onClick={resetFilters} className="reset-filter-button">
+              Nullstill filter
+            </button>
+          )}
+        </div>
 
         <div className="checkbox-group">
           <label>
-            <input type="checkbox" name="Heltid" className="checkbox" />
+            <input
+              type="checkbox"
+              name="fullTime"
+              checked={filters.fullTime}
+              onChange={handleChange}
+              className="checkbox"
+            />
             Heltid
           </label>
           <label>
-            <input type="checkbox" name="Deltid" className="checkbox" />
+            <input
+              type="checkbox"
+              name="partTime"
+              checked={filters.partTime}
+              onChange={handleChange}
+              className="checkbox"
+            />
             Deltid
           </label>
         </div>
