@@ -65,7 +65,7 @@ const EventBox = () => {
       {birthdayEmployees.length > 0 ? (
         birthdayEmployees.map((emp) => (
           <div key={emp.employee_id} className="entry">
-            <span>🎂 {emp.employee_name} har bursdag i dag</span>
+            <span>🎂 {emp.employee_name}</span>
           </div>
         ))
       ) : (
@@ -82,8 +82,7 @@ const EventBox = () => {
           return (
             <div key={emp.employee_id} className="entry">
               <span>
-                🎉
-                {emp.employee_name} har {years}-års jubileum i dag
+                🎉 {emp.employee_name} - {years} år
               </span>
             </div>
           );
