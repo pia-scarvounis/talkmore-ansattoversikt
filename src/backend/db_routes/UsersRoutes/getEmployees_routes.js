@@ -175,6 +175,24 @@ router.post('/', async (req, res) => {
           `, [employee_id, license.license_id]
           );
         }
+        //Admin og Teamledere blir satt inn i userOfTool tabellen
+        if(workPosistion_title === 'Admin' || workPosistion_title === 'Teamleder'){
+          const role = workPosistion_title === 'Admin' ? 'Admin' : 'Teamleder';
+
+          await pool.query(`
+            INSERT INTO userOfTool (roles,username,password_hash, active, is_test, employee_id)
+            VALUES (?, ?, ?, ?, ?, ?)`
+            , [
+              role,
+              employee.email,
+              //dette passordet må justeres senere
+              'testHashPassord',
+              true,
+              true,
+              result.insertId
+            ]);
+
+        }
 
         employees.push({
           ...employee,

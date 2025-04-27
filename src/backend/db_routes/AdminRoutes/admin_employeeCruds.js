@@ -19,7 +19,7 @@ router.put('/:id', async (req, res) => {
     const { id } = req.params;
     //ny info fra body 
     const updatedData = req.body;
-    const amdinId = req.user?.user_id || 7 //hente fra middleware senere men får nå henter admin id fra databasen employee_id 7 er admin
+    const amdinId = req.user?.user_id || 10 //hente fra middleware senere men får nå henter admin id fra databasen employee_id 7 er admin
     
     const formatDate = (date) => {
         if (!date) return null;
@@ -34,6 +34,9 @@ router.put('/:id', async (req, res) => {
         }
         //henter originale ansatte er de ansatte som finnes i employee tabellen /før endring
         const original = existingResult[0];
+        //Sjekk epost så man ikke får duplikat i endringen eller om epost ikke er endret
+        const newEpost = updatedData.epost || original.epost;
+        const originalEpost = original.epost;
         //Oppdater employee
         await pool.query(`
             UPDATE employee
