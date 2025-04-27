@@ -32,11 +32,23 @@ router.put('/:id', async (req, res) => {
         if(existingResult.length === 0) {
             return res.status(404).json({error: 'Ansatt ikke funnet'});
         }
-        //henter originale ansatte er de ansatte som finnes i employee tabellen /før endring
+        //henter originale ansatte er de ansatte som finnes i employee tabellen /før endring 
+        //Hvis ikke epost blir endret
         const original = existingResult[0];
+
         //Sjekk epost så man ikke får duplikat i endringen eller om epost ikke er endret
-        const newEpost = updatedData.epost || original.epost;
-        const originalEpost = original.epost;
+        const newEpost = (updatedData.epost || original.epost || '').toLowerCase();
+        const originalEpost = (original.epost || '').trim().toLowerCase();
+        if(newEpost !== originalEpost){
+            const [emailCheck] = await pool.query(
+                `SELECT employee_id FROM employee WHERE epost = ? AND employee_id != ?`,
+                [newEpost, id]
+            );
+
+            if(emailCheck.length > 0){
+                return res.status(400).json({error: 'Eposten er allerede i bruk av en annen ansatt'});
+            }
+        }
         //Oppdater employee
         await pool.query(`
             UPDATE employee
