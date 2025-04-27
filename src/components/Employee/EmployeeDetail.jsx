@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import defaultImg from "../../assets/images/default-img.png";
 import "../../styles/EmployeeInfo.css";
+import "../../styles/profilecards.css";
 import { format } from "date-fns";
 
 const EmployeeDetail = ({ employeeId }) => {
@@ -26,9 +27,17 @@ const EmployeeDetail = ({ employeeId }) => {
 
   return (
     <div className="employee-detail-container">
-      <div className="employee-detail-card">
+      <div className={`employee-detail-card ${
+  employee.workPosistion_title === "Admin" || employee.workPosistion_title === "Teamleder"
+    ? "pink-border"
+    : "blue-border"
+}`}>
         {/* Venstre seksjon */}
-        <div className="employee-info">
+        <div className={`employee-info ${
+  employee.workPosistion_title === "Admin" || employee.workPosistion_title === "Teamleder"
+    ? "pink-bg"
+    : "blue-bg"
+}`}>
           <div className="employee-info-inner">
             <div className="employee-info-text">
               <h2>{employee.employee_name}</h2>
@@ -52,12 +61,12 @@ const EmployeeDetail = ({ employeeId }) => {
             </p>
             <p>
               <strong>Telefon:</strong>{" "}
-              {employee.phoneNr ? employee.phoneNr : "Ikke oppgitt"}
+              {employee.phoneNr ? employee.phoneNr : "-"}
             </p>
 
             <p>
               <strong>E-post:</strong>{" "}
-              {employee.epost ? employee.epost : "Ikke oppgitt"}
+              {employee.epost ? employee.epost : "-"}
             </p>
 
             {employee.epost_Telenor && (
@@ -76,27 +85,27 @@ const EmployeeDetail = ({ employeeId }) => {
               <strong>Startdato:</strong>{" "}
               {employee.start_date
                 ? formatDate(employee.start_date)
-                : "Ikke oppgitt"}
+                : "-"}
             </p>
             <p>
               <strong>Sluttdato:</strong>{" "}
               {employee.end_date
                 ? formatDate(employee.end_date)
-                : "Ikke oppgitt"}
+                : "-"}
             </p>
             <p>
-              <strong>Fast/Inleid:</strong> {employee.form_of_employeement || "Ikke oppgitt"}
+              <strong>Fast/Inleid:</strong> {employee.form_of_employeement || "-"}
             </p>
             <p>
-              <strong>Stilling:</strong> {employee.workPosistion_title || "Ikke oppgitt"}
+              <strong>Stilling:</strong> {employee.workPosistion_title || "-"}
             </p>
             <p>
-              <strong>Team:</strong> {employee.team_name || "Ikke oppgitt"}
+              <strong>Team:</strong> {employee.team_name || "-"}
             </p>
             <p>
               <strong>Stillingsprosent:</strong> {employee.employee_percentages !== undefined
                 ? `${employee.employee_percentages} %`
-                : "Ikke oppgitt"}
+                : "-"}
             </p>
             <p>
               <strong>Permisjon:</strong>{" "}
@@ -111,27 +120,26 @@ const EmployeeDetail = ({ employeeId }) => {
           <div className="employee-emergency-inner">
             <h4><u>Nærmeste pårørende</u></h4>
             <p>
-              <strong>Navn pårørende:</strong> {relative?.relative_name || "Ikke oppgitt"}
+              <strong>Navn pårørende:</strong> {relative?.relative_name || "-"}
             </p>
             <p>
-              <strong>Telefon pårørende:</strong> {relative?.phone_number || "Ikke oppgitt"}
+              <strong>Telefon pårørende:</strong> {relative?.phone_number || "-"}
             </p>
 
             <h4><u>Tilganger</u></h4>
-            <div className="access-checkboxes">
-              <label>
-                <input type="checkbox" />
-                Eks 3
-              </label>
-              <label>
-                <input type="checkbox" />
-                Word
-              </label>
-              <label>
-                <input type="checkbox" />
-                Eks 2
-              </label>
-            </div>
+            {employee.licenses && employee.licenses.length > 0 ? (
+  <div className="access-checkboxes">
+    {employee.licenses.map((license) => (
+      <label key={license.license_id}>
+        <input type="checkbox" checked readOnly />
+        {license.license_title}
+      </label>
+    ))}
+  </div>
+) : (
+  <p>Ingen tilganger registrert</p>
+)}
+            
           </div>
         </div>
       </div>
