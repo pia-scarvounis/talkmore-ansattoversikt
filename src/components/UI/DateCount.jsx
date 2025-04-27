@@ -10,9 +10,11 @@ const DateCount = ({ count, hideDate = false  }) => {
     locale: nb,
   });
 
+  const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
   return (
     <div className="date-count">
-        {!hideDate && <span className="date-text">{formattedDate}</span>}
+        {!hideDate && <span className="date-text">{capitalizedDate}</span>}
       <span className="count-text">Totalt: {count} ansatte</span>
     </div>
   );
