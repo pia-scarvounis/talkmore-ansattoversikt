@@ -36,9 +36,19 @@ router.put('/:id', async (req, res) => {
         //Hvis ikke epost blir endret
         const original = existingResult[0];
 
+        //fikse dynamisk oppdatering
+        const fields = [];
+        const values = [];
+
+        if (updatedData.employee_name && updatedData.employee_name !== original.employee_name) {
+            fields.push('employee_name = ?');
+            values.push(updatedData.employee_name);
+          }
+        
         //Sjekk epost så man ikke får duplikat i endringen eller om epost ikke er endret
         const newEpost = (updatedData.epost || original.epost || '').toLowerCase();
         const originalEpost = (original.epost || '').trim().toLowerCase();
+
         if(newEpost !== originalEpost){
             const [emailCheck] = await pool.query(
                 `SELECT employee_id FROM employee WHERE epost = ? AND employee_id != ?`,
@@ -48,7 +58,81 @@ router.put('/:id', async (req, res) => {
             if(emailCheck.length > 0){
                 return res.status(400).json({error: 'Eposten er allerede i bruk av en annen ansatt'});
             }
+            fields.push('epost = ?');
+            values.push(newEpost);
         }
+        if (updatedData.epost_Telenor !== original.epost_Telenor) {
+            fields.push('epost_Telenor = ?');
+            values.push(updatedData.epost_Telenor);
+          }
+      
+          if (updatedData.phoneNr !== original.phoneNr) {
+            fields.push('phoneNr = ?');
+            values.push(updatedData.phoneNr);
+          }
+      
+          if (updatedData.birthdate !== original.birthdate) {
+            fields.push('birthdate = ?');
+            values.push(formatDate(updatedData.birthdate));
+          }
+      
+          if (updatedData.image_url !== original.image_url) {
+            fields.push('image_url = ?');
+            values.push(updatedData.image_url);
+          }
+      
+          if (updatedData.start_date !== original.start_date) {
+            fields.push('start_date = ?');
+            values.push(formatDate(updatedData.start_date));
+          }
+      
+          if (updatedData.end_date !== original.end_date) {
+            fields.push('end_date = ?');
+            values.push(updatedData.end_date ? formatDate(updatedData.end_date) : null);
+          }
+      
+          if (updatedData.form_of_employeement !== original.form_of_employeement) {
+            fields.push('form_of_employeement = ?');
+            values.push(updatedData.form_of_employeement);
+          }
+      
+          if (updatedData.employeeNr_Talkmore !== original.employeeNr_Talkmore) {
+            fields.push('employeeNr_Talkmore = ?');
+            values.push(updatedData.employeeNr_Talkmore);
+          }
+      
+          if (updatedData.employeeNr_Telenor !== original.employeeNr_Telenor) {
+            fields.push('employeeNr_Telenor = ?');
+            values.push(updatedData.employeeNr_Telenor);
+          }
+      
+          if (updatedData.employee_percentages !== original.employee_percentages) {
+            fields.push('employee_percentages = ?');
+            values.push(updatedData.employee_percentages);
+          }
+      
+          if (updatedData.team_id !== original.team_id) {
+            fields.push('team_id = ?');
+            values.push(updatedData.team_id);
+          }
+      
+          if (updatedData.workPosistion_id !== original.workPosistion_id) {
+            fields.push('workPosistion_id = ?');
+            values.push(updatedData.workPosistion_id);
+          }
+          
+          if(fields.length > 0){
+            const sql =
+                `UPDATE employee
+                SET ${fields.join(', ')}
+                WHERE employee_id = ?`;
+                
+                values.push(id);
+                await pool.query(sql, values);
+                console.log('Ansatt oppdatert');
+          }else{
+            console.log('Ingen endringer i employee')
+          }
         //Oppdater employee
         await pool.query(`
             UPDATE employee
