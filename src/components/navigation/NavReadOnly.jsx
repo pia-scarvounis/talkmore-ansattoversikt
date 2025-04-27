@@ -6,6 +6,7 @@ import "../../styles/nav.css";
 const NavReadOnly = () => {
   return (
     <div className="sidebar">
+      <div className="sidebar-content">
       <div className="logo-container">
         <img src={logo} alt="Talkmore logo" className="logo" />
       </div>
@@ -54,12 +55,13 @@ const NavReadOnly = () => {
           </NavLink>
         </div>
 
-        <div className="section">
+        <div className="logout-section">
           <NavLink to="logout" className="nav-link main-link">
             Logg ut
           </NavLink>
         </div>
       </nav>
+      </div>
     </div>
   );
 };

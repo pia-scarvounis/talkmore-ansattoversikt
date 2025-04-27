@@ -6,17 +6,20 @@ import "../../styles/nav.css";
 const NavAdmin = () => {
   return (
     <div className="sidebar">
+      <div className="sidebar-content">
       <div className="logo-container">
         <img src={logo} alt="Talkmore logo" className="logo" />
       </div>
 
       <nav className="nav">
+        <div className="section">
         <NavLink to="/admin-dashboard" className="nav-link main-link">
           Dashboard
-        </NavLink>
+        </NavLink></div>
+        <div className="section">
         <NavLink to="/nav/alleansatte" className="nav-link main-link">
           Alle Ansatte
-        </NavLink>
+        </NavLink></div>
 
         <div className="section">
           <NavLink to="/nav/privat" className="nav-link main-link">
@@ -56,6 +59,12 @@ const NavAdmin = () => {
           </NavLink>
         </div>
 
+
+        <div className="section">
+          <NavLink to="/register" className="nav-link main-link">
+            Registrer ansatt
+          </NavLink>
+        </div>
         <div className="section">
           <NavLink
             to="/admin-dashboard/manage-team"
@@ -67,8 +76,12 @@ const NavAdmin = () => {
         </div>
 
         <div className="section">
-          <NavLink to="/register" className="nav-link main-link">
-            Registrer ansatt
+          <NavLink
+            to="/admin-dashboard/manage-systems"
+            className="nav-link main-link"
+          >
+            {" "}
+            Administrer systemer
           </NavLink>
         </div>
         <div className="section">
@@ -77,6 +90,7 @@ const NavAdmin = () => {
           </NavLink>
         </div>
       </nav>
+      </div>
     </div>
   );
 };
