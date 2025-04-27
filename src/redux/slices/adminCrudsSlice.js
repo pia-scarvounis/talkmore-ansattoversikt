@@ -47,7 +47,7 @@ const updateEmployeeSlice = createSlice({
                     state.success = true;
                     state.error = null;
                 })
-                addCase(updateEmployee.rejected, (state, action) =>{
+                .addCase(updateEmployee.rejected, (state, action) =>{
                     state.loading = false;
                     state.success = false;
                     state.error = action.payload || 'Oppdatering feilet';
