@@ -8,7 +8,7 @@ const EditNotePopup = ({ note, onClose, onSave }) => {
 
   useEffect(() => {
     if (note) {
-      setText(note.text);
+      setText(note.note);
     }
   }, [note]);
 
@@ -41,5 +41,3 @@ const EditNotePopup = ({ note, onClose, onSave }) => {
 };
 
 export default EditNotePopup;
-
-

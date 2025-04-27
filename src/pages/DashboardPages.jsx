@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAvailableEmployees } from "../redux/slices/availableemployeesSlice";
+import { fetchDayOverviewEmployees } from "../redux/slices/dayOverviewEmpSlice";
 import EmployeeListTemplate from "../components/Employee/EmployeeListTemplate";
 
 const DashboardPages = () => {
@@ -9,11 +9,11 @@ const DashboardPages = () => {
   const dispatch = useDispatch();
 
   const selectedDate = useSelector((state) => state.date.selectedDate);
-  const { data: employees, loading, error } = useSelector((state) => state.availableEmployees);
+  const { data: employees, loading, error } = useSelector((state) => state.dayOverviewEmployees);
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchAvailableEmployees(selectedDate));
+    dispatch(fetchDayOverviewEmployees(selectedDate));
   }, [dispatch, selectedDate]);
 
   useEffect(() => {
@@ -23,25 +23,25 @@ const DashboardPages = () => {
 
     switch (filterKey) {
       case "teamleder":
-        result = employees.filter((e) => e && e.workPosistion_title === "Teamleder" && e.is_logged_in);
+        result = employees.filter((e) => e && e.workPosistion_title === "Teamleder");
         break;
       case "admin":
-        result = employees.filter((e) => e && e.workPosistion_title === "Admin" && e.is_logged_in);
+        result = employees.filter((e) => e && e.workPosistion_title === "Admin");
         break;
       case "kundeagent":
-        result = employees.filter((e) => e && e.workPosistion_title === "Kundeagent" && e.is_logged_in);
+        result = employees.filter((e) => e && e.workPosistion_title === "Kundeagent");
         break;
       case "fast":
-        result = employees.filter((e) => e && e.form_of_employeement === "Fast" && e.is_logged_in);
+        result = employees.filter((e) => e && e.form_of_employeement === "Fast");
         break;
       case "innleid":
-        result = employees.filter((e) => e && e.form_of_employeement === "Innleid" && e.is_logged_in);
+        result = employees.filter((e) => e && e.form_of_employeement === "Innleid");
         break;
       case "heltid":
-        result = employees.filter((e) => e && e.employee_percentages === 100 && e.is_logged_in);
+        result = employees.filter((e) => e && e.employee_percentages === 100);
         break;
       case "deltid":
-        result = employees.filter((e) => e && e.employee_percentages < 100 && e.is_logged_in);
+        result = employees.filter((e) => e && e.employee_percentages < 100);
         break;
       default:
         result = [];

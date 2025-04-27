@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import GreenButton from "../UI/GreenButton";
-import "../../styles/notes.css"; 
+import "../../styles/notes.css";
 
 const AddNote = ({ onAdd }) => {
   const [newNote, setNewNote] = useState("");
@@ -13,9 +13,8 @@ const AddNote = ({ onAdd }) => {
   };
 
   return (
-    <div className="add-note">
-     <h2 className="notes-title">Opprett notat for ansatt</h2>
-
+    <div className="add-note-column">
+      <h3 className="add-note-title">Opprett notat for ansatt</h3>
 
       <textarea
         placeholder="Skriv nytt notat her..."
@@ -24,7 +23,7 @@ const AddNote = ({ onAdd }) => {
         className="add-note-textarea"
       />
 
-      <div className="add-note-button">
+      <div className="note-actions">
         <GreenButton text="Lagre" onClick={handleAdd} />
       </div>
     </div>
