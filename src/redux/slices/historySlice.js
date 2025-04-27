@@ -1,0 +1,53 @@
+import {createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+//SLICE FOR HISTORIKK
+// Historikk for en ansatt
+
+//async THUNK som skal returnere en promise og håndtere asynkrone handlinger/fetch
+//https://redux.js.org/tutorials/fundamentals/part-6-async-logic
+
+//fetch med å hente historikken til valgt ansatt (:id)
+export const fetchEmployeeHistory = createAsyncThunk(
+    'employeeHistory/fetchEmployeeHistory',
+        async(_,{rejectWithValue}) => {
+
+            try{
+                const respone = await axios.get('http://localhost:3000/api/employee/history/:id');
+                console.log('Response fra Api employeeHistoryGet:', respone.data);
+
+            }catch{
+                return rejectWithValue(error.respone.data);
+            }
+        }
+);
+
+const employeeHistorySlice = createSlice({
+    name: 'employeeHistory',
+    initialState: {
+        data:[],
+        loading: false,
+        error: null
+    },
+    reducers:{},
+    extraReducers: (builder) => {
+        builder
+            //fetch loader
+            .addCase(fetchEmployeeHistory.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            //fetch suksess
+            .addCase(fetchEmployeeHistory.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = action.payload;
+            })
+            //fetch failed
+            .addCase(fetchEmployeeHistory.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            });
+    }
+});
+
+export default employeeHistorySlice.reducer;
