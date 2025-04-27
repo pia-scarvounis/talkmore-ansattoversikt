@@ -5,7 +5,7 @@ import noteRoutes from './db_routes/UsersRoutes/notes_routes.js';
 import dayOverviewEmployees from './db_routes/UsersRoutes/dayOverviewEmp.js';
 import availableEmployees from './db_routes/UsersRoutes/availableEmp_router.js';
 import employeeHistory from './db_routes/UsersRoutes/getEmpHistory_router.js';
-import adminEmployeeCruds from './db_routes/AdminRoutes/admin_employeeCruds';
+import adminEmployeeCruds from './db_routes/AdminRoutes/admin_employeeCruds.js';
 import cors from 'cors';
 
 //importere rutere for admin og begge(teamleder og admin)

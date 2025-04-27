@@ -8,6 +8,7 @@ import platformClient from 'purecloud-platform-client-v2';
 import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
 
 const router = Router();
+dotenv.config();
 
 const usersApi = new platformClient.UsersApi();
 const apiInstance = platformClient.ApiClient.instance;
