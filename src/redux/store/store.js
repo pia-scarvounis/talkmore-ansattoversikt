@@ -5,6 +5,7 @@ import noteReducer from "../slices/noteSlice";
 import availableEmployeesReducer from "../slices/availableemployeesSlice";
 import dayOverviewEmployeesReducer from '../slices/dayOverviewEmpSlice';
 import employeeHistoryReducer from '../slices/historySlice'
+
 export const store = configureStore({
   reducer: {
     date: dateReducer,
