@@ -20,7 +20,12 @@ router.put('/:id', async (req, res) => {
     //ny info fra body 
     const updatedData = req.body;
     const amdinId = req.user?.user_id || 7 //hente fra middleware senere men får nå henter admin id fra databasen employee_id 7 er admin
-
+    
+    const formatDate = (date) => {
+        if (!date) return null;
+        return new Date(date).toISOString().split('T')[0];
+      };
+      
     try{
 
         const[existingResult] = await pool.query(`SELECT * FROM employee WHERE employee_id = ?`,[id]);
@@ -36,7 +41,7 @@ router.put('/:id', async (req, res) => {
                 employee_name = ?, epost = ?, epost_Telenor = ?, phoneNr = ?, birthdate = ?,
                 image_url = ?, start_date = ?, end_date = ?, form_of_employeement = ?, 
                 employeeNr_Talkmore = ?, employeeNr_Telenor = ?, 
-                employee_percentages = ?, team_id = ? , workPosistion_id
+                employee_percentages = ?, team_id = ? , workPosistion_id = ?
             WHERE employee_id = ?
         `, [
             //Setter || denne for hvis ikke ny info er lagt inn bruk originale info å sett inn databasen
@@ -44,10 +49,10 @@ router.put('/:id', async (req, res) => {
             updatedData.epost || original.epost,
             updatedData.epost_Telenor || original.epost_Telenor,
             updatedData.phoneNr ||original.phoneNr,
-            updatedData.birthdate || original.birthdate,
+            formatDate(updatedData.birthdate) || formatDate(original.birthdate),
             updatedData.image_url || original.image_url,
-            updatedData.start_date || original.start_date,
-            updatedData.end_date || original.end_date,
+            formatDate(updatedData.start_date) || formatDate(original.start_date),
+            formatDate(updatedData.end_date) || formatDate(original.end_date),
             updatedData.form_of_employeement || original.form_of_employeement,
             updatedData.employeeNr_Talkmore || original.employeeNr_Talkmore,
             updatedData.employeeNr_Telenor || original.employeeNr_Telenor,
@@ -79,7 +84,7 @@ router.put('/:id', async (req, res) => {
                 VALUES (?, ?, ?, ?)`
                 ,[
                     id, 
-                    updatedData.leave.leave_percentages,
+                    updatedData.leave.leave_percentage,
                     updatedData.leave.leave_start_date,
                     updatedData.leave.leave_end_date
                 ]
@@ -111,11 +116,11 @@ router.put('/:id', async (req, res) => {
                 employee_id, admin_id, 
                 employeeNr_Talkmore, employeeNr_Telenor, 
                 department_id, team_id, workPosistion_id,
-                form_of_employement, employee_percentages,
+                form_of_employeement, employee_percentages,
                 start_date, end_date,
-                leave_id, leave_percentages, leave_start_date, leave_end_date
+                leave_id, leave_percentage, leave_start_date, leave_end_date
                 )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?)
         `,[
             id,
             amdinId,
@@ -124,13 +129,14 @@ router.put('/:id', async (req, res) => {
             updatedData.department_id || original.department_id,
             updatedData.team_id || original.team_id,
             updatedData.workPosistion_id || original.workPosistion_id,
+            updatedData.form_of_employeement || original.form_of_employeement,
             updatedData.employee_percentages || original.employee_percentages,
-            updatedData.start_date || original.start_date,
-            updatedData.end_date || original.end_date,
+            formatDate(updatedData.start_date) || formatDate(original.start_date),
+            formatDate(updatedData.end_date) || formatDate(original.end_date),
             updatedData.leave_id || original.leave_id,
-            updatedData.leave_percentages || original.leave_percentages,
-            updatedData.leave_start_date || original.leave_start_date,
-            updatedData.leave_end_date || original.leave_end_date
+            updatedData.leave_percentage || original.leave_percentage,
+            formatDate(updatedData.leave_start_date) || null,
+            formatDate(updatedData.leave_end_date) || null
         ]);
 
         //Oppdatere ansatt i api genesys hvis endring i navn eller epost
