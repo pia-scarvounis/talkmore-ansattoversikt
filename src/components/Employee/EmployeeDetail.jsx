@@ -31,35 +31,39 @@ const EmployeeDetail = ({ employeeId }) => {
         <div className="employee-info">
           <div className="employee-info-inner">
             <div className="employee-info-text">
-              <h2><u>{employee.employee_name}</u></h2>
+              <h2>{employee.employee_name}</h2>
 
               {employee.employeeNr_Talkmore && (
                 <p>
-                  <strong>Ansattnr (Talkmore):</strong>{" "}
+                  <strong>Ansattnr</strong> (Talkmore):{" "}
                   {employee.employeeNr_Talkmore}
                 </p>
               )}
-              <p>Ansattnr (Innleid): xxxxxxxx</p>
+              <p>
+                <strong>Ansattnr</strong> (Innleid): {" "}
+                {employee.employeeNr_Telenor}
+              </p>
             </div>
 
             <img src={defaultImg} alt="Profilbilde" className="employee-img" />
 
-            <p>Fødselsdato: {formatDate(employee.birthdate)}</p>
-            
-            {employee.phoneNr ? (
-  <p><strong>Telefon:</strong> {employee.phoneNr}</p>
-) : (
-  <p><strong>Telefon:</strong> Ikke oppgitt</p>
-)}
+            <p>
+              <strong>Fødselsdato:</strong> {formatDate(employee.birthdate)}
+            </p>
+            <p>
+              <strong>Telefon:</strong>{" "}
+              {employee.phoneNr ? employee.phoneNr : "Ikke oppgitt"}
+            </p>
 
-              E-post:
-              {employee.epost ? (
-                <p>E-post: {employee.epost}</p>
-              ) : (
-                <p>E-post ikke oppgitt</p>
-              )}
+            <p>
+              <strong>E-post:</strong>{" "}
+              {employee.epost ? employee.epost : "Ikke oppgitt"}
+            </p>
+
             {employee.epost_Telenor && (
-              <p>E-post (Telenor): {employee.epost_Telenor}</p>
+              <p>
+                <strong>E-post</strong> (Telenor): {employee.epost_Telenor}
+              </p>
             )}
           </div>
         </div>
@@ -67,33 +71,37 @@ const EmployeeDetail = ({ employeeId }) => {
         {/* Midtseksjon */}
         <div className="employee-position-info">
           <div className="employee-position-inner">
-            <h4>Stillinginformasjon</h4>
+            <h4><u>Stillinginformasjon</u></h4>
             <p>
-              <strong>Startdato:</strong> 20.02.14
+              <strong>Startdato:</strong>{" "}
+              {employee.start_date
+                ? formatDate(employee.start_date)
+                : "Ikke oppgitt"}
             </p>
             <p>
-              <strong>Sluttdato:</strong> 31.12.25
+              <strong>Sluttdato:</strong>{" "}
+              {employee.end_date
+                ? formatDate(employee.end_date)
+                : "Ikke oppgitt"}
             </p>
             <p>
-              <strong>Fast/Inleid:</strong>
-              {employee.form_of_employeement}
+              <strong>Fast/Inleid:</strong> {employee.form_of_employeement || "Ikke oppgitt"}
             </p>
             <p>
-              <strong>Stilling:</strong>
-              {employee.workPosistion_title}
+              <strong>Stilling:</strong> {employee.workPosistion_title || "Ikke oppgitt"}
             </p>
             <p>
-              <strong>Team:</strong> Havanna
+              <strong>Team:</strong> {employee.team_name || "Ikke oppgitt"}
             </p>
             <p>
-              <strong>Avd.:</strong> Privat
+              <strong>Stillingsprosent:</strong> {employee.employee_percentages !== undefined
+                ? `${employee.employee_percentages} %`
+                : "Ikke oppgitt"}
             </p>
             <p>
-              <strong>Stillingsprosent:</strong>
-              {employee.employee_percentages}%
-            </p>
-            <p>
-              <strong>Permisjon:</strong> 0%
+              <strong>Permisjon:</strong>{" "}
+              {/* denne er fortsatt dummy fordi permisjon-tabellen ikke er koblet riktig opp */}
+              0% {/* kan byttes ut senere hvis vi lager permisjonsdata */}
             </p>
           </div>
         </div>
@@ -101,17 +109,15 @@ const EmployeeDetail = ({ employeeId }) => {
         {/* Høyre seksjon */}
         <div className="employee-emergency-access">
           <div className="employee-emergency-inner">
-            <h4>Nærmeste pårørende</h4>
+            <h4><u>Nærmeste pårørende</u></h4>
             <p>
-              <strong>Navn:</strong>
-              {relative ? relative.relative_name : "-"}
+              <strong>Navn pårørende:</strong> {relative?.relative_name || "Ikke oppgitt"}
             </p>
             <p>
-              <strong>Telefon:</strong>
-              {relative ? relative.phone_number : "-"}
+              <strong>Telefon pårørende:</strong> {relative?.phone_number || "Ikke oppgitt"}
             </p>
 
-            <h4>Tilganger</h4>
+            <h4><u>Tilganger</u></h4>
             <div className="access-checkboxes">
               <label>
                 <input type="checkbox" />
