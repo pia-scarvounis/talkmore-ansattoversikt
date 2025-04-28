@@ -1,8 +1,6 @@
 //  felles mal for alle profilkortsider
 
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchEmployees } from "../../redux/slices/employeeSlice";
 import PageHeader from "../UI/PageHeader";
 import DateCount from "../UI/DateCount";
 import NavAdmin from "../navigation/NavAdmin";
@@ -27,13 +25,16 @@ const EmployeeListTemplate = ({
   showStandardFilter = false,
   CustomFilterComponent = null,
   showDate = true,
+  data,
+  loading,
+  error,
 }) => {
-  const dispatch = useDispatch();
-  const {
-    data: employees,
-    loading,
-    error,
-  } = useSelector((state) => state.employees);
+  // const dispatch = useDispatch();
+  // const {
+    // data: employees,
+    // loading,
+    // error,
+  // } = useSelector((state) => state.employees);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({
@@ -47,18 +48,18 @@ const EmployeeListTemplate = ({
   const [filteredData, setFilteredData] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
-  useEffect(() => {
-    dispatch(fetchEmployees());
-  }, [dispatch]);
+ //  useEffect(() => {
+    // dispatch(fetchEmployees());
+  // }, [dispatch]);
 
   // Søkelogikk
   // Endret useEffect som håndterer søk + filter
   useEffect(() => {
-    if (!employees || !Array.isArray(employees)) return;
+    if (!data || !Array.isArray(data)) return;
 
     const term = searchTerm.toLowerCase();
 
-    const filtered = employees.filter((employee) => {
+    const filtered = data.filter((employee) => {
       const matchesSearch =
         employee.employee_name?.toLowerCase().includes(term) ||
         employee.epost?.toLowerCase().includes(term) ||
@@ -105,7 +106,7 @@ const EmployeeListTemplate = ({
     });
 
     setFilteredData(filtered);
-  }, [searchTerm, employees, selectedFilters]);
+  }, [searchTerm, data, selectedFilters]);
 
   const visibleData = showAll ? filteredData : filteredData.slice(0, 9);
 
@@ -124,7 +125,7 @@ const EmployeeListTemplate = ({
       {/* Filtrering */}
       {showStandardFilter && (
         <FilterOption
-          employees={employees}
+          employees={data}
           onFilterChange={setSelectedFilters}
         />
       )}
