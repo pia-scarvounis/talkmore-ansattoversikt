@@ -4,17 +4,45 @@ import PageHeader from "../components/UI/PageHeader";
 import GreenButton from "../components/UI/GreenButton";
 import RedButton from "../components/UI/RedButton";
 
-import {useDispatch, useSelector} from 'react-redux';
-
-
 import "../styles/form.css";
 import defaultImage from "../assets/images/default-img.png";
 import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 import EditHistoryPopup from "../components/History/EditHistoryPopup"; // for å teste EditHistoryPopupen
 
+import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { updateEmployee, resetUpdateState } from "../redux/slices/adminCrudsSlice";
+import { fetchEmployees } from "../redux/slices/employeeSlice";
 
 const EditEmployee = () => {
+
+  const {id} = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //henter den ansatte fra get employeeSlicen og finner ansatte med id lik url
+  const employee = useSelector(state => state.employees.data.find(emp => emp.employee_id === Number(id))
+  );
+  const {success, error} = useSelector(state => state.updateEmployee);
+
+  //vi må bruke formdata
+  const [formData, setFormData] = useState(null)
+
+  //Etter henting av ansatt så setter vi inn data
+  //Det må hentes på denne måten og ikke oppdatere i selve endre ansatt Slicen da backend ikke returnerer
+  //listen, og versions id fra api genesys kan endre seg og settes inn i oppdatert ansatt
+  
+  //Setter data og lar eksisterene data være i feltene
+  useEffect(() => {
+    if(employee){
+      setFormData({
+        employee_name: employee.employee_name || '',
+      })
+    }
+  })
+
   return (
     <div className="form-page">
       <NavAdmin />
