@@ -1,9 +1,9 @@
 import {Router} from 'express';
 import {pool} from '../../config/db.js';
+import dotenv from 'dotenv';
 
 const router = Router();
-
-//senere legge til dotenv 
+dotenv.config();
 
 //Hente alle avdelinger
 router.get('/departments', async (req, res) =>{
