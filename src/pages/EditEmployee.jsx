@@ -15,6 +15,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { updateEmployee, resetUpdateState } from "../redux/slices/adminCrudsSlice";
 import { fetchEmployees } from "../redux/slices/employeeSlice";
+import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice";
 
 const EditEmployee = () => {
 
@@ -26,8 +27,14 @@ const EditEmployee = () => {
   const employee = useSelector(state => state.employees.data.find(emp => emp.employee_id === Number(id))
   );
   const {success, error} = useSelector(state => state.updateEmployee);
+  //Uthenting av avdeling/Teams/stillinger
+  const {departments, teams, posistions, loading } = useSelector(state => state.metaData)
+  //hent fetch metadata
+  useEffect(() => {
+    dispatch(fetchMetaData());
+  },[dispatch]);
 
-  //vi må bruke formdata
+   //vi må bruke formdata
   const [formData, setFormData] = useState(null)
   //Etter henting av ansatt så setter vi inn data
   //Det må hentes på denne måten og ikke oppdatere i selve endre ansatt Slicen da backend ikke returnerer
