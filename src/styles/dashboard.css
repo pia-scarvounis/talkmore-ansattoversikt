@@ -47,6 +47,10 @@
 
 /* FTE BOKS STYLING*/
 
+.stat-box.highlight.fte:hover {
+  transform: none;
+}
+
 .stat-box.highlight.fte {
   background-color: #fff;
   border: 2px solid #ddf5d2;
