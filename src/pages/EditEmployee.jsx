@@ -29,7 +29,6 @@ const EditEmployee = () => {
 
   //vi må bruke formdata
   const [formData, setFormData] = useState(null)
-
   //Etter henting av ansatt så setter vi inn data
   //Det må hentes på denne måten og ikke oppdatere i selve endre ansatt Slicen da backend ikke returnerer
   //listen, og versions id fra api genesys kan endre seg og settes inn i oppdatert ansatt
@@ -249,6 +248,62 @@ const EditEmployee = () => {
             </div>
           </div>
         </div>
+
+        {/* === PERMISJON === */}
+      <div className="form-section">
+        <h2 className="section-heading">Permisjon</h2>
+        <div className="two-column">
+          <div className="column">
+          <label>Permisjonsprosent</label>
+            <input
+            type="number"
+            name="leave_percentage"
+            value={formData.leave ? formData.leave.leave_percentage : ''}
+            onChange={(e) => {
+              setFormData(prev => ({
+                ...prev,
+                leave: {
+                ...prev.leave,
+                leave_percentage: e.target.value
+              }
+            }));
+          }}
+        />
+
+        <label>Startdato permisjon</label>
+        <input
+          type="date"
+          name="leave_start_date"
+          value={formData.leave ? formData.leave.leave_start_date : ''}
+          onChange={(e) => {
+            setFormData(prev => ({
+              ...prev,
+              leave: {
+                ...prev.leave,
+                leave_start_date: e.target.value
+              }
+            }));
+          }}
+        />
+
+        <label>Sluttdato permisjon</label>
+        <input
+          type="date"
+          name="leave_end_date"
+          value={formData.leave ? formData.leave.leave_end_date : ''}
+          onChange={(e) => {
+            setFormData(prev => ({
+              ...prev,
+              leave: {
+                ...prev.leave,
+                leave_end_date: e.target.value
+              }
+            }));
+          }}
+        />
+      </div>
+    </div>
+  </div>
 
         {/* SECTION: TILGANGER */}
 <div className="form-section">
