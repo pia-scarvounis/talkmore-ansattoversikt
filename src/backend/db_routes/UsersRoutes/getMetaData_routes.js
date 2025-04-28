@@ -3,18 +3,36 @@ import {pool} from '../../config/db.js';
 
 const router = Router();
 
+//senere legge til dotenv 
+
 //Hente alle avdelinger
-router('/teams', async (req, res) =>{
+router.get('/departments', async (req, res) =>{
     try{
-
-    }catch{
-
+        const [departments] = await pool.query(`
+            SELECT * FROM department
+        `)
+        res.json(departments);
+    }catch(err){
+        console.error('Feil ved henting av avdelinger', err);
+        res.status(500).json({error:'Noe gikk galt'})
     }
 })
 
+//Hente alle Team og join med department tabellen
+router.get('/teams', async (req, res) => {
+    try{
+        const [teams] = await pool.query(`
+        SELECT team.*, department.department_name
+        FROM team
+        JOIN department ON team.department_id = department.department_id
+        `);
+        res.json(teams)
 
-//Hente alle Team
-
+    }catch(err){
+        console.error('Feil ved henting av team', err);
+        res.status(500).json({error: 'noe gikk galt'})
+    }
+})
 
 //Hente alle stillinger
 
