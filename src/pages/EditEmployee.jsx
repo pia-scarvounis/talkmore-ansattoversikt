@@ -174,28 +174,78 @@ const EditEmployee = () => {
               onChange={handleChange}/>
 
               <label>Ansattnummer (Telenor)</label>
-              <input type="text" name="employeeNr_Telenor" value={formData.employeeNr_Telenor}
+              <input type="number" name="employeeNr_Telenor" value={formData.employeeNr_Telenor}
               onChange={handleChange}/>
 
+              {/**MÅ HENTE INN rutere for å hente team og stillinger fra databasen */}
               <label>Team</label>
-              <select><option>Velg</option></select>
+              <select
+              name="team_id"
+              value={formData.team_id}
+              onChange={handleChange}
+              >
+                <option value=''>Velg</option>
+                {teams.map(team => (
+                  <option key={team.team_id} value={team.team_id}>
+                    {team.team_name}
+                  </option>
+                ))}
+              </select>
 
               <label>Stillingstittel</label>
-              <select><option>Velg</option></select>
+              <select
+              name="workPosistion_id"
+              value={formData.workPosistion_id}
+              onChange={handleChange}
+              >
+              <option value=''>Velg stilling</option>
+              {workPosistion.map(posistion =>(
+                <option key={posistion.workPosistion_id} value={posistion.workPosistion_id}>
+                  {posistion.posistion_title}
+                </option>
+              ))}
+              </select>
             </div>
 
             <div className="column">
               <label>Fast / innleid</label>
-              <select><option>Velg</option></select>
+              <select
+              name="form_of_employement"
+              value={formData.form_of_employeement}
+              onChange={handleChange}
+              >
+                <option value="">Velg</option>
+                <option value="Fast">Fast</option>
+                <option value="Innleid">Innleid</option>
+              </select>
 
               <label>Stillingsprosent</label>
-              <select><option>Velg</option></select>
+              <select
+              name="employee_percentages"
+              value={formData.employee_percentages}
+              onChange={handleChange}
+              >
+                <option value="">Velg</option>
+                {[...Array(10)].map((_, i) => {
+                const pct = (i + 1) * 10;
+                return <option key={pct} value={pct}>{pct}%</option>;
+              })}
+              </select>
 
               <label>Startdato</label>
-              <input type="date" />
+              <input 
+              type="date"
+              name="start_date"
+              value={formData.start_date}
+              onChange={handleChange}
+               />
 
               <label>Sluttdato</label>
-              <input type="date" />
+              <input 
+              type="date" 
+              name="end_date"
+              value={formData.end_date}
+              onChange={handleChange}/>
             </div>
           </div>
         </div>
