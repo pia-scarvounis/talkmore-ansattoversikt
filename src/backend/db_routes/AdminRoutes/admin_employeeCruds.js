@@ -253,9 +253,9 @@ router.put('/:id', async (req, res) => {
             console.log('Genesys User ID vi prøver å oppdatere', original.genesys_user_id);
 
             const updateUser = {
-                version: currentUser.version,
                 name: updatedData.employee_name || currentUser.name,
-                email: updatedData.epost || currentUser.email
+                email: updatedData.epost || currentUser.email,
+                version: currentUser.version
             };
             console.log('Oppdateringsdata som sendes til Genesys:', updateUser);
 
