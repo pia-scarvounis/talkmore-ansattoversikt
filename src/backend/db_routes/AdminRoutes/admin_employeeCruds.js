@@ -10,8 +10,8 @@ import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
 const router = Router();
 dotenv.config();
 
-const usersApi = new platformClient.UsersApi();
 const apiInstance = platformClient.ApiClient.instance;
+const usersApi = new platformClient.UsersApi();
 
 //Ruter for å endre en ansatt og sette endringene og verdiene i historikken til den endrede ansatte
 //Kilder til å endre ansatt i api genesys også er hentet fra GPT
@@ -126,7 +126,7 @@ router.put('/:id', async (req, res) => {
                 `UPDATE employee
                 SET ${fields.join(', ')}
                 WHERE employee_id = ?`;
-                
+
                 values.push(id);
                 await pool.query(sql, values);
                 console.log('Ansatt oppdatert');
@@ -243,24 +243,43 @@ router.put('/:id', async (req, res) => {
         if(original.genesys_user_id){
             //henter inn token
             const accessTokenGen = await getOAuthToken();
+            console.log('AccessToken hentet fra Genesys:', accessTokenGen); // 👈 Legg til denne linjen
             apiInstance.setAccessToken(accessTokenGen);
 
-            const updateUser = {
-                version: original.genesys_version,
-                name: updatedData.employee_name || original.employee_name,
-                email: updatedData.epost || original.epost
-            };
-            //variabel som holder på den oppdaterte ansatte
-            const updatedUser = await usersApi.patchUser(original.genesys_user_id, updateUser);
-            console.log(`Oppdatert i Genesys: ${original.genesys_user_id}`);
+            try{
 
+             //må hente bruker før vi setter den i update user
+            const currentUser = await usersApi.getUser(original.genesys_user_id);
+            console.log('Genesys User ID vi prøver å oppdatere', original.genesys_user_id);
+
+            const updateUser = {
+                version: currentUser.version,
+                name: updatedData.employee_name || currentUser.name,
+                email: updatedData.epost || currentUser.email
+            };
+            console.log('Oppdateringsdata som sendes til Genesys:', updateUser);
+
+            //variabel som holder på den oppdaterte ansatte
+            const updatedUser = await usersApi.patchUser(currentUser, updateUser);
+            console.log(`Oppdatert i Genesys: ${currentUser}`);
+
+            if(!updatedData.employee_name || !updatedData.epost){
+                return res.status(400).json({
+                    error: 'Både navn og epost må være satt i for å oppdatere i genesys'
+                });
+            }
+        
             //oppdater genesys_verision id i databasen med den oppdaterte verdien i version
             await pool.query(`
                 UPDATE employee
                 SET genesys_version = ?
                 WHERE employee_id = ?
             `,[updatedUser.version, id]);
+
+        }catch(genesysError){
+            console.error('Feil ved oppdatering i Genesys', genesysError);
         }
+    }
         res.status(200).json({message:'Ansatt, pårørendende, permisjon og genesys oppdatert'});
 
     }catch(err){
