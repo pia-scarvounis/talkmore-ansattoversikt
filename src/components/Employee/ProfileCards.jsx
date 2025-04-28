@@ -49,9 +49,10 @@ onClick={() => handleClick(employee.employee_id)} //  gjør kortene klikkbare
         </div>
 
         {/**Ansatt/jobb informasjon*/}
-        <p><span className='label-info'> Stilling </span> {employee.workPosistion_title}</p>
-        <p><span className='label-info'> Fast/Innleid </span> {employee.form_of_employeement}</p>
-        <p><span className='label-info'> Stilling% </span> {employee.employee_percentages}</p>        
+        <p><span className='label-info'> Stilling: </span> {employee.workPosistion_title}</p>
+        <p><span className='label-info'> Team: </span> {employee.team_name}</p>
+        <p><span className='label-info'> Fast/Innleid: </span> {employee.form_of_employeement}</p>
+        <p><span className='label-info'> Stillingsprosent: </span> {employee.employee_percentages} %</p>        
 
 
     </div>
