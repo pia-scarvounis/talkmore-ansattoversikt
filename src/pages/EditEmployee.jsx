@@ -134,7 +134,7 @@ const EditEmployee = () => {
               <input type="email"  name="epost" value={formData.epost} onChange={handleChange}/>
 
               <label>Epost (Telenor)</label>
-              <input type="email" />
+              <input type="email" name="epost_Telenor" value={formData.epost_Telenor} onChange={handleChange}/>
             </div>
           </div>
         </div>
@@ -149,7 +149,16 @@ const EditEmployee = () => {
             </div>
             <div className="column">
               <label>Telefonnummer</label>
-              <input type="text" />
+              <input type="text" name="relative_name" 
+              value={formData.relative.length > 0 ? formData.relative[0].relative_name : ''} 
+              onChange={(e) => {
+                const newRelatives = [...formData.relative];
+                  if(newRelatives.length > 0){
+                    newRelatives[0].relative_name = e.target.value;
+                  }
+                  setFormData(prev =>({...prev, relative: newRelatives}));
+              }}
+              />
             </div>
           </div>
         </div>
@@ -159,19 +168,19 @@ const EditEmployee = () => {
           <h2 className="section-heading">Stillingsinfo</h2>
           <div className="two-column">
             <div className="column">
+
+              <label>Ansattnummer (Talkmore)</label>
+              <input type="number" name="employeeNr_Talkmore" value={formData.employeeNr_Talkmore}
+              onChange={handleChange}/>
+
               <label>Ansattnummer (Telenor)</label>
-              <input type="text" />
-
-              <label>Ansattnummer (Innleid)</label>
-              <input type="text" />
-
-              <label>Avdeling</label>
-              <select><option>Velg</option></select>
+              <input type="text" name="employeeNr_Telenor" value={formData.employeeNr_Telenor}
+              onChange={handleChange}/>
 
               <label>Team</label>
               <select><option>Velg</option></select>
 
-              <label>Stilling/rolle</label>
+              <label>Stillingstittel</label>
               <select><option>Velg</option></select>
             </div>
 
@@ -211,6 +220,7 @@ const EditEmployee = () => {
 
         <div className="form-buttons">
           <GreenButton text="Lagre" onClick={() => console.log("Lagrer endringer")} />
+          {/*** navigere til sider etterhvert!! naviger tilbake profildetaljesiden*/}
           <RedButton text="Avbryt" onClick={() => console.log("Avbryter redigering")} />
         </div>
 
