@@ -6,6 +6,8 @@ import availableEmployeesReducer from "../slices/availableemployeesSlice";
 import dayOverviewEmployeesReducer from '../slices/dayOverviewEmpSlice';
 import employeeHistoryReducer from '../slices/historySlice';
 import updateEmployeeReducer from '../slices/adminCrudsSlice';
+import metaDataReducer from '../slices/metaDataCrudsSlice';
+
 export const store = configureStore({
   reducer: {
     date: dateReducer,
@@ -14,6 +16,7 @@ export const store = configureStore({
     notes: noteReducer,
     employeeHistory: employeeHistoryReducer,
     dayOverviewEmployees: dayOverviewEmployeesReducer,
-    availableEmployees: availableEmployeesReducer
+    availableEmployees: availableEmployeesReducer,
+    metaData: metaDataReducer
   },
 });
