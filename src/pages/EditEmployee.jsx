@@ -201,15 +201,29 @@ const EditEmployee = () => {
 
               {/**MÅ HENTE INN rutere for å hente team og stillinger fra databasen */}
               {/**Avdeling og team */}
+              <label>Avdeling</label>
+              <select
+              name="department_id"
+              value={formData.department_id}
+              onChange={handleDepartmentChange}
+              >
+                <options value=''>Velg avdeling</options>
+                {departments.map(dep => (
+                  <option 
+                    key={dep.department_id}
+                    value={dep.department_id}
+                    >
+                      {dep.department_name}
+                  </option>
+                ))}
+              </select>
 
-
-
-              
               <label>Team</label>
               <select
               name="team_id"
               value={formData.team_id}
               onChange={handleChange}
+              disabled={!formData.department_id}
               >
                 <option value=''>Velg</option>
                 {teams.map(team => (
@@ -226,7 +240,7 @@ const EditEmployee = () => {
               onChange={handleChange}
               >
               <option value=''>Velg stilling</option>
-              {workPosistion.map(posistion =>(
+              {posistions.map(posistion =>(
                 <option key={posistion.workPosistion_id} value={posistion.workPosistion_id}>
                   {posistion.posistion_title}
                 </option>
