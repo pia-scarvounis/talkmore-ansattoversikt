@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, Suspense} from "react";
 import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
 import GreenButton from "../components/UI/GreenButton";
@@ -39,17 +39,70 @@ const EditEmployee = () => {
     if(employee){
       setFormData({
         employee_name: employee.employee_name || '',
+        epost: employee.epost || '',
+        epost_Telenor: employee.epost_Telenor || '',
+        phoneNr: employee.phoneNr || '',
+        birthdate: employee.birthdate ? employee.birthdate.split('T')[0] : '',
+        start_date: employee.start_date  ? employee.start_date.split('T')[0] : '',
+        end_date: employee.end_date ? employee.end_date.split('T')[0] : '',
+        form_of_employeement:employee.form_of_employeement || '',
+        employeeNr_Talkmore: employee.employeeNr_Talkmore || '',
+        employeeNr_Telenor: employee.employeeNr_Telenor || '',
+        employee_percentages: employee.employee_percentages || '',
+        team_id: employee.team_id || '',
+        workPosistion_id: employee.workPosistion_id || '',
+        licenses:employee.licenses || [],
+        relative: employee.relative || [],
+        leave: employee.leave || null
       })
     }
-  })
+  }, [employee]);
+
+  //lagre
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(!formData) return;
+    //sender inn oppdatert ansatt objektet som formData i fetchen
+    dispatch(updateEmployee({id, updatedData:formData}));
+  }
+
+  //oppdaterer formData (objektet ansatt info) med input
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  //etter vellykket oppdatering
+  useEffect(() =>{
+    if(success){
+      dispatch(fetchEmployees());
+      //resetter oppdateringg
+      dispatch(resetUpdateState());
+      //Sette riktig alert ui her!!!!
+      alert('Ansatt oppdatert');
+      //sett inn riktig navigasjon her: tilbake til ansattprofildetaljer med id)
+    }
+    if(error){
+      alert('Feil: ' + error);
+      dispatch(resetUpdateState());
+    }
+  },[success, error, dispatch, navigate]);
+
+  if(!formData){
+    return <div>Laster ansatt...</div>
+  }
 
   return (
     <div className="form-page">
       <NavAdmin />
       <div className="form-content page-header-wrapper">
       <PageHeader title="Rediger ansatt" />
-   
-
+    
+    <form onSubmit={handleSubmit}>
+    {/* SECTION: IMAGE */}
         <div className="image-upload-container">
           <h2 className="section-heading">Endre bilde</h2> 
           <div className="image-box">
@@ -67,18 +120,18 @@ const EditEmployee = () => {
           <div className="two-column">
             <div className="column">
               <label>Fornavn og Etternavn</label>
-              <input type="text" />
-
+              <input type="text" name='employee_name' value={formData.employee_name} onChange={handleChange}/>
+              
               <label>Telefonnummer</label>
-              <input type="text" />
+              <input type="text" name="phoneNr" value={formData.phoneNr} onChange={handleChange} />
 
               <label>Fødselsdato</label>
-              <input type="date" />
+              <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} />
             </div>
 
             <div className="column">
               <label>Epost (Talkmore)</label>
-              <input type="email" />
+              <input type="email"  name="epost" value={formData.epost} onChange={handleChange}/>
 
               <label>Epost (Telenor)</label>
               <input type="email" />
@@ -160,6 +213,8 @@ const EditEmployee = () => {
           <GreenButton text="Lagre" onClick={() => console.log("Lagrer endringer")} />
           <RedButton text="Avbryt" onClick={() => console.log("Avbryter redigering")} />
         </div>
+
+        </form>
 
       </div>
     </div>
