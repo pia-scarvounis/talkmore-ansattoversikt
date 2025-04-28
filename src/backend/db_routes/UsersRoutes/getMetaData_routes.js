@@ -35,5 +35,17 @@ router.get('/teams', async (req, res) => {
 })
 
 //Hente alle stillinger
+router.get('/posistions', async (req, res) =>{
+    try{
+        const [posistions] = await pool.query(`
+            SELECT * FROM workPosistion
+        `);
+        res.json(posistions);
+
+    }catch(err){
+        console.error('Feil ved henting av stillinger');
+        res.status(500).json({error:'Noe gikk galt'})
+    }
+})
 
 export default router;
