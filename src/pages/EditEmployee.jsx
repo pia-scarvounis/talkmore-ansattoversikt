@@ -60,9 +60,25 @@ const EditEmployee = () => {
         licenses:employee.licenses || [],
         relative: employee.relative || [],
         leave: employee.leave || null
-      })
+      });
+      if(employee.department_id){
+        const filtered = teams.filter(t => t.department_id === employee.department_id);
+        setfilteredTeams(filtered);
+      }
     }
-  }, [employee]);
+  }, [employee, teams]);
+
+  //Når bruker endrer avdeling i options
+  const handleDepartmentChange = (e) => {
+    const departmentId = parseInt(e.target.value);
+    setFormData(prev => ({
+      ...prev,
+      department_id: departmentId,
+      team_id: ''
+    }));
+    const filtered = teams.filter(t => t.department_id === departmentId);
+    setfilteredTeams(filtered);
+  }
 
   //lagre
   const handleSubmit = (e) => {
@@ -184,6 +200,11 @@ const EditEmployee = () => {
               onChange={handleChange}/>
 
               {/**MÅ HENTE INN rutere for å hente team og stillinger fra databasen */}
+              {/**Avdeling og team */}
+
+
+
+              
               <label>Team</label>
               <select
               name="team_id"
