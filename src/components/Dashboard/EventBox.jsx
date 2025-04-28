@@ -82,7 +82,7 @@ const EventBox = () => {
           return (
             <div key={emp.employee_id} className="entry">
               <span>
-                🎉 {emp.employee_name} - {years} år
+                🎉 {emp.employee_name} <span className="years-text">({years} år)</span>
               </span>
             </div>
           );
