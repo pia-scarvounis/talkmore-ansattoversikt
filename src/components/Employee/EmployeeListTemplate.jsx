@@ -4,9 +4,13 @@ import React, { useState, useEffect } from "react";
 import PageHeader from "../UI/PageHeader";
 import DateCount from "../UI/DateCount";
 import NavAdmin from "../navigation/NavAdmin";
+import ListView from "./ListView";
 import ProfileCards from "./ProfileCards";
 import FilterOption from "./FilterOption";
 import WhiteButton from "../UI/WhiteButton";
+import ExportCSVButton from "./ExportCSVButton";
+import "../../styles/listview.css";
+import ListIcon from "../../assets/icons/list.svg";
 
 /**
  * Denne komponenten brukes som mal for alle profilsider (f.eks. Brooklyn, Privat, Kundeansvarlig)
@@ -31,9 +35,9 @@ const EmployeeListTemplate = ({
 }) => {
   // const dispatch = useDispatch();
   // const {
-    // data: employees,
-    // loading,
-    // error,
+  // data: employees,
+  // loading,
+  // error,
   // } = useSelector((state) => state.employees);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,9 +51,10 @@ const EmployeeListTemplate = ({
   });
   const [filteredData, setFilteredData] = useState([]);
   const [showAll, setShowAll] = useState(false);
+  const [viewMode, setViewMode] = useState("cards"); // "cards" eller "list"
 
- //  useEffect(() => {
-    // dispatch(fetchEmployees());
+  //  useEffect(() => {
+  // dispatch(fetchEmployees());
   // }, [dispatch]);
 
   // Søkelogikk
@@ -124,22 +129,39 @@ const EmployeeListTemplate = ({
 
       {/* Filtrering */}
       {showStandardFilter && (
-        <FilterOption
-          employees={data}
-          onFilterChange={setSelectedFilters}
-        />
+        <>
+          <FilterOption employees={data} onFilterChange={setSelectedFilters} />
+
+          <div className="view-toggle-below">
+            <button
+              onClick={() =>
+                setViewMode(viewMode === "cards" ? "list" : "cards")
+              }
+              className="view-toggle-button"
+            >
+              <img src={ListIcon} alt="Bytt visning" className="view-icon" />
+              {viewMode === "cards" ? "Vis som liste" : "Vis som kort"}
+            </button>
+            {viewMode === "list" && <ExportCSVButton />}{" "}
+            {/* Vises kun i listevisning */}
+          </div>
+        </>
       )}
-      {CustomFilterComponent && <CustomFilterComponent />}
 
       {/* Navigasjon og profilkort */}
       <div className="profilePages-container">
         <NavAdmin />
         <div className="profileList-container">
-          <ProfileCards
-            employees={visibleData}
-            loading={loading}
-            error={error}
-          />
+          {viewMode === "cards" ? (
+            <ProfileCards
+              employees={visibleData}
+              loading={loading}
+              error={error}
+            />
+          ) : (
+            <ListView employees={visibleData} loading={loading} error={error} />
+          )}
+
           {!loading && !error && visibleData.length === 0 && (
             <p className="no-results-message">Ingen ansatte å vise.</p>
           )}
