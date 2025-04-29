@@ -107,6 +107,14 @@ h1 {
   gap: 70px;
 }
 
+.manage-teams-buttons {
+  padding-top: 80px;
+  padding-bottom: 5px;
+  display: flex;
+  justify-content: center;
+  gap: 70px;
+}
+
 .team-box {
   border: 1px solid #60aa3b;
   border-radius: 20px;
