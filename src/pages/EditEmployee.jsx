@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEmployees } from "../redux/slices/employeeSlice";
+
 import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
 import GreenButton from "../components/UI/GreenButton";
@@ -12,11 +16,32 @@ import EditHistoryPopup from "../components/History/EditHistoryPopup"; // for å
 
 
 const EditEmployee = () => {
+  const dispatch = useDispatch();
+  const { id } = useParams(); // hente id fra urlen
+  const employeeId = parseInt(id, 10); // gjøre id om til tall
+
+  const employeeList = useSelector((state) => state.employees.data); // henter employee-listen med data fra EmplyeeSlice. 
+
+  // henter employees fra backend hvis listen er tom..
+  useEffect(() => {
+    if (!employeeList || employeeList.length === 0) {
+      dispatch(fetchEmployees());
+    }
+  }, [dispatch, employeeList]);
+
+  // finner riktig employee basert på ID
+  const employee = employeeList?.find((emp) => emp.employee_id === employeeId);
+
+  // hvis employee ikke finnes enda, vis melding
+  if (!employee) {
+    return <p>Laster inn, eller fant ikke ansatt...</p>;
+  }
+
   return (
     <div className="form-page">
       <NavAdmin />
       <div className="form-content page-header-wrapper">
-      <PageHeader title="Rediger ansatt" />
+      <PageHeader title={`Rediger ansatt: ${employee?.employee_name || "ukjent ansatt"}`} />
    
 
         <div className="image-upload-container">
