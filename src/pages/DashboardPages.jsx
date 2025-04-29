@@ -5,11 +5,15 @@ import { fetchDayOverviewEmployees } from "../redux/slices/dayOverviewEmpSlice";
 import EmployeeListTemplate from "../components/Employee/EmployeeListTemplate";
 
 const DashboardPages = () => {
-  const { filterKey } = useParams(); 
+  const { filterKey } = useParams();
   const dispatch = useDispatch();
 
   const selectedDate = useSelector((state) => state.date.selectedDate);
-  const { data: employees, loading, error } = useSelector((state) => state.dayOverviewEmployees);
+  const {
+    data: employees,
+    loading,
+    error,
+  } = useSelector((state) => state.dayOverviewEmployees);
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
@@ -23,19 +27,29 @@ const DashboardPages = () => {
 
     switch (filterKey) {
       case "teamleder":
-        result = employees.filter((e) => e && e.workPosistion_title === "Teamleder");
+        result = employees.filter(
+          (e) => e && e.workPosistion_title === "Teamleder"
+        );
         break;
       case "admin":
-        result = employees.filter((e) => e && e.workPosistion_title === "Admin");
+        result = employees.filter(
+          (e) => e && e.workPosistion_title === "Admin"
+        );
         break;
       case "kundeagent":
-        result = employees.filter((e) => e && e.workPosistion_title === "Kundeagent");
+        result = employees.filter(
+          (e) => e && e.workPosistion_title === "Kundeagent"
+        );
         break;
       case "fast":
-        result = employees.filter((e) => e && e.form_of_employeement === "Fast");
+        result = employees.filter(
+          (e) => e && e.form_of_employeement === "Fast"
+        );
         break;
       case "innleid":
-        result = employees.filter((e) => e && e.form_of_employeement === "Innleid");
+        result = employees.filter(
+          (e) => e && e.form_of_employeement === "Innleid"
+        );
         break;
       case "heltid":
         result = employees.filter((e) => e && e.employee_percentages === 100);
@@ -46,18 +60,17 @@ const DashboardPages = () => {
       default:
         result = [];
     }
-    
 
     setFilteredData(result);
   }, [employees, filterKey]);
 
   // overskrift basert på filterKey. dårlig løsning - finn ut av det hvis tid senere både her og nav-pages
   const titleMap = {
-    teamleder: "Teamledere",
+    teamleder: "Teamleder",
     admin: "KS Admin",
-    kundeagent: "Kundeansvarlige",
-    fast: "Telenoransatte",
-    innleid: "Innleide",
+    kundeagent: "Kundeansvarlig",
+    fast: "Telenoransatt",
+    innleid: "Innleid",
     heltid: "Heltid",
     deltid: "Deltid",
   };
