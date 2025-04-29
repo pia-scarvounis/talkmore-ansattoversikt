@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/listview.css";
 import "../../styles/profilecards.css";
-import profileImage from "../../assets/images/default-img.png";
+import "../../styles/buttons.css";
 
 const ListView = ({ employees, loading, error }) => {
   const navigate = useNavigate();
@@ -24,7 +24,6 @@ const ListView = ({ employees, loading, error }) => {
           <div
             key={emp.employee_id}
             className={`profile-list-item ${borderClass}`}
-            onClick={() => navigate(`/employee-info/${emp.employee_id}`)}
           >
             <div className="profile-list-info">
               <p>

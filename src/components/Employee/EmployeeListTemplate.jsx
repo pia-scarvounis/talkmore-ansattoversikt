@@ -139,11 +139,14 @@ const EmployeeListTemplate = ({
               }
               className="view-toggle-button"
             >
-              <img src={ListIcon} alt="Bytt visning" className="view-icon" />
-              {viewMode === "cards" ? "Vis som liste" : "Vis som kort"}
+        {viewMode === "cards" && (
+  <img src={ListIcon} alt="Vis som liste" className="view-icon" />
+)}{viewMode === "cards" ? "Vis som liste" : "Vis som kort"}
+
+          
             </button>
             {viewMode === "list" && <ExportCSVButton />}{" "}
-            {/* Vises kun i listevisning */}
+           
           </div>
         </>
       )}
