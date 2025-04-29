@@ -22,6 +22,7 @@ const NavPages = () => {
     havana: "Havana",
     casablanca: "Casablanca",
     springfield: "Springfield",
+    performancemanagement: "Performance Management",
   }; // ikke bra løsnong. fiks senere
 
   const { data: employees, loading, error } = useSelector(

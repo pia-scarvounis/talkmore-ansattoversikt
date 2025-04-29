@@ -10,6 +10,7 @@ import ManageTeams from "./pages/ManageTeams";
 import EmployeeInfo from "./pages/EmployeeInfo";
 import NavPages from "./pages/NavPages";
 import DashboardPages from "./pages/DashboardPages";
+import AdminPanel from "./pages/AdminPanel"; 
 
 import ErrorBoundry from "./ErrorBoundry";
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/profilecardlists" element={<ProfileCardLists />} />
           <Route path="/register" element={<RegisterEmployee />} />
           <Route path="/edit/:id" element={<EditEmployee />} />
+          <Route path="/admin-panel" element={<AdminPanel />} />
           <Route
             path="/admin-dashboard/manage-team"
             element={<ManageTeams />}
