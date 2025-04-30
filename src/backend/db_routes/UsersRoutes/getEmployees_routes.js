@@ -256,6 +256,7 @@ router.get('/', async (req, res) => {
                     leave_percentage,
                     leave_start_date,
                     leave_end_date,
+                    department_id,
                     ...employeeData
                     } = row;
  
@@ -263,6 +264,7 @@ router.get('/', async (req, res) => {
                 acc[employee_id] = {
                 employee_id,
                 ...employeeData,
+                department_id,
                 relative: [],
                 licenses: [],
                 leave: null //Hvis ansatt ikke har noen permisjon
