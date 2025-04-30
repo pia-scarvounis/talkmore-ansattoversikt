@@ -55,6 +55,7 @@ const EditEmployee = () => {
   //Setter data og lar eksisterene data være i feltene
   useEffect(() => {
     if(employee){
+
       setFormData({
         employee_name: employee.employee_name || '',
         epost: employee.epost || '',
@@ -67,20 +68,17 @@ const EditEmployee = () => {
         employeeNr_Talkmore: employee.employeeNr_Talkmore || '',
         employeeNr_Telenor: employee.employeeNr_Telenor || '',
         employee_percentages: employee.employee_percentages || '',
+        department_id: employee.department_id || '',
         team_id: employee.team_id || '',
         workPosistion_id: employee.workPosistion_id || '',
         licenses:employee.licenses || [],
         relative: employee.relative || [],
-        leave: employee.leave || null
+        leave: employee.leave || null,
+      
       });
-      if(employee.department_id){
         const filtered = teams.filter((t) => t.department_id === employee.department_id);
         setfilteredTeams(filtered);
-        setFormData(prev => ({
-          ...prev,
-          department_id: employee.department_id,
-        }));
-      }
+        
     }
   }, [employee, teams]);
 
@@ -96,12 +94,16 @@ const EditEmployee = () => {
   //Når bruker endrer avdeling i options
   const handleDepartmentChange = (e) => {
     const departmentId = parseInt(e.target.value);
+
+    const filtered = teams.filter(t => t.department_id === departmentId);
+    setfilteredTeams(filtered);
+
     setFormData(prev => ({
       ...prev,
       department_id: departmentId,
       team_id: ''
     }));
-    const filtered = teams.filter(t => t.department_id === departmentId);
+
     setfilteredTeams(filtered);
   }
 
@@ -223,7 +225,7 @@ const EditEmployee = () => {
               value={formData.department_id}
               onChange={handleDepartmentChange}
               >
-                <options value=''>Velg avdeling</options>
+                <option value="">Velg avdeling</option>
                 {departments.map(dep => (
                   <option 
                     key={dep.department_id}
