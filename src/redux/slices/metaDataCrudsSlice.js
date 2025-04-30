@@ -9,7 +9,8 @@ export const fetchMetaData = createAsyncThunk(
             const [departmentsRes, teamsRes, posistionsRes] = await Promise.all([
                 axios.get('http://localhost:3000/api/metaData/departments'),
                 axios.get('http://localhost:3000/api/metaData/teams'),
-                axios.get('http://localhost:3000/api/metaData/posistions')
+                axios.get('http://localhost:3000/api/metaData/posistions'),
+                axios.get('http://localhost:3000/api/metaData/licenses')
             ]);
             return{
                 departments: departmentsRes.data,
