@@ -41,7 +41,10 @@ router.put('/:id', async (req, res) => {
         //Hvis ikke epost blir endret
         const original = existingResult[0];
         //Sjekk epost så man ikke får duplikat i endringen eller om epost ikke er endret
-        
+        //fikse dynamisk oppdatering
+        const fields = [];
+        const values = [];
+
         const originalEpost = (original.epost || '').trim().toLowerCase();
 
         const newEpost = (updatedData.epost || original.epost || '').toLowerCase();
@@ -50,6 +53,7 @@ router.put('/:id', async (req, res) => {
         console.log('Ny epost (trim/lower):', newEpost);
         console.log('Original epost (trim/lower):', originalEpost);
         console.log('Employee ID:', id);
+
 
         if(newEpost && newEpost !== (originalEpost || '').toLowerCase()){
             const [emailCheck] = await conn.query(
@@ -65,10 +69,11 @@ router.put('/:id', async (req, res) => {
                 values.push(newEpost);
             }
         }
-
-        //fikse dynamisk oppdatering
-        const fields = [];
-        const values = [];
+        // Sjekk og legg til navn
+        if (updatedData.employee_name && updatedData.employee_name !== original.employee_name) {
+        fields.push('employee_name = ?');
+        values.push(updatedData.employee_name);
+        }   
 
         // Legg til andre felter som har blitt endret
         const keysToCheck = [
