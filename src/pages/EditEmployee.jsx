@@ -411,17 +411,32 @@ const EditEmployee = () => {
 <div className="form-section">
   <h2 className="section-heading">Tilganger</h2>
   <div className="checkbox-group">
-    <label>
-      <input type="checkbox" name="access" value="Lisens 1" /> Eksempel Lisens 1
-    </label>
-    <label>
-      <input type="checkbox" name="access" value="Lisens 2" /> Eksempel Lisens 2
-    </label>
-    <label>
-      <input type="checkbox" name="access" value="Lisens 3" /> Eksempel Lisens 3
-    </label>
-    <label>
-    <input type="checkbox" name="access" value="Lisens 4" /> Eksempel lisens 4 </label>
+    {allLicenses.map((license) => (
+      <label key={license.license_id}>
+        <input
+          type="checkbox"
+          value={license.license_id}
+          checked={formData.license.some(
+            (l) =>l.license_id === license.license_id
+          )}
+          onChange={(e) => {
+            const isChecked = e.target;
+            const licenseId = Number(e.target.value);
+
+            const updatedLicenses = isChecked
+            ? [...formData.licenses, {license_id: licenseId}]
+            : formData.licenses.filter((l)=> l.license_id !== licenseId);
+
+            setFormData((prev) => ({
+              ...prev,
+              licenses: updatedLicenses,
+            }))
+          }}
+        >
+        </input>
+          {license.license_title}
+      </label>
+    ))}
   </div>
 </div>
 
