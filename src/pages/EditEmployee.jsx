@@ -23,6 +23,13 @@ const EditEmployee = () => {
   const navigate = useNavigate();
 
 
+  useEffect(() => {
+    dispatch(fetchMetaData());
+  }, [dispatch]);
+
+  const metaData = useSelector(state => state.metaData);
+  console.log("metaData fra Redux:", metaData);
+
   if (!id) return <div>Mangler ID</div>;
 
   //henter den ansatte fra get employeeSlicen og finner ansatte med id lik url
@@ -49,9 +56,7 @@ const EditEmployee = () => {
     }
   }, [dispatch, employee]);
 
-  useEffect(() => {
-    dispatch(fetchMetaData());
-  }, [dispatch]);
+  
   
   
   //Etter henting av ansatt så setter vi inn data
@@ -60,8 +65,9 @@ const EditEmployee = () => {
   
   //Setter data og lar eksisterene data være i feltene
   useEffect(() => {
-    if(employee && teams.length > 0) {
-      
+    if(employee && teams) {
+      console.log("Teams fra Redux/metaData:", teams);
+
       const deptId = employee.department_id ? String(employee.department_id): '';
       const teamId = employee.team_id ? String(employee.team_id): '';
       const workPosistionId = employee.workPosistion_id?.toString() || '';
@@ -98,15 +104,15 @@ const EditEmployee = () => {
   }, [employee, teams]);
 
   useEffect(() => {
-    if (!formData?.department_id && teams.length > 0 ){
+    if (formData?.department_id && teams.length > 0 ){
       const filtered = teams.filter(
-        (t) => t.department_id?.toString() === formData.department_id
+        (t) => t.team_department_id?.toString() === formData.department_id
       );
       setfilteredTeams(filtered);
       }
     
   }, [formData?.department_id, teams]);
-
+  console.log("formData.department_id:", formData?.department_id);
 
   //oppdaterer formData (objektet ansatt info) med input
   const handleChange = (e) => {

@@ -6,7 +6,7 @@ export const fetchMetaData = createAsyncThunk(
     'metaData/fetchMetaData',
     async(_, {rejectedWithValue}) => {
         try{
-            const [departmentsRes, teamsRes, posistionsRes] = await Promise.all([
+            const [departmentsRes, teamsRes, posistionsRes, licensesRes] = await Promise.all([
                 axios.get('http://localhost:3000/api/metaData/departments'),
                 axios.get('http://localhost:3000/api/metaData/teams'),
                 axios.get('http://localhost:3000/api/metaData/posistions'),
@@ -45,6 +45,7 @@ const metaDataSlice = createSlice({
                 state.departments = action.payload.departments;
                 state.teams = action.payload.teams;
                 state.posistions = action.payload.posistions;
+                state.licenses = action.payload.licenses;
             })
             .addCase(fetchMetaData.rejected, (state, action) => {
                 state.loading = false;

@@ -22,7 +22,11 @@ router.get('/departments', async (req, res) =>{
 router.get('/teams', async (req, res) => {
     try{
         const [teams] = await pool.query(`
-        SELECT team.*, department.department_name
+        SELECT 
+            team.team_id,
+            team.team_name,
+            team.department_id AS team_department_id,
+            department.department_name
         FROM team
         JOIN department ON team.department_id = department.department_id
         `);
