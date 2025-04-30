@@ -26,16 +26,19 @@ const EditEmployee = () => {
   //henter den ansatte fra get employeeSlicen og finner ansatte med id lik url
   const employee = useSelector(state => state.employees.data.find(emp => emp.employee_id === Number(id))
   );
-  const {success, error} = useSelector(state => state.updateEmployee);
   //Uthenting av avdeling/Teams/stillinger
-  const {departments, teams, posistions, loading } = useSelector(state => state.metaData)
+  const {departments, teams, posistions } = useSelector(state => state.metaData);
+  //Henter fra updateEmployeeSlicen
+  const {loading, success, error} = useSelector.apply(state => state.updateEmployee);
+  
+   //vi må bruke formdata
+  const [formData, setFormData] = useState(null)
+  const [filteredTeams, setfilteredTeams] = useState([]);
   //hent fetch metadata
   useEffect(() => {
     dispatch(fetchMetaData());
   },[dispatch]);
 
-   //vi må bruke formdata
-  const [formData, setFormData] = useState(null)
   //Etter henting av ansatt så setter vi inn data
   //Det må hentes på denne måten og ikke oppdatere i selve endre ansatt Slicen da backend ikke returnerer
   //listen, og versions id fra api genesys kan endre seg og settes inn i oppdatert ansatt
@@ -68,6 +71,15 @@ const EditEmployee = () => {
     }
   }, [employee, teams]);
 
+  //oppdaterer formData (objektet ansatt info) med input
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
   //Når bruker endrer avdeling i options
   const handleDepartmentChange = (e) => {
     const departmentId = parseInt(e.target.value);
@@ -88,14 +100,7 @@ const EditEmployee = () => {
     dispatch(updateEmployee({id, updatedData:formData}));
   }
 
-  //oppdaterer formData (objektet ansatt info) med input
-  const handleChange = (e) => {
-    const {name, value} = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+
 
   //etter vellykket oppdatering
   useEffect(() =>{
