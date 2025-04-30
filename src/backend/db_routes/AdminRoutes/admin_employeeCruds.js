@@ -25,6 +25,7 @@ router.put('/:id', async (req, res) => {
         if (!date) return null;
         return new Date(date).toISOString().split('T')[0];
       };
+     
       //må legge inn transasksjon for å rullere tilbake om feil og ungå feil i duplikat av epost -gpt
       const conn = await pool.getConnection();
     try{
@@ -45,14 +46,23 @@ router.put('/:id', async (req, res) => {
 
         const newEpost = (updatedData.epost || original.epost || '').toLowerCase();
 
+        console.log('🟨 Epost-sjekk:');
+        console.log('Ny epost (trim/lower):', newEpost);
+        console.log('Original epost (trim/lower):', originalEpost);
+        console.log('Employee ID:', id);
+
         if(newEpost && newEpost !== (originalEpost || '').toLowerCase()){
             const [emailCheck] = await conn.query(
                 `SELECT employee_id FROM employee WHERE epost = ? AND employee_id != ?`,
-                [newEpost, id]
+                [newEpost, Number(id)]
             );
             if(emailCheck.length > 0){
                 await conn.rollback();
                 return res.status(400).json({error: 'Eposten er allerede i bruk av en annen ansatt'});
+                
+            }else{
+                fields.push('epost = ?');
+                values.push(newEpost);
             }
         }
 
