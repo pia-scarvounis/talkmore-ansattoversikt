@@ -35,7 +35,6 @@ router.put('/:id', async (req, res) => {
         //henter originale ansatte er de ansatte som finnes i employee tabellen /før endring 
         //Hvis ikke epost blir endret
         const original = existingResult[0];
-
         //fikse dynamisk oppdatering
         const fields = [];
         const values = [];
@@ -61,6 +60,17 @@ router.put('/:id', async (req, res) => {
             fields.push('epost = ?');
             values.push(newEpost);
         }
+
+        //for loop setter inn fields
+        for(const key of key){
+            if(updatedData[key] !== undefined && updatedData[key] !== original[key]){
+                fields.push(`${key} = ?`);
+                values.push(['birthdate', 'start_date', 'end_date'].includes(key) ? formatDate(updatedData[key]):
+                updatedData[key]
+                );
+            }
+        }
+        /*
         if (updatedData.epost_Telenor !== original.epost_Telenor) {
             fields.push('epost_Telenor = ?');
             values.push(updatedData.epost_Telenor);
@@ -120,13 +130,13 @@ router.put('/:id', async (req, res) => {
             fields.push('workPosistion_id = ?');
             values.push(updatedData.workPosistion_id);
           }
-          
+          **/
+
           if(fields.length > 0){
             const sql =
                 `UPDATE employee
                 SET ${fields.join(', ')}
                 WHERE employee_id = ?`;
-
                 values.push(id);
                 await pool.query(sql, values);
                 console.log('Ansatt oppdatert');
@@ -279,8 +289,26 @@ router.put('/:id', async (req, res) => {
         }catch(genesysError){
             console.error('Feil ved oppdatering i Genesys', genesysError);
         }
+        //returnere oppdatert ansatt
+        const[updatedEmployee] = await pool.query(`
+            SELECT
+                e.*,
+                t.team_name,
+                d.department_name,
+                wp.posistion_title AS workPosistion_title
+            FROM employee e
+            LEFT JOIN team t ON e.team_id = t.team_id
+            LEFT JOIN department d ON t.department_id = d.department_id
+            LEFT JOIN workPosistion wp ON e.workPosistion_id = wp.workPosistion_id
+            WHERE e.employee_id = ?
+        `, [id]);
+
+        res.status(200).json({
+            message:'Ansatt, pårørendende, permisjon og genesys oppdatert',
+            employee: updatedEmployee[0]   
+         
+        });
     }
-        res.status(200).json({message:'Ansatt, pårørendende, permisjon og genesys oppdatert'});
 
     }catch(err){
         console.error('Feil ved oppdatering av ansatt:', err);
