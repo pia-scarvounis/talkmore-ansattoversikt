@@ -57,8 +57,6 @@ const EditEmployee = () => {
   }, [dispatch, employee]);
 
   
-  
-  
   //Etter henting av ansatt så setter vi inn data
   //Det må hentes på denne måten og ikke oppdatere i selve endre ansatt Slicen da backend ikke returnerer
   //listen, og versions id fra api genesys kan endre seg og settes inn i oppdatert ansatt
@@ -102,6 +100,8 @@ const EditEmployee = () => {
         
     }
   }, [employee, teams]);
+
+  console.log("Teams fra Redux:", JSON.stringify(teams, null, 2));
 
   useEffect(() => {
     if (formData?.department_id && teams.length > 0 ){
