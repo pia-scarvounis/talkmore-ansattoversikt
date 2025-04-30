@@ -31,11 +31,6 @@ const EditEmployee = () => {
     return state.employees.data.find(emp => emp.employee_id === Number(id));
   });
 
-  useEffect(() => {
-    dispatch(fetchMetaData());
-  }, [dispatch]);
-  
-
   //Uthenting av avdeling/Teams/stillinger
   const {departments, teams, posistions } = useSelector(state => state.metaData);
   //alle lisenser
@@ -58,16 +53,18 @@ const EditEmployee = () => {
     dispatch(fetchMetaData());
   }, [dispatch]);
   
+  
   //Etter henting av ansatt så setter vi inn data
   //Det må hentes på denne måten og ikke oppdatere i selve endre ansatt Slicen da backend ikke returnerer
   //listen, og versions id fra api genesys kan endre seg og settes inn i oppdatert ansatt
   
   //Setter data og lar eksisterene data være i feltene
   useEffect(() => {
-    if(employee ) {
+    if(employee && teams.length > 0) {
       
-      const deptId = employee.department_id ? String(employee.department_id): '';
+      const deptId = employee.department_id ? String(employee.team_department_id): '';
       const teamId = employee.team_id ? String(employee.team_id): '';
+      const workPosistionId = employee.workPosistion_id?.toString() || '';
 
       const filtered = teams.filter((t) => t.department_id?.toString() === deptId);
       setfilteredTeams(filtered);
@@ -90,7 +87,7 @@ const EditEmployee = () => {
         employee_percentages: employee.employee_percentages || '',
         department_id: deptId,
         team_id: teamId ,
-        workPosistion_id: employee.workPosistion_id || '',
+        workPosistion_id: workPosistionId,
         licenses:employee.licenses || [],
         relative: employee.relative || [],
         leave: employee.leave || null,
@@ -98,15 +95,16 @@ const EditEmployee = () => {
       });
         
     }
-  }, [employee]);
+  }, [employee, teams, departments]);
 
   useEffect(() => {
-    if (formData?.department_id && teams.length > 0) {
+    if (!formData?.department_id && teams.length > 0 ){
       const filtered = teams.filter(
         (t) => t.department_id?.toString() === formData.department_id
       );
       setfilteredTeams(filtered);
-    }
+      }
+    
   }, [formData?.department_id, teams]);
 
 
@@ -137,6 +135,15 @@ const EditEmployee = () => {
   console.log("filteredTeams:", filteredTeams);
   console.log("selected option:", departments.find(dep => dep.department_id.toString() === formData?.department_id));
   
+  const handleLicenseChange = (e) => {
+    const isChecked = e.target.checked;
+    const licenseId = Number(e.target.value);
+    const updated = isChecked
+      ? [...formData.licenses, { license_id: licenseId }]
+      : formData.licenses.filter(l => l.license_id !== licenseId);
+    setFormData(prev => ({ ...prev, licenses: updated }));
+  };
+
 
   //lagre
   const handleSubmit = (e) => {
@@ -291,7 +298,7 @@ const EditEmployee = () => {
               >
               <option value=''>Velg stilling</option>
               {posistions.map(posistion =>(
-                <option key={posistion.workPosistion_id} value={posistion.workPosistion_id}>
+                <option key={posistion.workPosistion_id} value={posistion.workPosistion_id.toString()}>
                   {posistion.posistion_title}
                 </option>
               ))}
@@ -416,22 +423,10 @@ const EditEmployee = () => {
         <input
           type="checkbox"
           value={license.license_id}
-          checked={formData.license.some(
+          checked={formData.licenses.some(
             (l) =>l.license_id === license.license_id
           )}
-          onChange={(e) => {
-            const isChecked = e.target;
-            const licenseId = Number(e.target.value);
-
-            const updatedLicenses = isChecked
-            ? [...formData.licenses, {license_id: licenseId}]
-            : formData.licenses.filter((l)=> l.license_id !== licenseId);
-
-            setFormData((prev) => ({
-              ...prev,
-              licenses: updatedLicenses,
-            }))
-          }}
+          onChange={handleLicenseChange}
         >
         </input>
           {license.license_title}
