@@ -25,49 +25,55 @@ router.put('/:id', async (req, res) => {
         if (!date) return null;
         return new Date(date).toISOString().split('T')[0];
       };
-      
+      //må legge inn transasksjon for å rullere tilbake om feil og ungå feil i duplikat av epost -gpt
+      const conn = await pool.getConnection();
     try{
 
-        const[existingResult] = await pool.query(`SELECT * FROM employee WHERE employee_id = ?`,[id]);
+        await conn.beginTransaction();
+
+        const[existingResult] = await conn.query(`SELECT * FROM employee WHERE employee_id = ?`,[id]);
         if(existingResult.length === 0) {
+            await conn.rollback();
             return res.status(404).json({error: 'Ansatt ikke funnet'});
         }
         //henter originale ansatte er de ansatte som finnes i employee tabellen /før endring 
         //Hvis ikke epost blir endret
         const original = existingResult[0];
+        //Sjekk epost så man ikke får duplikat i endringen eller om epost ikke er endret
+        
+        const originalEpost = (original.epost || '').trim().toLowerCase();
+
+        const newEpost = (updatedData.epost || original.epost || '').toLowerCase();
+
+        if(newEpost && newEpost !== (originalEpost || '').toLowerCase()){
+            const [emailCheck] = await conn.query(
+                `SELECT employee_id FROM employee WHERE epost = ? AND employee_id != ?`,
+                [newEpost, id]
+            );
+            if(emailCheck.length > 0){
+                await conn.rollback();
+                return res.status(400).json({error: 'Eposten er allerede i bruk av en annen ansatt'});
+            }
+        }
+
         //fikse dynamisk oppdatering
         const fields = [];
         const values = [];
 
-        if (updatedData.employee_name && updatedData.employee_name !== original.employee_name) {
-            fields.push('employee_name = ?');
-            values.push(updatedData.employee_name);
-          }
-        
-        //Sjekk epost så man ikke får duplikat i endringen eller om epost ikke er endret
-        const newEpost = (updatedData.epost || original.epost || '').toLowerCase();
-        const originalEpost = (original.epost || '').trim().toLowerCase();
-
-        if(newEpost !== originalEpost){
-            const [emailCheck] = await pool.query(
-                `SELECT employee_id FROM employee WHERE epost = ? AND employee_id != ?`,
-                [newEpost, id]
-            );
-
-            if(emailCheck.length > 0){
-                return res.status(400).json({error: 'Eposten er allerede i bruk av en annen ansatt'});
-            }
-            fields.push('epost = ?');
-            values.push(newEpost);
-        }
-
+        // Legg til andre felter som har blitt endret
+        const keysToCheck = [
+        'epost_Telenor', 'phoneNr', 'birthdate', 'image_url',
+        'start_date', 'end_date', 'form_of_employeement', 'employeeNr_Talkmore',
+        'employeeNr_Telenor', 'employee_percentages', 'team_id', 'workPosistion_id'
+        ];
         //for loop setter inn fields
-        for(const key of key){
-            if(updatedData[key] !== undefined && updatedData[key] !== original[key]){
+        for(const key of keysToCheck){
+            const newValue = updatedData[key];
+            const originalValue = original[key];
+
+            if(newValue !== undefined && String(newValue) !== String(originalValue)){
                 fields.push(`${key} = ?`);
-                values.push(['birthdate', 'start_date', 'end_date'].includes(key) ? formatDate(updatedData[key]):
-                updatedData[key]
-                );
+                values.push(['birthdate', 'start_date', 'end_date'].includes(key) ? formatDate(newValue): newValue);
             }
         }
         /*
@@ -137,13 +143,15 @@ router.put('/:id', async (req, res) => {
                 `UPDATE employee
                 SET ${fields.join(', ')}
                 WHERE employee_id = ?`;
+
                 values.push(id);
-                await pool.query(sql, values);
+                await conn.query(sql, values);
                 console.log('Ansatt oppdatert');
           }else{
             console.log('Ingen endringer i employee')
           }
         //Oppdater employee
+        /** 
         await pool.query(`
             UPDATE employee
             SET 
@@ -169,13 +177,14 @@ router.put('/:id', async (req, res) => {
             updatedData.team_id || original.team_id,
             updatedData.workPosistion_id || original.workPosistion_id,
             id
-        ]);
+        ///]);
+        */
         //Oppdater pårørende (relative)
         if(Array.isArray(updatedData.relative)){
             //Fjerner tidligere relativ maks 1 pårørende per ansatt
-            await pool.query(`DELETE FROM relative WHERE employee_id = ?`,[id]);
+            await conn.query(`DELETE FROM relative WHERE employee_id = ?`,[id]);
             for(const r of updatedData.relative){
-                await pool.query(
+                await conn.query(
                     `INSERT INTO relative (employee_id, relative_name)
                     VALUES (?, ?)`,[id, r.relative_name]
                 );
@@ -185,10 +194,10 @@ router.put('/:id', async (req, res) => {
         let leaveId = null;
         if(updatedData.leave){
             //Fjerner tidligere permisjon hvis endringer
-            await pool.query(`DELETE FROM employeeLeave WHERE employee_id = ?`, [id]);
+            await conn.query(`DELETE FROM employeeLeave WHERE employee_id = ?`, [id]);
 
 
-            const [leaveResult] = await pool.query(
+            const [leaveResult] = await conn.query(
                 `INSERT INTO employeeLeave (employee_id, leave_percentage, leave_start_date, leave_end_date)
                 VALUES (?, ?, ?, ?)`
                 ,[
@@ -201,7 +210,7 @@ router.put('/:id', async (req, res) => {
             leaveId = leaveResult.insertId; // får ny id
         }else{
             //hvis ikke ny hent eksisterende
-            const [leaveResult] = await pool.query(`
+            const [leaveResult] = await conn.query(`
                 SELECT * FROM employeeLeave WHERE employee_id = ?`, [id]);
                 if(leaveResult.length > 0){
                     leaveId = leaveResult[0].leave_id;
@@ -210,9 +219,9 @@ router.put('/:id', async (req, res) => {
         //oppdatere lisenser for ansatt
         if(Array.isArray(updatedData.licenses)){
             //fjerner lisenser og setter inn nye
-            await pool.query(`DELETE FROM employee_license WHERE employee_id = ?`,[id]);
+            await conn.query(`DELETE FROM employee_license WHERE employee_id = ?`,[id]);
             for(const license of updatedData.licenses){
-                await pool.query(
+                await conn.query(
                     `INSERT INTO employee_license (employee_id, license_id)
                     VALUES (?, ?)`,
                     [id, license.license_id]
@@ -220,7 +229,7 @@ router.put('/:id', async (req, res) => {
             }
         }
         //Denne skal insert inn i changelog tabellen /historikk for ansatt
-        await pool.query(`
+        await conn.query(`
             INSERT INTO changeLog (
                 employee_id, admin_id, 
                 employeeNr_Talkmore, employeeNr_Telenor, 
@@ -257,7 +266,6 @@ router.put('/:id', async (req, res) => {
             apiInstance.setAccessToken(accessTokenGen);
 
             try{
-
              //må hente bruker før vi setter den i update user
             const currentUser = await usersApi.getUser(original.genesys_user_id);
             console.log('Genesys User ID vi prøver å oppdatere', original.genesys_user_id);
@@ -271,26 +279,19 @@ router.put('/:id', async (req, res) => {
 
             //variabel som holder på den oppdaterte ansatte
             const updatedUser = await usersApi.patchUser(currentUser, updateUser);
-            console.log(`Oppdatert i Genesys: ${currentUser}`);
-
-            if(!updatedData.employee_name || !updatedData.epost){
-                return res.status(400).json({
-                    error: 'Både navn og epost må være satt i for å oppdatere i genesys'
-                });
-            }
-        
             //oppdater genesys_verision id i databasen med den oppdaterte verdien i version
-            await pool.query(`
+            await conn.query(`
                 UPDATE employee
                 SET genesys_version = ?
                 WHERE employee_id = ?
             `,[updatedUser.version, id]);
 
+            console.log(`Oppdatert i Genesys: ${currentUser}`);
         }catch(genesysError){
             console.error('Feil ved oppdatering i Genesys', genesysError);
         }
         //returnere oppdatert ansatt
-        const[updatedEmployee] = await pool.query(`
+        const[updatedEmployee] = await conn.query(`
             SELECT
                 e.*,
                 t.team_name,
@@ -301,7 +302,9 @@ router.put('/:id', async (req, res) => {
             LEFT JOIN department d ON t.department_id = d.department_id
             LEFT JOIN workPosistion wp ON e.workPosistion_id = wp.workPosistion_id
             WHERE e.employee_id = ?
-        `, [id]);
+        `, [id]
+        );
+        await conn.commit();
 
         res.status(200).json({
             message:'Ansatt, pårørendende, permisjon og genesys oppdatert',
@@ -311,6 +314,7 @@ router.put('/:id', async (req, res) => {
     }
 
     }catch(err){
+        await conn.query.rollback();
         console.error('Feil ved oppdatering av ansatt:', err);
         res.status(500).json({error: 'Kunne ikke oppdatere ansatt'});
     }
