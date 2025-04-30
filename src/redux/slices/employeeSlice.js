@@ -1,5 +1,6 @@
 import {createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { updateEmployee } from './adminCrudsSlice';
 
 //SLICE for EMPLOYEES
 
@@ -45,7 +46,15 @@ const employeeSlice = createSlice({
             .addCase(fetchEmployees.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
-            });
+            })
+            //setter inn det nye oppdaterte objektet i employees
+            .addCase(updateEmployee.fulfilled, (state, action) =>{
+                const updated = action.payload.employee;
+                const index = state.data.findIndex(emp => emp.employee_id === updatet.employee_id);
+                if(index !==1){
+                    state.data[index] = updated;
+                }
+            })
     }
 });
 
