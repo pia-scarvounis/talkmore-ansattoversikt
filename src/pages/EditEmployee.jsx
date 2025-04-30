@@ -63,7 +63,7 @@ const EditEmployee = () => {
   
   //Setter data og lar eksisterene data være i feltene
   useEffect(() => {
-    if(employee && teams) {
+    if(employee && teams.length > 0) {
       console.log("Teams fra Redux/metaData:", teams);
 
       const deptId = employee.department_id ? String(employee.department_id): '';
@@ -102,6 +102,8 @@ const EditEmployee = () => {
   }, [employee, teams]);
 
   console.log("Teams fra Redux:", JSON.stringify(teams, null, 2));
+  
+
 
   useEffect(() => {
     if (formData?.department_id && teams.length > 0 ){
@@ -109,6 +111,7 @@ const EditEmployee = () => {
         (t) => t.team_department_id?.toString() === formData.department_id
       );
       setfilteredTeams(filtered);
+      console.log("✅ Filtered teams:", filtered);
       }
     
   }, [formData?.department_id, teams]);
