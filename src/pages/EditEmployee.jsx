@@ -22,13 +22,14 @@ const EditEmployee = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
   if (!id) return <div>Mangler ID</div>;
+
   //henter den ansatte fra get employeeSlicen og finner ansatte med id lik url
   const employee = useSelector(state => {
     if (!id || !state.employees?.data) return null;
     return state.employees.data.find(emp => emp.employee_id === Number(id));
   });
-
 
   //Uthenting av avdeling/Teams/stillinger
   const {departments, teams, posistions } = useSelector(state => state.metaData);
@@ -38,11 +39,15 @@ const EditEmployee = () => {
    //vi må bruke formdata
   const [formData, setFormData] = useState(null)
   const [filteredTeams, setfilteredTeams] = useState([]);
-  //hent fetch metadata
-  useEffect(() => {
-    dispatch(fetchMetaData());
-  },[dispatch]);
+  
 
+  useEffect(() => {
+    if (!employee) {
+      dispatch(fetchEmployees());
+      dispatch (fetchMetaData());
+    }
+  }, [dispatch, employee]);
+  
   //Etter henting av ansatt så setter vi inn data
   //Det må hentes på denne måten og ikke oppdatere i selve endre ansatt Slicen da backend ikke returnerer
   //listen, og versions id fra api genesys kan endre seg og settes inn i oppdatert ansatt
@@ -69,8 +74,12 @@ const EditEmployee = () => {
         leave: employee.leave || null
       });
       if(employee.department_id){
-        const filtered = teams.filter(t => t.department_id === employee.department_id);
+        const filtered = teams.filter((t) => t.department_id === employee.department_id);
         setfilteredTeams(filtered);
+        setFormData(prev => ({
+          ...prev,
+          department_id: employee.department_id,
+        }));
       }
     }
   }, [employee, teams]);
@@ -103,8 +112,6 @@ const EditEmployee = () => {
     //sender inn oppdatert ansatt objektet som formData i fetchen
     dispatch(updateEmployee({id, updatedData:formData}));
   }
-
-
 
   //etter vellykket oppdatering
   useEffect(() =>{
@@ -235,7 +242,7 @@ const EditEmployee = () => {
               disabled={!formData.department_id}
               >
                 <option value=''>Velg</option>
-                {teams.map(team => (
+                {filteredTeams.map(team => (
                   <option key={team.team_id} value={team.team_id}>
                     {team.team_name}
                   </option>
@@ -306,7 +313,7 @@ const EditEmployee = () => {
         <div className="two-column">
           <div className="column">
           <label>Permisjonsprosent</label>
-            <input
+            <select
             type="number"
             name="leave_percentage"
             value={formData.leave ? formData.leave.leave_percentage : ''}
@@ -319,7 +326,17 @@ const EditEmployee = () => {
               }
             }));
           }}
-        />
+        >
+          <option value="">Velg %</option>
+          {[...Array(10)].map((_, i) => {
+          const pct = (i + 1) * 10;
+          return (
+            <option key={pct} value={pct}>
+              {pct}%
+            </option>
+          );
+        })}
+        </select>
 
         <label>Startdato permisjon</label>
         <input
