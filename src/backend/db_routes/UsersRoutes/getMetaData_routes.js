@@ -46,6 +46,18 @@ router.get('/posistions', async (req, res) =>{
         console.error('Feil ved henting av stillinger');
         res.status(500).json({error:'Noe gikk galt'})
     }
-})
+});
+
+router.get('/licenses', async (req, res) =>{
+    try{
+        const [licenses] = await pool.query(`
+            SELECT * FROM license
+        `);
+        res.json(licenses);
+    }catch(err){
+        console.err('Feil ved henting av lisenser:', err);
+        res.status(500).json({error: 'Noe gikk galt ved henting av lisenser'})
+    }
+});
 
 export default router;
