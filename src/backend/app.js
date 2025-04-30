@@ -43,7 +43,7 @@ app.use('/api/availableemployees', availableEmployees);
 app.use('/api/employee/history', employeeHistory);
 
 //Hente (get) rutere for team, avdelinger, og stillinger fra databasen
-app.use('api/metaData', metaDataGet)
+app.use('/api/metaData', metaDataGet)
 
 //rutere kun for admin
 

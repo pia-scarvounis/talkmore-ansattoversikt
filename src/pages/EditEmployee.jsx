@@ -10,9 +10,8 @@ import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 import EditHistoryPopup from "../components/History/EditHistoryPopup"; // for å teste EditHistoryPopupen
 
-import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { updateEmployee, resetUpdateState } from "../redux/slices/adminCrudsSlice";
 import { fetchEmployees } from "../redux/slices/employeeSlice";
 import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice";
@@ -23,13 +22,18 @@ const EditEmployee = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  if (!id) return <div>Mangler ID</div>;
   //henter den ansatte fra get employeeSlicen og finner ansatte med id lik url
-  const employee = useSelector(state => state.employees.data.find(emp => emp.employee_id === Number(id))
-  );
+  const employee = useSelector(state => {
+    if (!id || !state.employees?.data) return null;
+    return state.employees.data.find(emp => emp.employee_id === Number(id));
+  });
+
+
   //Uthenting av avdeling/Teams/stillinger
   const {departments, teams, posistions } = useSelector(state => state.metaData);
   //Henter fra updateEmployeeSlicen
-  const {loading, success, error} = useSelector.apply(state => state.updateEmployee);
+  const {loading, success, error} = useSelector(state => state.updateEmployee);
   
    //vi må bruke formdata
   const [formData, setFormData] = useState(null)
