@@ -15,7 +15,8 @@ export const fetchMetaData = createAsyncThunk(
             return{
                 departments: departmentsRes.data,
                 teams: teamsRes.data,
-                posistions: posistionsRes.data
+                posistions: posistionsRes.data,
+                licenses: licensesRes.data
             }
         }catch(error){
             return rejectedWithValue(error.response.data);
@@ -29,6 +30,7 @@ const metaDataSlice = createSlice({
         departments: [],
         teams: [],
         posistions: [],
+        licenses: [],
         loading: false,
         error: null
     },

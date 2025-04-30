@@ -31,8 +31,15 @@ const EditEmployee = () => {
     return state.employees.data.find(emp => emp.employee_id === Number(id));
   });
 
+  useEffect(() => {
+    dispatch(fetchMetaData());
+  }, [dispatch]);
+  
+
   //Uthenting av avdeling/Teams/stillinger
   const {departments, teams, posistions } = useSelector(state => state.metaData);
+  //alle lisenser
+  const {licenses: allLicenses } = useSelector(state => state.metaData);
   //Henter fra updateEmployeeSlicen
   const {loading, success, error} = useSelector(state => state.updateEmployee);
   
