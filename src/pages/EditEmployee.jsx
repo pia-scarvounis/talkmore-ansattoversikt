@@ -62,7 +62,7 @@ const EditEmployee = () => {
   useEffect(() => {
     if(employee && teams.length > 0) {
       
-      const deptId = employee.department_id ? String(employee.team_department_id): '';
+      const deptId = employee.department_id ? String(employee.department_id): '';
       const teamId = employee.team_id ? String(employee.team_id): '';
       const workPosistionId = employee.workPosistion_id?.toString() || '';
 
@@ -95,7 +95,7 @@ const EditEmployee = () => {
       });
         
     }
-  }, [employee, teams, departments]);
+  }, [employee, teams]);
 
   useEffect(() => {
     if (!formData?.department_id && teams.length > 0 ){
