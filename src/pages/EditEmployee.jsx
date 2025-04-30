@@ -44,9 +44,12 @@ const EditEmployee = () => {
   useEffect(() => {
     if (!employee) {
       dispatch(fetchEmployees());
-      dispatch (fetchMetaData());
     }
   }, [dispatch, employee]);
+
+  useEffect(() => {
+    dispatch(fetchMetaData());
+  }, [dispatch]);
   
   //Etter henting av ansatt så setter vi inn data
   //Det må hentes på denne måten og ikke oppdatere i selve endre ansatt Slicen da backend ikke returnerer
@@ -54,7 +57,17 @@ const EditEmployee = () => {
   
   //Setter data og lar eksisterene data være i feltene
   useEffect(() => {
-    if(employee){
+    if(employee ) {
+      
+      const deptId = employee.department_id ? String(employee.department_id): '';
+      const teamId = employee.team_id ? String(employee.team_id): '';
+
+      const filtered = teams.filter((t) => t.department_id?.toString() === deptId);
+      setfilteredTeams(filtered);
+
+      console.log("employee.department_id:", employee.department_id);
+      console.log("employee.team_id:", employee.team_id);
+
 
       setFormData({
         employee_name: employee.employee_name || '',
@@ -68,51 +81,62 @@ const EditEmployee = () => {
         employeeNr_Talkmore: employee.employeeNr_Talkmore || '',
         employeeNr_Telenor: employee.employeeNr_Telenor || '',
         employee_percentages: employee.employee_percentages || '',
-        department_id: employee.department_id || '',
-        team_id: employee.team_id || '',
+        department_id: deptId,
+        team_id: teamId ,
         workPosistion_id: employee.workPosistion_id || '',
         licenses:employee.licenses || [],
         relative: employee.relative || [],
         leave: employee.leave || null,
       
       });
-        const filtered = teams.filter((t) => t.department_id === employee.department_id);
-        setfilteredTeams(filtered);
         
     }
-  }, [employee, teams]);
+  }, [employee]);
+
+  useEffect(() => {
+    if (formData?.department_id && teams.length > 0) {
+      const filtered = teams.filter(
+        (t) => t.department_id?.toString() === formData.department_id
+      );
+      setfilteredTeams(filtered);
+    }
+  }, [formData?.department_id, teams]);
+
 
   //oppdaterer formData (objektet ansatt info) med input
   const handleChange = (e) => {
-    const {name, value} = e.target;
+   const {name, value} = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
-    }))
+      [name]: value,
+    }));
   }
 
   //Når bruker endrer avdeling i options
   const handleDepartmentChange = (e) => {
-    const departmentId = parseInt(e.target.value);
 
-    const filtered = teams.filter(t => t.department_id === departmentId);
-    setfilteredTeams(filtered);
+    const departmentId = e.target.value;
 
     setFormData(prev => ({
       ...prev,
       department_id: departmentId,
       team_id: ''
     }));
-
+    const filtered = teams.filter(t => t.department_id?.toString() === departmentId);
     setfilteredTeams(filtered);
   }
+
+  console.log("department_id:", formData?.department_id);
+  console.log("filteredTeams:", filteredTeams);
+  console.log("selected option:", departments.find(dep => dep.department_id.toString() === formData?.department_id));
+  
 
   //lagre
   const handleSubmit = (e) => {
     e.preventDefault();
     if(!formData) return;
     //sender inn oppdatert ansatt objektet som formData i fetchen
-    dispatch(updateEmployee({id, updatedData:formData}));
+    dispatch(updateEmployee({id, updatedData: formData }));
   }
 
   //etter vellykket oppdatering
@@ -124,6 +148,7 @@ const EditEmployee = () => {
       //Sette riktig alert ui her!!!!
       alert('Ansatt oppdatert');
       //sett inn riktig navigasjon her: tilbake til ansattprofildetaljer med id)
+      navigate(`/employee/${id}`);
     }
     if(error){
       alert('Feil: ' + error);
@@ -221,15 +246,15 @@ const EditEmployee = () => {
               {/**Avdeling og team */}
               <label>Avdeling</label>
               <select
-              name="department_id"
-              value={formData.department_id}
-              onChange={handleDepartmentChange}
+                name="department_id"
+                value={formData.department_id}
+                onChange={handleDepartmentChange}
               >
                 <option value="">Velg avdeling</option>
                 {departments.map(dep => (
                   <option 
                     key={dep.department_id}
-                    value={dep.department_id}
+                    value={dep.department_id.toString()}
                     >
                       {dep.department_name}
                   </option>
@@ -245,7 +270,7 @@ const EditEmployee = () => {
               >
                 <option value=''>Velg</option>
                 {filteredTeams.map(team => (
-                  <option key={team.team_id} value={team.team_id}>
+                  <option key={team.team_id} value={team.team_id.toString()}>
                     {team.team_name}
                   </option>
                 ))}

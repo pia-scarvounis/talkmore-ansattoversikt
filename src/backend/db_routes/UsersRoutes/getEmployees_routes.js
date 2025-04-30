@@ -221,6 +221,7 @@ router.get('/', async (req, res) => {
                     relative.relative_id,
                     relative.relative_name,
                     team.team_name,
+                    team.department_id,
                     department.department_name,
                     workPosistion.posistion_title as workPosistion_title,
                     l.license_id,
