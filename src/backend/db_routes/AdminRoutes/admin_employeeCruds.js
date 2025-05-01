@@ -118,8 +118,8 @@ router.put('/:id', async (req, res) => {
             await conn.query(`DELETE FROM relative WHERE employee_id = ?`,[id]);
             for(const r of updatedData.relative){
                 await conn.query(
-                    `INSERT INTO relative (employee_id, relative_name)
-                    VALUES (?, ?)`,[id, r.relative_name]
+                    `INSERT INTO relative (employee_id, relative_name, relative_phoneNr)
+                    VALUES (?, ?,?)`,[id, r.relative_name, r.relative_phoneNr]
                 );
             }
         }

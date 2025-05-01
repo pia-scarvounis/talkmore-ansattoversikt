@@ -237,7 +237,7 @@ const EditEmployee = () => {
               <input type="text" />
             </div>
             <div className="column">
-              <label>Telefonnummer</label>
+              <label>Fornavn og Etternavn</label>
               <input type="text" name="relative_name" 
               value={formData.relative.length > 0 ? formData.relative[0].relative_name : ''} 
               onChange={(e) => {
