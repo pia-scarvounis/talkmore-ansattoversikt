@@ -63,24 +63,29 @@ router.post('/', async (req, res) => {
       const shuffledTeamIds = allTeams.map(t => t.team_id);
       shuffle(shuffledTeamIds);
   
-      let teamIndex = 0;
+      
       const employees = [];
 
       //henter team_id for performance management-teamet
-      const [performanceTeam] = await pool.query(
+      const [[{team_id: adminTeamId} = {}]] = await pool.query(
         `SELECT team_id FROM team WHERE team_name = 'Performance Management'`
       );
-      const adminTeamId = performanceTeam[0]?.team_id;
-      if(!adminTeamId){
-        throw new Error('Fant ikke teamet "Performance Management" i databasen');
-      }
       
+      let teamIndex = 0;
+    
       //Maks 8 admin skal bli fordelt per testbruker, 1 teamleder per team, og resten tildeles kundeagenter
       //må bruke denne istedenfor promise da den fortsatte å hente inn nye admin og teamledere
       //bruker det fordi det krever en nøyaktig rekkefølge og kontroll på tildeling av tilstand
       //gpt for å justere promise
       for (const employee of genesysApiEmployees) {
         let team_id;
+
+        do{
+          team_id = shuffledTeamIds[teamIndex % shuffledTeamIds.length];
+          teamIndex++;
+        }while(team_id === adminTeamId && currentAdminCount >= 8);
+
+        /** 
         let assignAsAdmin = false;
 
         if(currentAdminCount < 8){
@@ -90,7 +95,8 @@ router.post('/', async (req, res) => {
           team_id = shuffledTeamIds[teamIndex % shuffledTeamIds.length];
           teamIndex++;
         }
-  
+        */
+       //
         const [teamRows] = await pool.query('SELECT team_name FROM team WHERE team_id = ?', [team_id]);
         const team_name = teamRows[0]?.team_name || 'Ukjent team';
 
@@ -128,7 +134,7 @@ router.post('/', async (req, res) => {
         let employee_percentages = 100;
   
         // --- Tildel rolle basert på logikk hjelp med gpt ---
-        if(assignAsAdmin){
+        if(team_id === adminTeamId && currentAdminCount < 8){
           workPosistion_title = 'Admin';
           const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Admin'`);
           workPosistion_id = res[0].workPosistion_id;
