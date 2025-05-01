@@ -25,22 +25,42 @@ const NavPages = () => {
 
   useEffect(() => {
     if (!employees || !Array.isArray(employees)) return;
+    const allDepartments = employees
+  .map(emp => emp.department_name?.toLowerCase())
+  .filter(Boolean);
+
 
     let result = [];
+    console.log("Admin-ansatte funnet:", result);
 
     if (lowerTeam === "alleansatte") {
       result = employees;
       setPageTitle("Alle ansatte");
-    } else if (["privat", "bedrift", "2.linje"].includes(lowerTeam)) {
+    /* } else if (["privat", "bedrift", "2.linje", "admin"].includes(lowerTeam)) { */
+    } else if (allDepartments.includes(lowerTeam)) {
+
       result = employees.filter(
         (emp) => emp.department_name?.toLowerCase() === lowerTeam
-      );
+      ); 
       if (result.length > 0) {
         setPageTitle(result[0].department_name); 
       } else {
         setPageTitle(formatTitle(lowerTeam)); 
       }
     } 
+    else if (lowerTeam === "admin") {
+      // EGEN sjekk for Admin: Vis ansatte med rolle admin
+      result = employees.filter(
+        (emp) => emp.role?.toLowerCase() === "admin"
+      );
+    
+      if (result.length > 0) {
+        setPageTitle("Admin");
+      } else {
+        setPageTitle("Admin");
+      }
+    }
+    
     else {
       // hvis vi er på team (alle andre team)
       result = employees.filter(
