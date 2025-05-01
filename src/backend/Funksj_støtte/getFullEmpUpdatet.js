@@ -4,7 +4,6 @@ export async function getFullEmployeeById(conn, employeeId) {
         employee.*,
         relative.relative_id,
         relative.relative_name,
-        relative.relative_phoneNr,
         team.team_name,
         team.department_id AS department_id,
         department.department_name,
@@ -54,7 +53,7 @@ export async function getFullEmployeeById(conn, employeeId) {
       }
   
       if (relative_id) {
-        acc[employee_id].relative.push({ relative_id, relative_name });
+        acc[employee_id].relative.push({ relative_id, relative_name, relative_phoneNr });
       }
   
       if (license_id && license_title) {

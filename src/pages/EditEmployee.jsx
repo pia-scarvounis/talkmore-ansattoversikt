@@ -252,7 +252,7 @@ const EditEmployee = () => {
               <input 
                 type="text" 
                 name="relative_phoneNr"
-                value={formData.relative.length > 0 ? formData.relative[0].relative_phoneNr || '': ''}
+                value={formData.relative[0]?.relative_phoneNr || ''}
                 onChange={(e) => {
                   const existing = formData.relative[0] || {};
 
