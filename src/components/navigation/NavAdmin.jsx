@@ -66,7 +66,7 @@ const NavAdmin = () => {
           </NavLink>
         </div>
 
-        <NavLink to="/admin-panel" className="nav-link main-link">
+        <NavLink to="/admin-dashboard/admin-panel" className="nav-link main-link">
   Administrasjonspanel
 </NavLink>
 

@@ -4,13 +4,17 @@ import DashBoardAdmin from "./pages/DashboardAdmin";
 import DashboardReadOnly from "./pages/DashboardReadOnly";
 import ProfileCards from "./components/Employee/ProfileCards";
 import ProfileCardLists from "./pages/ProfileCardLists";
-import RegisterEmployee from "./pages/RegisterEmployee";
 import EditEmployee from "./pages/EditEmployee";
-import ManageTeams from "./pages/ManageTeams";
 import EmployeeInfo from "./pages/EmployeeInfo";
 import NavPages from "./pages/NavPages";
 import DashboardPages from "./pages/DashboardPages";
+
 import AdminPanel from "./pages/AdminPanel"; 
+import ManageSystems from "./pages/ManageSystems";
+import ManageTeams from "./pages/ManageTeams";
+import RegisterEmployee from "./pages/RegisterEmployee";
+
+
 
 import ErrorBoundry from "./ErrorBoundry";
 
@@ -40,6 +44,9 @@ function App() {
             path="/dashboardlist/:filterKey"
             element={<DashboardPages />}
           />
+          <Route path="/admin-dashboard/admin-panel" element={<AdminPanel />} />
+          <Route path="/admin-dashboard/manage-systems" element={<ManageSystems />} />
+
         </Routes>
       </Router>
     </ErrorBoundry>
