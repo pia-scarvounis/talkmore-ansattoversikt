@@ -70,7 +70,7 @@ const EditEmployee = () => {
       const teamId = employee.team_id ? String(employee.team_id): '';
       const workPosistionId = employee.workPosistion_id?.toString() || '';
 
-      const filtered = teams.filter((t) => t.department_id?.toString() === deptId);
+      const filtered = teams.filter((t) => t.team_department_id?.toString() === deptId);
       setfilteredTeams(filtered);
 
       console.log("employee.department_id:", employee.department_id);
@@ -106,7 +106,7 @@ const EditEmployee = () => {
 
 
   useEffect(() => {
-    if (formData?.department_id && teams.length > 0 ){
+    if (formData?.department_id && teams.length > 0  ){
       const filtered = teams.filter(
         (t) => t.team_department_id?.toString() === formData.department_id
       );
