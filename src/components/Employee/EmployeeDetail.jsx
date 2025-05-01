@@ -123,7 +123,7 @@ const EmployeeDetail = ({ employeeId }) => {
               <strong>Navn pårørende:</strong> {relative?.relative_name || "-"}
             </p>
             <p>
-              <strong>Telefon pårørende:</strong> {relative?.phone_number || "-"}
+              <strong>Telefon pårørende:</strong> {relative?.relative_phoneNr || "-"}
             </p>
 
             <h4><u>Tilganger</u></h4>

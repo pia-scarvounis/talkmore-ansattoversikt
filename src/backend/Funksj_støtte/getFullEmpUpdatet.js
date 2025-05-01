@@ -4,6 +4,7 @@ export async function getFullEmployeeById(conn, employeeId) {
         employee.*,
         relative.relative_id,
         relative.relative_name,
+        relative.relative_phoneNr,
         team.team_name,
         team.department_id AS department_id,
         department.department_name,

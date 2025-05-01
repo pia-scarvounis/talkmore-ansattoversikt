@@ -119,7 +119,7 @@ router.put('/:id', async (req, res) => {
             for(const r of updatedData.relative){
                 await conn.query(
                     `INSERT INTO relative (employee_id, relative_name, relative_phoneNr)
-                    VALUES (?, ?,?)`,[id, r.relative_name, r.relative_phoneNr]
+                    VALUES (?, ?, ?)`,[id, r.relative_name, r.relative_phoneNr]
                 );
             }
         }
