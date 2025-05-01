@@ -91,67 +91,6 @@ router.put('/:id', async (req, res) => {
                 values.push(['birthdate', 'start_date', 'end_date'].includes(key) ? formatDate(newValue): newValue);
             }
         }
-        /*
-        if (updatedData.epost_Telenor !== original.epost_Telenor) {
-            fields.push('epost_Telenor = ?');
-            values.push(updatedData.epost_Telenor);
-          }
-      
-          if (updatedData.phoneNr !== original.phoneNr) {
-            fields.push('phoneNr = ?');
-            values.push(updatedData.phoneNr);
-          }
-      
-          if (updatedData.birthdate !== original.birthdate) {
-            fields.push('birthdate = ?');
-            values.push(formatDate(updatedData.birthdate));
-          }
-      
-          if (updatedData.image_url !== original.image_url) {
-            fields.push('image_url = ?');
-            values.push(updatedData.image_url);
-          }
-      
-          if (updatedData.start_date !== original.start_date) {
-            fields.push('start_date = ?');
-            values.push(formatDate(updatedData.start_date));
-          }
-      
-          if (updatedData.end_date !== original.end_date) {
-            fields.push('end_date = ?');
-            values.push(updatedData.end_date ? formatDate(updatedData.end_date) : null);
-          }
-      
-          if (updatedData.form_of_employeement !== original.form_of_employeement) {
-            fields.push('form_of_employeement = ?');
-            values.push(updatedData.form_of_employeement);
-          }
-      
-          if (updatedData.employeeNr_Talkmore !== original.employeeNr_Talkmore) {
-            fields.push('employeeNr_Talkmore = ?');
-            values.push(updatedData.employeeNr_Talkmore);
-          }
-      
-          if (updatedData.employeeNr_Telenor !== original.employeeNr_Telenor) {
-            fields.push('employeeNr_Telenor = ?');
-            values.push(updatedData.employeeNr_Telenor);
-          }
-      
-          if (updatedData.employee_percentages !== original.employee_percentages) {
-            fields.push('employee_percentages = ?');
-            values.push(updatedData.employee_percentages);
-          }
-      
-          if (updatedData.team_id !== original.team_id) {
-            fields.push('team_id = ?');
-            values.push(updatedData.team_id);
-          }
-      
-          if (updatedData.workPosistion_id !== original.workPosistion_id) {
-            fields.push('workPosistion_id = ?');
-            values.push(updatedData.workPosistion_id);
-          }
-          **/
 
           if(fields.length > 0){
             const sql =
@@ -165,35 +104,7 @@ router.put('/:id', async (req, res) => {
           }else{
             console.log('Ingen endringer i employee')
           }
-        //Oppdater employee
-        /** 
-        await pool.query(`
-            UPDATE employee
-            SET 
-                employee_name = ?, epost = ?, epost_Telenor = ?, phoneNr = ?, birthdate = ?,
-                image_url = ?, start_date = ?, end_date = ?, form_of_employeement = ?, 
-                employeeNr_Talkmore = ?, employeeNr_Telenor = ?, 
-                employee_percentages = ?, team_id = ? , workPosistion_id = ?
-            WHERE employee_id = ?
-        `, [
-            //Setter || denne for hvis ikke ny info er lagt inn bruk originale info å sett inn databasen
-            updatedData.employee_name || original.employee_name,
-            updatedData.epost || original.epost,
-            updatedData.epost_Telenor || original.epost_Telenor,
-            updatedData.phoneNr ||original.phoneNr,
-            formatDate(updatedData.birthdate) || formatDate(original.birthdate),
-            updatedData.image_url || original.image_url,
-            formatDate(updatedData.start_date) || formatDate(original.start_date),
-            formatDate(updatedData.end_date) || formatDate(original.end_date),
-            updatedData.form_of_employeement || original.form_of_employeement,
-            updatedData.employeeNr_Talkmore || original.employeeNr_Talkmore,
-            updatedData.employeeNr_Telenor || original.employeeNr_Telenor,
-            updatedData.employee_percentages || original.employee_percentages,
-            updatedData.team_id || original.team_id,
-            updatedData.workPosistion_id || original.workPosistion_id,
-            id
-        ///]);
-        */
+        
         //Oppdater pårørende (relative)
         if(Array.isArray(updatedData.relative)){
             //Fjerner tidligere relativ maks 1 pårørende per ansatt

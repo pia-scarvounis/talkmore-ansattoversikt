@@ -1,5 +1,4 @@
-import { application, json, Router } from "express";
-import dBpool from "../../config/db.js";
+import { Router } from "express";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
 import axios from "axios";
@@ -66,14 +65,31 @@ router.post('/', async (req, res) => {
   
       let teamIndex = 0;
       const employees = [];
+
+      //henter team_id for performance management-teamet
+      const [performanceTeam] = await pool.query(
+        `SELECT team_id FROM team WHERE team_name = 'Performance Management'`
+      );
+      const adminTeamId = performanceTeam[0]?.team_id;
+      if(!adminTeamId){
+        throw new Error('Fant ikke teamet "Performance Management" i databasen');
+      }
       
       //Maks 8 admin skal bli fordelt per testbruker, 1 teamleder per team, og resten tildeles kundeagenter
       //må bruke denne istedenfor promise da den fortsatte å hente inn nye admin og teamledere
       //bruker det fordi det krever en nøyaktig rekkefølge og kontroll på tildeling av tilstand
       //gpt for å justere promise
       for (const employee of genesysApiEmployees) {
-        const team_id = shuffledTeamIds[teamIndex % shuffledTeamIds.length];
-        teamIndex++;
+        let team_id;
+        let assignAsAdmin = false;
+
+        if(currentAdminCount < 8){
+          assignAsAdmin = true;
+          team_id = adminTeamId;
+        }else{
+          team_id = shuffledTeamIds[teamIndex % shuffledTeamIds.length];
+          teamIndex++;
+        }
   
         const [teamRows] = await pool.query('SELECT team_name FROM team WHERE team_id = ?', [team_id]);
         const team_name = teamRows[0]?.team_name || 'Ukjent team';
@@ -112,6 +128,29 @@ router.post('/', async (req, res) => {
         let employee_percentages = 100;
   
         // --- Tildel rolle basert på logikk hjelp med gpt ---
+        if(assignAsAdmin){
+          workPosistion_title = 'Admin';
+          const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Admin'`);
+          workPosistion_id = res[0].workPosistion_id;
+          currentAdminCount++;
+          console.log(`Tildelt Admin. Totalt: ${currentAdminCount}/8`);
+
+        }else if(!teamLeadersAssigned.has(team_id)){
+          workPosistion_title = 'Teamleder';
+          const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Teamleder'`);
+          workPosistion_id = res[0].workPosistion_id;
+          teamLeadersAssigned.add(team_id);
+          console.log(`Tildelt Teamleder til team ${team_name}`);
+        }else{
+          workPosistion_title = 'Kundeagent';
+          const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Kundeagent'`);
+          workPosistion_id = res[0].workPosistion_id;
+          employee_percentages = (Math.floor(Math.random() * 10) + 1) * 10;
+          form_of_employeement = formOptions[Math.floor(Math.random() * formOptions.length)];
+          console.log(`Tildelt Kundeagent til ${employee.name}`);
+        }
+
+        /** 
         if (!teamLeadersAssigned.has(team_id)) {
           workPosistion_title = 'Teamleder';
           const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Teamleder'`);
@@ -122,6 +161,7 @@ router.post('/', async (req, res) => {
           workPosistion_title = 'Admin';
           const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Admin'`);
           workPosistion_id = res[0].workPosistion_id;
+          team_id = adminTeamId;
           currentAdminCount++;
           console.log(`Tildelt Admin. Totalt: ${currentAdminCount}/8`);
         } else {
@@ -132,7 +172,8 @@ router.post('/', async (req, res) => {
           form_of_employeement = formOptions[Math.floor(Math.random() * formOptions.length)];
           console.log(`Tildelt Kundeagent til ${employee.name}`);
         }
-  
+        */
+       //
         // --- Sett inn ny ansatt i databasen ---
         const [result] = await pool.query(
           `INSERT INTO employee (
