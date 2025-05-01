@@ -7,6 +7,11 @@
     width: 290px;
     text-align: center;
 } 
+.profile-card p {
+  font-size: 14px; 
+  margin: 4px 0;
+  word-break: break-word; /* lange ord brytes og holder seg inne i boksen */
+}
 .pink-bg {
     background-color: #F29FC8;
   }
@@ -47,8 +52,9 @@
 
 /*span klasser med font weight bold*/
 .label-info{
-    font-family: "Circular Pro Bold", sans-serif ;
     font-weight: bold;
+    font-size: 13px;
+    margin-right: 5px; 
 }
 
 /*Profilkort kontainer*/

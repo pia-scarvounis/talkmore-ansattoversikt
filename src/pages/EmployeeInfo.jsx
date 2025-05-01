@@ -18,9 +18,9 @@ const EmployeeInfo = () => {
         <PageHeader title="Ansattinformasjon" />
       </div>
       <div className="page-wrapper">
-        <EmployeeDetail />
+        <EmployeeDetail employeeId={employeeId}/>
         <div className="employee-info-button-wrapper">
-          <WhiteButton text="Rediger" onClick={() => navigate("/edit")} />
+          <WhiteButton text="Rediger" onClick={() => navigate(`/edit/${employeeId}`)} />
         </div>
 
         <div className="employee-info-notes-wrapper">

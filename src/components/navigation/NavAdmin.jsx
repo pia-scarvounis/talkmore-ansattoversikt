@@ -20,6 +20,13 @@ const NavAdmin = () => {
         <NavLink to="/nav/alleansatte" className="nav-link main-link">
           Alle Ansatte
         </NavLink></div>
+        <div className="section">
+        <NavLink to="/nav/admin" className="nav-link main-link">
+          Admin
+        </NavLink>
+        <NavLink to="/nav/performancemanagement" className="nav-link sub-link">
+            Performance Management
+          </NavLink></div>
 
         <div className="section">
           <NavLink to="/nav/privat" className="nav-link main-link">
@@ -59,31 +66,10 @@ const NavAdmin = () => {
           </NavLink>
         </div>
 
+        <NavLink to="/admin-panel" className="nav-link main-link">
+  Administrasjonspanel
+</NavLink>
 
-        <div className="section">
-          <NavLink to="/register" className="nav-link main-link">
-            Registrer ansatt
-          </NavLink>
-        </div>
-        <div className="section">
-          <NavLink
-            to="/admin-dashboard/manage-team"
-            className="nav-link main-link"
-          >
-            {" "}
-            Administrer team
-          </NavLink>
-        </div>
-
-        <div className="section">
-          <NavLink
-            to="/admin-dashboard/manage-systems"
-            className="nav-link main-link"
-          >
-            {" "}
-            Administrer systemer
-          </NavLink>
-        </div>
         <div className="section">
           <NavLink to="logout" className="nav-link main-link">
             Logg ut

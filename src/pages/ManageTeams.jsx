@@ -58,7 +58,7 @@ const ManageTeams = () => {
               <input type="text" />
             </div>
           </div>
-          <div className="form-buttons">
+          <div className="manage-teams-buttons">
             <GreenButton text="Lagre" onClick={() => handleSave("lagre")} />{" "}
           </div>
         </div>
@@ -80,7 +80,7 @@ const ManageTeams = () => {
             </div>
           </div>
 
-          <div className="form-buttons">
+          <div className="manage-teams-buttons">
             <GreenButton
               text="Legg til"
               onClick={() => handleSave("leggtil")}
@@ -107,7 +107,7 @@ const ManageTeams = () => {
             </div>
           </div>
 
-          <div className="form-buttons">
+          <div className="manage-teams-buttons">
             <RedButton text="Slett" onClick={handleDelete} />
           </div>
         </div>
@@ -122,7 +122,7 @@ const ManageTeams = () => {
             message={
               saveType === "lagre"
                 ? "Er du sikker på at du ønsker å lagre dette?"
-                : "Er du sikker på at du ønsker å opprette et nytt team?"
+                : "Er du sikker på at du ønsker å legge til dette?"
             }
           >
             <WhiteButton text="Fortsett" onClick={confirmSave} />

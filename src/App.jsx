@@ -10,6 +10,7 @@ import ManageTeams from "./pages/ManageTeams";
 import EmployeeInfo from "./pages/EmployeeInfo";
 import NavPages from "./pages/NavPages";
 import DashboardPages from "./pages/DashboardPages";
+import AdminPanel from "./pages/AdminPanel"; 
 
 import ErrorBoundry from "./ErrorBoundry";
 

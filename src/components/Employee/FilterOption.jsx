@@ -64,7 +64,6 @@ const FilterOption = ({ employees, onFilterChange }) => {
       newParams.set("form", filters.formOfEmployment);
     if (filters.position) newParams.set("position", filters.position);
     if (filters.percentage) newParams.set("percentage", filters.percentage);
-    if (filters.department) newParams.set("department", filters.department);
     if (filters.fullTime) newParams.set("fullTime", "true");
     if (filters.partTime) newParams.set("partTime", "true");
 
@@ -73,10 +72,35 @@ const FilterOption = ({ employees, onFilterChange }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+
+    if (type === "checkbox") {
+      if (name === "fullTime" && checked) {
+        // Hvis "Heltid" velges, fjern kryss på "Deltid"
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          fullTime: true,
+          partTime: false,
+        }));
+      } else if (name === "partTime" && checked) {
+        // Hvis "Deltid" velges, fjern kryss på "Heltid"
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          fullTime: false,
+          partTime: true,
+        }));
+      } else {
+        // Hvis brukeren fjerner kryss på en checkbox
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          [name]: false,
+        }));
+      }
+    } else {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [name]: value,
+      }));
+    }
   };
 
   // Nullstill alle filtre
@@ -184,20 +208,6 @@ const FilterOption = ({ employees, onFilterChange }) => {
             {percentages.map((percentage, index) => (
               <option key={index} value={percentage}>
                 {percentage}%
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="department"
-            value={filters.department}
-            onChange={handleChange}
-            className="options-section"
-          >
-            <option value="">Avdeling</option>
-            {departments.map((department, index) => (
-              <option key={index} value={department}>
-                {department}
               </option>
             ))}
           </select>

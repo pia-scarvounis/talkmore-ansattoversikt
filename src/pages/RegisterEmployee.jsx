@@ -99,11 +99,6 @@ const RegisterEmployee = () => {
               <label>Ansattnummer (Innleid)</label>
               <input type="text" />
 
-              <label>Avdeling</label>
-              <select>
-                <option>Velg</option>
-              </select>
-
               <label>Team</label>
               <select>
                 <option>Velg</option>

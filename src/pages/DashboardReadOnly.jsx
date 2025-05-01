@@ -10,57 +10,54 @@ import iconKA from "../assets/icons/ka.svg";
 import iconFTE from "../assets/icons/fte.svg";
 import iconTL from "../assets/icons/tl.svg";
 
-import {fetchDayOverviewEmployees} from "../redux/slices/dayOverviewEmpSlice";
+import { fetchDayOverviewEmployees } from "../redux/slices/dayOverviewEmpSlice";
 import DateSelector from "../components/UI/DateSelector";
 import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 
-
 const DashboardReadOnly = () => {
-  //redux 
+  //redux
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleBoxClick = (filterKey) => {
     navigate(`/dashboardlist/${filterKey}`);
   }; // statbox trigges når den trykkes og sender videre til riktig sted
   const selectedDateString = useSelector((state) => state.date.selectedDate);
-  const selectedDate = new Date(selectedDateString); 
-    const {data: employees, loading } = useSelector((state) => state.dayOverviewEmployees);
+  const selectedDate = new Date(selectedDateString);
+  const { data: employees, loading } = useSelector(
+    (state) => state.dayOverviewEmployees
+  );
   console.log("dagsoversikt:", employees);
 
   const rawDate = format(selectedDate, "EEEE d. MMMM yyyy", {
     locale: nb,
   });
 
-
   const formattedDate = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
 
   //henter fetch for tilgjengelige ansatte og setter inn availableemployee slicen
-  useEffect(()=>{
-
+  useEffect(() => {
     //sender inn valgt dato til fetchen
     dispatch(fetchDayOverviewEmployees(selectedDateString));
-  },[dispatch,selectedDateString]);
+  }, [dispatch, selectedDateString]);
 
   //sjekker at employees er et array
   const getCount = (filterFn) => {
     if (!Array.isArray(employees)) return 0;
     return employees.filter(filterFn).length;
   };
-  
 
   //tester denne gpt snittet + sjekk av om employees er array og ikke undefined
   //den skal telle antall fte med 100% = 1 fte
   const totalFTE = Array.isArray(employees)
-  ? employees.reduce((acc, employee) => {
-      const pct = Number(employee.employee_percentages);
-      return acc + (isNaN(pct) ? 0 : pct / 100); // <- Legg til som FTE, ikke %
-    }, 0)
-  : 0;
+    ? employees.reduce((acc, employee) => {
+        const pct = Number(employee.employee_percentages);
+        return acc + (isNaN(pct) ? 0 : pct / 100); // <- Legg til som FTE, ikke %
+      }, 0)
+    : 0;
 
   const formattedFTE = totalFTE.toFixed(2); // Eks: 107.00
-
 
   return (
     <div className="dashboard-layout">
@@ -79,46 +76,46 @@ const DashboardReadOnly = () => {
         <div className="left-column">
           <div className="dashboard-grid">
             <StatBox
-              title="TEAMLEDERE"
-              value={getCount((e)=> e.workPosistion_title === 'Teamleder')}
+              title="TEAMLEDER"
+              value={getCount((e) => e.workPosistion_title === "Teamleder")}
               unit="Tilgjengelig"
               icon={iconTL}
               onClick={() => handleBoxClick("teamleder")}
             />
             <StatBox
               title="KS ADMIN"
-              value={getCount((e) => e.workPosistion_title === 'Admin')}
+              value={getCount((e) => e.workPosistion_title === "Admin")}
               unit="Tilgjengelig"
               icon={iconKSAdmin}
               onClick={() => handleBoxClick("admin")}
             />
             <StatBox
               title="KUNDEANSVARLIG"
-              value={getCount((e) => e.workPosistion_title === 'Kundeagent')}
+              value={getCount((e) => e.workPosistion_title === "Kundeagent")}
               unit="Tilgjengelig"
               icon={iconKA}
               onClick={() => handleBoxClick("kundeagent")}
-              
             />
             <StatBox
-              title="TELENORANSATTE"
-              value={getCount((e) => e.form_of_employeement === 'Fast')}
+              title="TELENORANSATT"
+              value={getCount((e) => e.form_of_employeement === "Fast")}
               unit="Tilgjengelig"
               icon={iconKA}
-              onClick={()=> handleBoxClick("fast")}
+              onClick={() => handleBoxClick("fast")}
             />
             <StatBox
               title="INNLEID"
-              value={getCount((e) =>e.form_of_employeement === 'Innleid')}
+              value={getCount((e) => e.form_of_employeement === "Innleid")}
               unit="Tilgjengelig"
               icon={iconKA}
-              onClick={()=> handleBoxClick("innleid")}
+              onClick={() => handleBoxClick("innleid")}
             />
             <StatBox
               title="HELTID"
-              value={getCount((e) =>e.employee_percentages === 100)}
+              value={getCount((e) => e.employee_percentages === 100)}
               unit="Tilgjengelig"
-              icon={iconKA}onClick={() => handleBoxClick("heltid")}
+              icon={iconKA}
+              onClick={() => handleBoxClick("heltid")}
             />
             <StatBox
               title="DELTID"
@@ -126,7 +123,6 @@ const DashboardReadOnly = () => {
               unit="Tilgjengelig"
               icon={iconKA}
               onClick={() => handleBoxClick("deltid")}
-
             />
             <StatBox
               title="FULLTIDSEKVIVALENTER"

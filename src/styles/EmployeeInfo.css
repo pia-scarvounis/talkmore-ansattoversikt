@@ -14,7 +14,6 @@
 .employee-detail-card {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  border: 2px solid #8fd1ef;
   border-radius: 16px;
   padding: 0;
   background-color: #ffffff;
@@ -23,7 +22,6 @@
 }
 
 .employee-info {
-  background-color: #8fd1ef;
   border-radius: 0;
   display: flex;
   flex-direction: column;
@@ -48,7 +46,7 @@
 .employee-info-text {
   font-size: 14px;
   line-height: 1.6;
-  max-width: 200px;
+  max-width: 200px
 }
 
 .employee-info,

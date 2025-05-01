@@ -21,12 +21,12 @@ p {
   font-size: 14px;
 }
 
-/* HEADER */ 
+/* HEADER */
 
 /* felles heading for alle sider, eks: EditEmployee, EmployeeDetails, register, edit... */
 
 /* Wrapper som gjør at header alltid følger layouten uansett side */
-/*pageheader.jsx*/ 
+/*pageheader.jsx*/
 .page-header-wrapper {
   margin-left: 200px; /* plass til nav */
   padding: 10px 120px 0 120px;
@@ -45,13 +45,12 @@ p {
   align-items: center;
 }
 
-
 .page-header-search {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-/* datecount.jsx */ 
+/* datecount.jsx */
 .date-count {
   display: flex;
   align-items: center;
@@ -66,8 +65,6 @@ p {
   font-weight: 600;
   color: #666;
 }
-
-
 
 /* Styling for posisjon for filtrering systemet på alle sidene*/
 .filter-section {
@@ -121,40 +118,38 @@ label {
   flex-wrap: wrap;
   gap: 40px;
   justify-content: center; /* midtstiller kortene */
-  margin-left: 240px; 
+  margin-left: 240px;
   margin-top: -50px;
   padding: 20px 40px;
 }
 
-  /* date count */
-  .date-count {
-    display: flex;
-    justify-content: flex-start; /* venstrejustert */
-    align-items: center;
-    gap: 30px; /* luft mellom dato og antall */
-    margin: -50px 0 60px 3px; /* top right bottom left */
-  }
-  
-  .date-text,
-  .count-text {
-    font-size: 14px;
-    font-weight: 400;
-    color: #666;
-  }
-  
-  /* load more knapp på alle profilsider, under profilkort - plasserig */ 
-  .load-more-wrap {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 30px;
-    min-height: 60px;
-  }
+/* date count */
+.date-count {
+  display: flex;
+  justify-content: flex-start; /* venstrejustert */
+  align-items: center;
+  gap: 30px; /* luft mellom dato og antall */
+  margin: -50px 0 60px 3px; /* top right bottom left */
+}
 
-  /* Usynlig placeholder for å ikke fucke opp profilkort layout */
+.date-text,
+.count-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+}
+
+/* load more knapp på alle profilsider, under profilkort - plasserig */
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 30px;
+  min-height: 60px;
+}
+
+/* Usynlig placeholder for å ikke ødelegge opp profilkort layout */
 .button-placeholder {
   visibility: hidden;
   height: 48px;
 }
-  
-

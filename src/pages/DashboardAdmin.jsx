@@ -82,7 +82,7 @@ const DashboardAdmin = () => {
           ) : (
             <div className="dashboard-grid">
               <StatBox
-                title="TEAMLEDERE"
+                title="TEAMLEDER"
                 value={getCount((e) => e.workPosistion_title === "Teamleder")}
                 unit="Tilgjengelig"
                 icon={iconTL}
@@ -104,7 +104,7 @@ const DashboardAdmin = () => {
               />
 
               <StatBox
-                title="TELENORANSATTE"
+                title="TELENORANSATT"
                 value={getCount((e) => e.form_of_employeement === "Fast")}
                 unit="Tilgjengelig"
                 icon={iconKA}
