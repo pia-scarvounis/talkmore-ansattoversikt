@@ -50,7 +50,7 @@ const employeeSlice = createSlice({
             //setter inn det nye oppdaterte objektet i employees
             .addCase(updateEmployee.fulfilled, (state, action) =>{
                 const updated = action.payload.employee;
-                const index = state.data.findIndex(emp => emp.employee_id === updatet.employee_id);
+                const index = state.data.findIndex(emp => emp.employee_id === updated.employee_id);
                 if(index !==1){
                     state.data[index] = updated;
                 }
