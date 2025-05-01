@@ -6,6 +6,7 @@
     height: 383px;
     width: 290px;
     text-align: center;
+    z-index: 1;
 } 
 .profile-card p {
   font-size: 14px; 
@@ -31,6 +32,7 @@
 /*Profilkort hover øker med 5% */
 .profile-card:hover{
    transform: scale(1.05);
+   z-index: 2;
 }
 
 /*Profilkort bakgrunn med farge*/
