@@ -410,7 +410,7 @@ const EditEmployee = () => {
         <input
           type="date"
           name="leave_start_date"
-          value={formData.leave ? formData.leave.leave_start_date : ''}
+          value={formData.leave ? formData.leave.leave_start_date?.split('T')[0] : ''}
           onChange={(e) => {
             setFormData(prev => ({
               ...prev,
@@ -426,7 +426,7 @@ const EditEmployee = () => {
         <input
           type="date"
           name="leave_end_date"
-          value={formData.leave ? formData.leave.leave_end_date : ''}
+          value={formData.leave ? formData.leave.leave_end_date?.split('T')[0] : ''}
           onChange={(e) => {
             setFormData(prev => ({
               ...prev,

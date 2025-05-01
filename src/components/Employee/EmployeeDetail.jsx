@@ -9,6 +9,8 @@ const EmployeeDetail = ({ employeeId }) => {
   const employees = useSelector((state) => state.employees.data);
 
   const employee = employees.find((emp) => emp.employee_id === employeeId);
+
+  
   if (!employee) {
     return <p>Fant ikke ansatt</p>;
   }
@@ -110,7 +112,7 @@ const EmployeeDetail = ({ employeeId }) => {
             <p>
               <strong>Permisjon:</strong>{" "}
               {/* denne er fortsatt dummy fordi permisjon-tabellen ikke er koblet riktig opp */}
-              0% {/* kan byttes ut senere hvis vi lager permisjonsdata */}
+              {employee.leave?.leave_percentage || "-"}%
             </p>
           </div>
         </div>
