@@ -14,7 +14,7 @@ router.get('/:id', async (req, res) =>{
         //Henter bruker sin historikk med admin navn og id som har endret sortert etter siste endring
         const [history] =await pool.query(`
             SELECT
-                cl.changleLog_id,
+                cl.changeLog_id,
                 cl.employee_id,
                 cl.admin_id,
                 cl.employeeNr_Talkmore,
@@ -36,12 +36,12 @@ router.get('/:id', async (req, res) =>{
                 cl.change_date,
                 u.username AS endret_av,
                 e.employee_name AS endret_av_navn
-            FROM changelog cl
+            FROM changeLog cl
             JOIN userOfTool u ON cl.admin_id = u.user_id
             JOIN employee e ON u.employee_id = e.employee_id
             LEFT JOIN department d ON cl.department_id = d.department_id
             LEFT JOIN team t ON cl.team_id = t.team_id
-            LEFT JOIN workPosistion wp ON cl.workPosistion_id = wp.wortPosistion_id
+            LEFT JOIN workPosistion wp ON cl.workPosistion_id = wp.workPosistion_id
             WHERE cl.employee_id = ?
             ORDER BY cl.change_date DESC
         `,[id]);
