@@ -21,6 +21,7 @@ const EditEmployee = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const employeeId = parseInt(id, 10);
 
 
   useEffect(() => {
