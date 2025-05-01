@@ -172,7 +172,7 @@ const EditEmployee = () => {
       //Sette riktig alert ui her!!!!
       alert('Ansatt oppdatert');
       //sett inn riktig navigasjon her: tilbake til ansattprofildetaljer med id)
-      navigate(`/employee/${id}`);
+      navigate(`/employee-info/${id}`);
     }
     if(error){
       alert('Feil: ' + error);
@@ -242,7 +242,7 @@ const EditEmployee = () => {
                     ...formData.relative[0],
                     relative_name: e.target.value
                   };
-                  setFormData(prev =>({...prev, relative: updatedRelative}));
+                  setFormData(prev =>({...prev, relative: [updatedRelative]}));
                 }  
               }}
               />
@@ -254,13 +254,15 @@ const EditEmployee = () => {
                 name="relative_phoneNr"
                 value={formData.relative.length > 0 ? formData.relative[0].relative_phoneNr || '': ''}
                 onChange={(e) => {
-                  const newRelatives = [...formData.relative];
-                  if(newRelatives.length > 0){
-                    newRelatives[0].relative_phoneNr = e.target.value;
-                  }else{
-                    newRelatives.push({relative_name: '', relative_phoneNr: e.target.value});
-                  }
-                  setFormData(prev => ({...prev, relative: newRelatives}));
+                  const existing = formData.relative[0] || {};
+
+                  const updated = {
+                    ...existing,
+                    relative_phoneNr: e.target.value,
+                    relative_name: existing.relative_name || ''
+                  };
+                  setFormData(prev => ({...prev, relative: [updated]}));
+                  
                 }}
               />
             </div>
