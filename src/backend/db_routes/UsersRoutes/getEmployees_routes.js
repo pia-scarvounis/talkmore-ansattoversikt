@@ -85,18 +85,7 @@ router.post('/', async (req, res) => {
           teamIndex++;
         }while(team_id === adminTeamId && currentAdminCount >= 8);
 
-        /** 
-        let assignAsAdmin = false;
-
-        if(currentAdminCount < 8){
-          assignAsAdmin = true;
-          team_id = adminTeamId;
-        }else{
-          team_id = shuffledTeamIds[teamIndex % shuffledTeamIds.length];
-          teamIndex++;
-        }
-        */
-       //
+      
         const [teamRows] = await pool.query('SELECT team_name FROM team WHERE team_id = ?', [team_id]);
         const team_name = teamRows[0]?.team_name || 'Ukjent team';
 
