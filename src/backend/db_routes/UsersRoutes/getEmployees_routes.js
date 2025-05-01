@@ -107,7 +107,7 @@ router.post('/', async (req, res) => {
         }
   
         // --- Generer data for ny ansatt ---
-        const randomPhone = `+45${Math.floor(10000000 + Math.random() * 8999999)}`;
+        const randomPhone = `+47${Math.floor(10000000 + Math.random() * 8999999)}`;
         const randomBirthday = () => new Date(1980 + Math.random() * 21, Math.random() * 12, Math.floor(Math.random() * 28) + 1)
           .toISOString().split('T')[0];
         const birthdate = randomBirthday();
