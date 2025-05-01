@@ -160,7 +160,7 @@ const EditEmployee = () => {
     e.preventDefault();
     if(!formData) return;
     //sender inn oppdatert ansatt objektet som formData i fetchen
-    dispatch(updateEmployee({id, updatedData: formData }));
+    dispatch(updateEmployee({id, updatedEmployeeData: formData }));
   }
 
   //etter vellykket oppdatering

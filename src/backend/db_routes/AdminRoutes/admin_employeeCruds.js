@@ -6,6 +6,8 @@ import axios from "axios";
 import platformClient from 'purecloud-platform-client-v2';
 //Token for API genesys
 import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
+//henter full employe detaljer fra backend
+import {getFullEmployeeById} from '../../Funksj_støtte/getFullEmpUpdatet.js'
 
 const router = Router();
 dotenv.config();
@@ -21,6 +23,11 @@ router.put('/:id', async (req, res) => {
     const updatedData = req.body;
     const amdinId = req.user?.user_id || 10 //hente fra middleware senere men får nå henter admin id fra databasen employee_id 7 er admin
     
+    if (!updatedData || typeof updatedData !== 'object') {
+        return res.status(400).json({ error: 'Ingen data å oppdatere' });
+      }
+      console.log("Request body:", req.body);
+
     const formatDate = (date) => {
         if (!date) return null;
         return new Date(date).toISOString().split('T')[0];
@@ -178,9 +185,9 @@ router.put('/:id', async (req, res) => {
             formatDate(updatedData.start_date) || formatDate(original.start_date),
             formatDate(updatedData.end_date) || formatDate(original.end_date),
             updatedData.leave_id || original.leave_id,
-            updatedData.leave_percentage || original.leave_percentage,
-            formatDate(updatedData.leave_start_date) || null,
-            formatDate(updatedData.leave_end_date) || null
+            updatedData.leave?.leave_percentage || original.leave_percentage,
+            formatDate(updatedData.leave?.leave_start_date) || null,
+            formatDate(updatedData.leave?.leave_end_date) || null
         ]);
 
         //Oppdatere ansatt i api genesys hvis endring i navn eller epost
@@ -216,33 +223,26 @@ router.put('/:id', async (req, res) => {
         }catch(genesysError){
             console.error('Feil ved oppdatering i Genesys', genesysError);
         }
-        //returnere oppdatert ansatt
-        const[updatedEmployee] = await conn.query(`
-            SELECT
-                e.*,
-                t.team_name,
-                d.department_name,
-                wp.posistion_title AS workPosistion_title
-            FROM employee e
-            LEFT JOIN team t ON e.team_id = t.team_id
-            LEFT JOIN department d ON t.department_id = d.department_id
-            LEFT JOIN workPosistion wp ON e.workPosistion_id = wp.workPosistion_id
-            WHERE e.employee_id = ?
-        `, [id]
-        );
-        await conn.commit();
-
-        res.status(200).json({
-            message:'Ansatt, pårørendende, permisjon og genesys oppdatert',
-            employee: updatedEmployee[0]   
-         
-        });
+        
+    
     }
+    //returnere oppdatert ansatt med hjelpefunksjonen getfullemployeebyid
+    const updatedEmployee = await getFullEmployeeById(conn, id);
+
+    await conn.commit();
+    
+    res.status(200).json({
+        message:'Ansatt, pårørendende, permisjon og genesys oppdatert',
+        employee: updatedEmployee  
+     
+    });
 
     }catch(err){
-        await conn.query.rollback();
+        await conn.rollback();
         console.error('Feil ved oppdatering av ansatt:', err);
         res.status(500).json({error: 'Kunne ikke oppdatere ansatt'});
+    }finally{
+        conn.release();
     }
 
 });

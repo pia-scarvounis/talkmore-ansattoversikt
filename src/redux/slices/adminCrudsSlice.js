@@ -11,7 +11,14 @@ export const updateEmployee = createAsyncThunk(
     'updateEmployee/updateEmployee',
     async ({ id, updatedEmployeeData}, {rejectedWithValue}) =>{
         try{
-            const response = await axios.get(`http://localhost:3000/api/employee/${id}`, updatedEmployeeData)
+            const response = await axios.put(`http://localhost:3000/api/employee/${id}`, 
+            updatedEmployeeData,
+            {
+                headers:{
+                    'Content-Type':'application/json'
+                }
+            }
+            );
             console.log('Response fra API updateEmployee', response.data);
             return response.data;
         }catch(error){
