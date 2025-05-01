@@ -234,10 +234,6 @@ const EditEmployee = () => {
           <div className="two-column">
             <div className="column">
               <label>Fornavn og Etternavn</label>
-              <input type="text" />
-            </div>
-            <div className="column">
-              <label>Fornavn og Etternavn</label>
               <input type="text" name="relative_name" 
               value={formData.relative.length > 0 ? formData.relative[0].relative_name : ''} 
               onChange={(e) => {
@@ -247,6 +243,23 @@ const EditEmployee = () => {
                   }
                   setFormData(prev =>({...prev, relative: newRelatives}));
               }}
+              />
+            </div>
+            <div className="column">
+              <label>Telefonnummer</label>
+              <input 
+                type="text" 
+                name="relative_phoneNr"
+                value={formData.relative.length > 0 ? formData.relative[0].relative_phoneNr || '': ''}
+                onChange={(e) => {
+                  const newRelatives = [...formData.relative];
+                  if(newRelatives.length > 0){
+                    newRelatives[0].relative_phoneNr = e.target.value;
+                  }else{
+                    newRelatives.push({relative_name: '', relative_phoneNr: e.target.value});
+                  }
+                  setFormData(prev => ({...prev, relative: newRelatives}));
+                }}
               />
             </div>
           </div>
