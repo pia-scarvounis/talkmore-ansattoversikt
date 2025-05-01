@@ -150,30 +150,6 @@ router.post('/', async (req, res) => {
           console.log(`Tildelt Kundeagent til ${employee.name}`);
         }
 
-        /** 
-        if (!teamLeadersAssigned.has(team_id)) {
-          workPosistion_title = 'Teamleder';
-          const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Teamleder'`);
-          workPosistion_id = res[0].workPosistion_id;
-          teamLeadersAssigned.add(team_id);
-          console.log(`Tildelt Teamleder til team ${team_name}`);
-        } else if (currentAdminCount < 8) {
-          workPosistion_title = 'Admin';
-          const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Admin'`);
-          workPosistion_id = res[0].workPosistion_id;
-          team_id = adminTeamId;
-          currentAdminCount++;
-          console.log(`Tildelt Admin. Totalt: ${currentAdminCount}/8`);
-        } else {
-          workPosistion_title = 'Kundeagent';
-          const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Kundeagent'`);
-          workPosistion_id = res[0].workPosistion_id;
-          employee_percentages = (Math.floor(Math.random() * 10) + 1) * 10;
-          form_of_employeement = formOptions[Math.floor(Math.random() * formOptions.length)];
-          console.log(`Tildelt Kundeagent til ${employee.name}`);
-        }
-        */
-       //
         // --- Sett inn ny ansatt i databasen ---
         const [result] = await pool.query(
           `INSERT INTO employee (
