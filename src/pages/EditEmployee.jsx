@@ -237,11 +237,13 @@ const EditEmployee = () => {
               <input type="text" name="relative_name" 
               value={formData.relative.length > 0 ? formData.relative[0].relative_name : ''} 
               onChange={(e) => {
-                const newRelatives = [...formData.relative];
-                  if(newRelatives.length > 0){
-                    newRelatives[0].relative_name = e.target.value;
-                  }
-                  setFormData(prev =>({...prev, relative: newRelatives}));
+                if(formData.relative.length > 0){
+                  const updatedRelative = {
+                    ...formData.relative[0],
+                    relative_name: e.target.value
+                  };
+                  setFormData(prev =>({...prev, relative: updatedRelative}));
+                }  
               }}
               />
             </div>

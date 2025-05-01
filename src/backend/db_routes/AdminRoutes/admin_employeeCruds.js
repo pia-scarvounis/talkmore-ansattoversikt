@@ -21,7 +21,7 @@ router.put('/:id', async (req, res) => {
     const { id } = req.params;
     //ny info fra body 
     const updatedData = req.body;
-    const amdinId = req.user?.user_id || 10 //hente fra middleware senere men får nå henter admin id fra databasen employee_id 7 er admin
+    const amdinId = req.user?.user_id || 1 //hente fra middleware senere men får nå henter admin id fra databasen employee_id 7 er admin
     
     if (!updatedData || typeof updatedData !== 'object') {
         return res.status(400).json({ error: 'Ingen data å oppdatere' });
