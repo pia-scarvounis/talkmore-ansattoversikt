@@ -1,15 +1,22 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import defaultImg from "../../assets/images/default-img.png";
 import "../../styles/EmployeeInfo.css";
 import "../../styles/profilecards.css";
 import { format } from "date-fns";
+import { fetchEmployees } from "../../redux/slices/employeeSlice";
 
 const EmployeeDetail = ({ employeeId }) => {
+  const dispatch = useDispatch();
   const employees = useSelector((state) => state.employees.data);
 
   const employee = employees.find((emp) => emp.employee_id === employeeId);
 
+  useEffect(() =>{
+    if(!employees || employees.length === 0){
+      dispatch(fetchEmployees());
+    }
+  },[dispatch, employees]);
   
   if (!employee) {
     return <p>Fant ikke ansatt</p>;
