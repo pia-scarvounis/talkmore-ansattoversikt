@@ -8,6 +8,7 @@ import employeeHistory from './db_routes/UsersRoutes/getEmpHistory_router.js';
 import adminEmployeeCruds from './db_routes/AdminRoutes/admin_employeeCruds.js';
 import metaDataGet from './db_routes/UsersRoutes/getMetaData_routes.js';
 import cors from 'cors';
+import authRoutes from './db_routes/Auth_Routes/loginauth_routes.js'
 
 //importere rutere for admin og begge(teamleder og admin)
 
@@ -20,6 +21,9 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+
+//ruter for innlogging og utlogging
+app.use('/api/auth', authRoutes);
 
 //rutere crud og autentisering
 //rutere for alle brukere av verktøyet "admin" + "teamledere" skal se eller gjøre
