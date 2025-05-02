@@ -32,6 +32,8 @@ const authSlice = createSlice({
     name: 'auth',
     initialState:{
         token: tokenFromStorage || null,
+        //bruker som er logget inn
+        user: userFromToken,
         loading: false,
         error: null
     },
@@ -48,8 +50,9 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginUser.fulfilled, (state, action) =>{
-                state.loading = false;
+                state.user = jwt_decode(action.payload);
                 state.token = action.payload;
+                state.loading = false;
                 state.error = null;
             })
             .addCase(loginUser.rejected, (state, action)=>{
