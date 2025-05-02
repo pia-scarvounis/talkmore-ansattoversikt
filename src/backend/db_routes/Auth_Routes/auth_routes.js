@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import pool from '../../config/db.js';
 import dotenv from 'dotenv';
+import { JWT_SECRET } from '../../config/config.js';
 
 dotenv.config();
-
 //istedenfor import Router
 const router = express.Router();
 
@@ -26,6 +26,12 @@ router.post('/login', async (req, res) =>{
         if(!user || !user.password_hash){
             return res.status(401).json({message:'Ugyldig brukernavn eller passord'});
         }
+        console.log('Prøver å logge inn med:');
+        console.log('Brukernavn:', username);
+        console.log('Sendt passord:', password);
+        console.log('Hash fra DB:', user?.password_hash);
+        
+          
 
         //sjekk passord mot hashed passord at det er gyldig
         const isMatch = await bcrypt.compare(password, user.password_hash);
@@ -33,6 +39,7 @@ router.post('/login', async (req, res) =>{
         if(!isMatch){
             return res.status(401).json({message:'Ugyldig brukernavn eller passord'});
         }
+        console.log('JWT_SECRET:', JWT_SECRET);
 
         const token = jwt.sign(
             {
@@ -44,10 +51,10 @@ router.post('/login', async (req, res) =>{
                 JWT_SECRET,
                 { expiresIn: '3h'}
         );
-        res.json({token})
+        res.json({token});
 
     }catch(err){
-        console.err('Feil under innlogging:', err);
+        console.error('Feil under innlogging:', err);
         res.status(500).json({message:'Serverfeil'});
     }
 });

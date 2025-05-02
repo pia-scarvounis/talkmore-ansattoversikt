@@ -1,20 +1,20 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
-const JWT_SECRET = process.env.JWT_SECRET;
 
 dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export function authenticateToken(req, res, next){
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split('')[1]; //Bearertoken
+    const token = authHeader && authHeader.split(' ')[1]; //Bearertoken
 
     if(!token){
         return res.status(401).json({message:'ingen token oppgitt'});
     }
 
-    jwt.verify(token, JWT_SECRET, (err, res)=>{
-        if(err) return res.status(403).json({message:'Ugyldig token'});
+    jwt.verify(token, JWT_SECRET, (err, user)=>{
+        if (err) return res.status(403).json({message:'Ugyldig token'});
         req.user = user;
         next();
     })
