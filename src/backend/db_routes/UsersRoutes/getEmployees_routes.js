@@ -2,6 +2,8 @@ import { Router } from "express";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
 import axios from "axios";
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 //Token for API genesys
 import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
 //vi skal importere en autentisering middleware for alle brukere av vårt verktøy
@@ -191,14 +193,17 @@ router.post('/', async (req, res) => {
         if(workPosistion_title === 'Admin' || workPosistion_title === 'Teamleder'){
           const role = workPosistion_title === 'Admin' ? 'Admin' : 'Teamleder';
 
+          //lager et kryptert passord, default passord ligger i env filen
+          
+          const testHashPassord = bcrypt.hash(process.env.DEFAULT_TEST_PASSWORD, 10);
+
           await pool.query(`
             INSERT INTO userOfTool (roles,username,password_hash, active, is_test, employee_id)
             VALUES (?, ?, ?, ?, ?, ?)`
             , [
               role,
               employee.email,
-              //dette passordet må justeres senere
-              'testHashPassord',
+              testHashPassord,
               true,
               true,
               result.insertId
