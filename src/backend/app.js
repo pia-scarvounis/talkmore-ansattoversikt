@@ -8,7 +8,7 @@ import employeeHistory from './db_routes/UsersRoutes/getEmpHistory_router.js';
 import adminEmployeeCruds from './db_routes/AdminRoutes/admin_employeeCruds.js';
 import metaDataGet from './db_routes/UsersRoutes/getMetaData_routes.js';
 import cors from 'cors';
-import authRoutes from './db_routes/Auth_Routes/loginauth_routes.js'
+import authRoutes from './db_routes/Auth_Routes/auth_routes.js'
 
 //importere rutere for admin og begge(teamleder og admin)
 
@@ -25,7 +25,7 @@ app.use(cookieParser());
 //ruter for innlogging og utlogging
 app.use('/api/auth', authRoutes);
 
-//rutere crud og autentisering
+
 //rutere for alle brukere av verktøyet "admin" + "teamledere" skal se eller gjøre
 
 //rutere for å hente og vise alle ansatte
@@ -49,7 +49,7 @@ app.use('/api/employee/history', employeeHistory);
 //Hente (get) rutere for team, avdelinger, og stillinger fra databasen
 app.use('/api/metaData', metaDataGet)
 
-//rutere kun for admin
+//rutere kun for Admin
 
 
 //starte serveren

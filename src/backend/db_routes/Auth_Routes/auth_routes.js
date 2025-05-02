@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-//definerer ruter i modulær undergruppe ikke bruke app.use men router.post i db.js
+//istedenfor import Router
 const router = express.Router();
 
 //LOGIN RUTE 
