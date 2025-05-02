@@ -1,5 +1,7 @@
 import {createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+// legge til api istedenfor axios. når det er klart
+import api from '../../backend/apiToken/axiosInstance.js';
 
 //async THUNK som skal returnere en promise og håndtere asynkrone handlinger/fetch
 //https://redux.js.org/tutorials/fundamentals/part-6-async-logic

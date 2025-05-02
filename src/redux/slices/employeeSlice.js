@@ -1,6 +1,8 @@
 import {createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { updateEmployee } from './adminCrudsSlice';
+// legge til api istedenfor axios. når det er klart
+import api from '../../backend/apiToken/axiosInstance.js';
 
 //SLICE for EMPLOYEES
 
