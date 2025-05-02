@@ -1,0 +1,1 @@
+//Denne ruteren er for når admin endrer noe i historikken på en ansatt
