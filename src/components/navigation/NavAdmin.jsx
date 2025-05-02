@@ -24,7 +24,7 @@ const NavAdmin = () => {
         <NavLink to="/nav/admin" className="nav-link main-link">
           Admin
         </NavLink>
-        <NavLink to="/nav/performancemanagement" className="nav-link sub-link">
+        <NavLink to="/nav/performance_management" className="nav-link sub-link">
             Performance Management
           </NavLink></div>
 
@@ -51,7 +51,7 @@ const NavAdmin = () => {
             {" "}
             Bedrift
           </NavLink>
-          <NavLink to="/nav/caymanisland" className="nav-link sub-link">
+          <NavLink to="/nav/cayman_island" className="nav-link sub-link">
             Cayman Island{" "}
           </NavLink>
         </div>

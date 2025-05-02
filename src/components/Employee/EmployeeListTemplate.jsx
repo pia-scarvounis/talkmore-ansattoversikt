@@ -133,6 +133,7 @@ const EmployeeListTemplate = ({
           <FilterOption employees={data} onFilterChange={setSelectedFilters} />
 
           <div className="view-toggle-below">
+          {filteredData.length > 0 && (
             <button
               onClick={() =>
                 setViewMode(viewMode === "cards" ? "list" : "cards")
@@ -144,9 +145,9 @@ const EmployeeListTemplate = ({
 )}{viewMode === "cards" ? "Vis som liste" : "Vis som kort"}
 
           
-            </button>
+            </button> )}
             {viewMode === "list" && <ExportCSVButton />}{" "}
-           
+          
           </div>
         </>
       )}
