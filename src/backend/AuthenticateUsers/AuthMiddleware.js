@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
-const JWT_SECRET = 'hemmelighashedpassord'; //bruke env. i produksjon
 import dotenv from 'dotenv';
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 dotenv.config();
 
