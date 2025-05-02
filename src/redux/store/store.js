@@ -5,7 +5,7 @@ import noteReducer from "../slices/noteSlice";
 import availableEmployeesReducer from "../slices/availableemployeesSlice";
 import dayOverviewEmployeesReducer from '../slices/dayOverviewEmpSlice';
 import employeeHistoryReducer from '../slices/historySlice';
-import updateEmployeeReducer from '../slices/AdminSlices/adminCrudsSlice';
+import updateEmployeeReducer from '../slices/AdminSlices/adminEmpl_CrudsSlice';
 import metaDataReducer from '../slices/metaDataCrudsSlice';
 import authReducer from '../slices/authLoginSlice/loginSlice';
 
