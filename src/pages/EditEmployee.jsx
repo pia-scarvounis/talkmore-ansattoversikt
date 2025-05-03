@@ -103,7 +103,11 @@ const EditEmployee = () => {
         workPosistion_id: workPosistionId,
         licenses: employee.licenses || [],
         relative: employee.relative || [],
-        leave: employee.leave || null,
+        leave: employee.leave || {
+          leave_percentage: "",
+          leave_start_date: "",
+          leave_end_date: "",
+        },
       });
     }
   }, [employee, teams]);
@@ -169,8 +173,25 @@ const EditEmployee = () => {
     return dateStr.split("T")[0];
   }
   
-  //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
-  const fixFormData = {
+
+
+  //lagre
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData) return;
+
+    // Valider permisjon: Startdato krever sluttdato
+  if (
+    formData.leave &&
+    formData.leave.leave_start_date &&
+    !formData.leave.leave_end_date
+  ) {
+    alert("Du må fylle inn sluttdato for permisjon hvis startdato er satt.");
+    return;
+  }
+
+    //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
+    const fixFormData = {
     ...formData,
       leave: formData.leave
       ?{
@@ -178,14 +199,8 @@ const EditEmployee = () => {
         leave_start_date: formatDate(formData.leave.leave_start_date),
         leave_end_date: formatDate(formData.leave.leave_end_date),
       }
-      :null,
-  };
-
-
-  //lagre
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData) return;
+        :null,
+    };
     //sender inn oppdatert ansatt objektet som formData i fetchen
     dispatch(updateEmployee({ id, updatedEmployeeData: fixFormData }));
   };
