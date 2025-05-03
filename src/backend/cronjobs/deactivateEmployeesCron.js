@@ -12,7 +12,7 @@ const apiInstance = platformClient.ApiClient.instance;
 const usersApi = new platformClient.UsersApi();
 
 //CRON JOB hver hver uke, mnd år kl 
-cron.schedule('0 2 * * *', async () => {
+cron.schedule('0 23 * * *', async () => {
     console.log('[CRON] Starter deaktivering av ansatte med slutt dato');
     try{
         //Henter ansatt fra databasen med end_date = dagens dato 
