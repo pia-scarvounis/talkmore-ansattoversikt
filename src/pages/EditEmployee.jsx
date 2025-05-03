@@ -163,12 +163,31 @@ const EditEmployee = () => {
     setFormData((prev) => ({ ...prev, licenses: updated }));
   };
 
+  //Dato konverter for date i Leave (permisjon dato)
+  const formatDate = (dateStr) => {
+    if(!dateStr) return null;
+    return dateStr.split("T")[0];
+  }
+  
+  //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
+  const fixFormData = {
+    ...formData,
+      leave: formData.leave
+      ?{
+        ...formData.leave,
+        leave_start_date: formatDate(formData.leave.leave_start_date),
+        leave_end_date: formatDate(formData.leave.leave_end_date),
+      }
+      :null,
+  };
+
+
   //lagre
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData) return;
     //sender inn oppdatert ansatt objektet som formData i fetchen
-    dispatch(updateEmployee({ id, updatedEmployeeData: formData }));
+    dispatch(updateEmployee({ id, updatedEmployeeData: fixFormData }));
   };
 
   //etter vellykket oppdatering
@@ -290,16 +309,17 @@ const EditEmployee = () => {
                       : ""
                   }
                   onChange={(e) => {
-                    if (formData.relative.length > 0) {
-                      const updatedRelative = {
+                    //if (formData.relative.length > 0) {
+                      const updated = {
                         ...formData.relative[0],
                         relative_name: e.target.value,
+                        relative_phoneNr: formData.relative[0]?.relative_phoneNr || "",
                       };
                       setFormData((prev) => ({
                         ...prev,
-                        relative: [updatedRelative],
+                        relative: [updated],
                       }));
-                    }
+                   // }
                   }}
                 />
               </div>
