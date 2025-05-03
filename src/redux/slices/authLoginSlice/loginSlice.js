@@ -6,6 +6,7 @@ import api from '../../../backend/apiToken/axiosInstance.js';
 
 //hente token fra localstorage
 const tokenFromStorage = localStorage.getItem('token');
+const userFromToken = tokenFromStorage ? jwt_decode(tokenFromStorage) : null;
 
 //Login 
 export const loginUser = createAsyncThunk(
