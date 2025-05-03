@@ -68,3 +68,4 @@ const updateEmployeeSlice = createSlice({
 export const {resetUpdateState} = updateEmployeeSlice.actions;
 
 export default updateEmployeeSlice.reducer;
+//legger en kommentar her 
