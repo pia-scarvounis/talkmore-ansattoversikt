@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "mysql2": "^3.14.0",
+    "node-cron": "^3.0.3",
     "purecloud-platform-client-v2": "^219.0.0",
     "react": "^19.0.0",
     "react-datepicker": "^8.2.1",
