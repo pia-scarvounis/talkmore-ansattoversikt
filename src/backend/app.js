@@ -9,7 +9,7 @@ import adminEmployeeCruds from './db_routes/AdminRoutes/admin_employeeCruds.js';
 import metaDataGet from './db_routes/UsersRoutes/getMetaData_routes.js';
 import cors from 'cors';
 import authRoutes from './db_routes/Auth_Routes/auth_routes.js'
-import adminHistoryCrud from './db_routes/AdminRoutes/admin_empHistoryRoutes';
+import adminHistoryCrud from './db_routes/AdminRoutes/admin_empHistoryRoutes.js';
 
 //importere rutere for admin og begge(teamleder og admin)
 
