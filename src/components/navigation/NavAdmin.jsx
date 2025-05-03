@@ -1,11 +1,26 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { logout } from "../../redux/slices/authLoginSlice/loginSlice";
 import logo from "../../assets/images/tm-logo.png";
 import "../../styles/nav.css";
 
 const NavAdmin = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+
+    // når user blir null (logget ut), send til login
+    useEffect(() => {
+      if (!user) {
+        navigate("/");
+      }
+    }, [user, navigate]);
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className="sidebar">
@@ -88,9 +103,12 @@ const NavAdmin = () => {
           </div>
 
           <div className="section">
-            <NavLink to="logout" className="nav-link main-link">
-              Logg ut
-            </NavLink>
+          <div
+    onClick={handleLogout}
+    className="nav-link main-link"
+  >
+    Logg ut
+  </div>
           </div>
         </nav>
       </div>

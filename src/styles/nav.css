@@ -55,6 +55,7 @@
   padding: 6px 8px;
   border-radius: 4px;
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 /* mainlink: grønn strek under ved hover */
