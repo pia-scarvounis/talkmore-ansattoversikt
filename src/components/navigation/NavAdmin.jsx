@@ -31,7 +31,7 @@ const NavAdmin = () => {
 
         <nav className="nav">
           <div className="section">
-            {user?.role === "Admin" && (
+            {user?.role === "Admin" || user?.role === "Teamleder" && (
               <NavLink to="/admin-dashboard" className="nav-link main-link">
                 Dashboard
               </NavLink>
