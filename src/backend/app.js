@@ -9,6 +9,7 @@ import adminEmployeeCruds from './db_routes/AdminRoutes/admin_employeeCruds.js';
 import metaDataGet from './db_routes/UsersRoutes/getMetaData_routes.js';
 import cors from 'cors';
 import authRoutes from './db_routes/Auth_Routes/auth_routes.js'
+import adminHistoryCrud from './db_routes/AdminRoutes/admin_empHistoryRoutes';
 
 //importere rutere for admin og begge(teamleder og admin)
 
@@ -49,7 +50,8 @@ app.use('/api/employee/history', employeeHistory);
 app.use('/api/metaData', metaDataGet)
 
 //rutere kun for Admin
-
+//endre historikk felter for en ansatt
+app.use('api/history', adminHistoryCrud)
 
 //starte serveren
 app.listen(3000, ()=>{
