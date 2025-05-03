@@ -6,6 +6,7 @@ import availableEmployeesReducer from "../slices/availableemployeesSlice";
 import dayOverviewEmployeesReducer from '../slices/dayOverviewEmpSlice';
 import employeeHistoryReducer from '../slices/historySlice';
 import updateEmployeeReducer from '../slices/AdminSlices/adminEmpl_CrudsSlice';
+import adminUpdateHistoryReducer from '../slices/AdminSlices/adminHistoryCrudSlice';
 import metaDataReducer from '../slices/metaDataCrudsSlice';
 import authReducer from '../slices/authLoginSlice/loginSlice';
 
@@ -18,6 +19,7 @@ export const store = configureStore({
     employeeHistory: employeeHistoryReducer,
     dayOverviewEmployees: dayOverviewEmployeesReducer,
     availableEmployees: availableEmployeesReducer,
+    changeLog: adminUpdateHistoryReducer,
     metaData: metaDataReducer,
     auth: authReducer
   },
