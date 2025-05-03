@@ -43,12 +43,14 @@
 
 .stat-box:hover {
   transform: scale(1.05);
+  cursor: pointer;
 }
 
 /* FTE BOKS STYLING*/
 
 .stat-box.highlight.fte:hover {
   transform: none;
+  cursor: default;
 }
 
 .stat-box.highlight.fte {

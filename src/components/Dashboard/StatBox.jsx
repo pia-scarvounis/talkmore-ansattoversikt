@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/dashboard.css";
 
 const StatBox = ({ title, value, unit, highlight, className, icon, onClick }) => {
+  
   return (
     <div
       className={`stat-box ${highlight ? "highlight" : ""} ${className || ""}`}onClick={onClick}
