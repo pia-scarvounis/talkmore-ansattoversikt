@@ -435,7 +435,7 @@ const EditEmployee = () => {
               <div className="column">
                 <label>Fast / innleid</label>
                 <select
-                  name="form_of_employement"
+                  name="form_of_employeement"
                   value={formData.form_of_employeement}
                   onChange={handleChange}
                 >
