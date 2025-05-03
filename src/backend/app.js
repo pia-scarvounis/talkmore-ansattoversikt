@@ -22,12 +22,11 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-//ruter for innlogging og utlogging
+//ruter for innlogging 
 app.use('/api/auth', authRoutes);
 
 
 //rutere for alle brukere av verktøyet "admin" + "teamledere" skal se eller gjøre
-
 //rutere for å hente og vise alle ansatte
 app.use('/api/employees', employeeRoutes);
 
