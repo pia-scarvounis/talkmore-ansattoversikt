@@ -15,6 +15,11 @@ router.patch('/history/:changleLog_id', async (req, res) => {
     const fields = [];
     const values = [];
 
+    //formaterer dato til isostring
+    const formatDate = (date) =>{
+        return date ? new Date(date).toDateString().split('T')[0] : null;
+    }
+
     const allowedFields = 
     ['department_id', 'team_id', 'workPosistion_id'
     , 'form_of_employeement', 'employee_percentages',  
@@ -24,6 +29,9 @@ router.patch('/history/:changleLog_id', async (req, res) => {
 
     for(const field of allowedFields){
         if(field in req.body){
+            const value = ['start_date', 'end_date', 'leave_start_date', 'leave_end_date'].includes(field)
+            ? formatDate(req.body[field])
+            :req.body[field]
             //setter inn feltene i []
             fields.push(`${field} = ?`);
             //henter inn verdien fra body og setter inn felt
@@ -36,8 +44,8 @@ router.patch('/history/:changleLog_id', async (req, res) => {
      try{
 
         await pool.query(
-            `UPDATE changeLog SET ${(fields.join(', '))} WHERE changeLog_id`,
-            [...values, id]
+            `UPDATE changeLog SET ${(fields.join(', '))} WHERE changeLog_id = ?`,
+            [...values, changeLog_id]
         );
         res.status(200).json({message: 'Historikk oppdatert'});
 
