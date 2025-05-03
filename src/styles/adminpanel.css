@@ -14,7 +14,7 @@
   
   .admin-option {
     background-color: #ffffff;
-    border: 2px solid #DDF5D2;
+    border: 2px solid #60AA3B;
     border-radius: 20px;
     padding: 30px;
     text-align: center;
@@ -25,7 +25,7 @@
   }
   
   .admin-option:hover {
-    background-color: #e6f4ea;
+    background-color: #DDF5D2;
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
