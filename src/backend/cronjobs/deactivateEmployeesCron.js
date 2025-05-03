@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import pool from  '../config/db.js';
 import platformClient from 'purecloud-platform-client-v2';
 import { getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js';
-import { current } from '@reduxjs/toolkit';
+
 
 // CRON JOB hvis en ansatt får en slutt dato skal den settes til is_active = false (1) i sql
 //Da skal dette også oppdateres i api genesys med hjelpe av genesys_user_id
