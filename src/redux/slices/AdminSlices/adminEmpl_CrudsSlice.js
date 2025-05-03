@@ -69,3 +69,4 @@ export const {resetUpdateState} = updateEmployeeSlice.actions;
 
 export default updateEmployeeSlice.reducer;
 //legger en kommentar her 
+//legger til kommentar fikser merge
