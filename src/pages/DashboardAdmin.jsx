@@ -50,9 +50,9 @@ const DashboardAdmin = () => {
     if (!Array.isArray(employees)) return 0;
     return employees.filter(filterFn).length;
   };
-
+  //Tester ekstra lagring
   //tester denne gpt snittet + sjekk av om employees er array og ikke undefined
-  //den skal telle antall fte med 100% = 1 fte
+  //den skal telle antall fte med 100% = 1 fte untatt de som er på permisjon/ de som har sluttet vil ikke dukke opp i get employees
   const totalFTE = Array.isArray(employees)
     ? employees.reduce((acc, employee) => {
         const pct = Number(employee.employee_percentages);
@@ -86,7 +86,7 @@ const DashboardAdmin = () => {
                 value={getCount((e) => e.workPosistion_title === "Teamleder")}
                 unit="Tilgjengelig"
                 icon={iconTL}
-                onClick={() => handleBoxClick("teamleder")}
+                onClick={() => handleBoxClick("teamleder")} 
               />
               <StatBox
                 title="KS ADMIN"
@@ -96,7 +96,7 @@ const DashboardAdmin = () => {
                 onClick={() => handleBoxClick("admin")}
               />
               <StatBox
-                title="KUNDEANSVARLIG"
+                title="KUNDEAGENT"
                 value={getCount((e) => e.workPosistion_title === "Kundeagent")}
                 unit="Tilgjengelig"
                 icon={iconKA}

@@ -7,7 +7,7 @@ import platformClient from 'purecloud-platform-client-v2';
 //Token for API genesys
 import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
 //henter full employe detaljer fra backend
-import {getFullEmployeeById} from '../../Funksj_støtte/getFullEmpUpdatet.js'
+import {getFullEmployeeById} from '../../Funksj_stotte/getFullEmpUpdatet.js'
 
 const router = Router();
 dotenv.config();
@@ -135,9 +135,9 @@ router.put('/:id', async (req, res) => {
                 VALUES (?, ?, ?, ?)`
                 ,[
                     id, 
-                    updatedData.leave.leave_percentage,
-                    updatedData.leave.leave_start_date,
-                    updatedData.leave.leave_end_date
+                    updatedData.leave.leave_percentage || null,
+                    updatedData.leave.leave_start_date || null,
+                    updatedData.leave.leave_end_date || null
                 ]
             );
             leaveId = leaveResult.insertId; // får ny id

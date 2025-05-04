@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import EmployeeDetail from "../components/Employee/EmployeeDetail";
 import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
@@ -9,6 +10,7 @@ import EmployeeHistoryTable from "../components/Employee/EmployeeHistoryTable";
 import "../styles/EmployeeInfo.css";
 
 const EmployeeInfo = () => {
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const { id } = useParams();
   const employeeId = parseInt(id, 10);
@@ -20,13 +22,14 @@ const EmployeeInfo = () => {
       </div>
       <div className="page-wrapper">
         <EmployeeDetail employeeId={employeeId} />
-        <div className="employee-info-button-wrapper">
-          <WhiteButton
-            text="Rediger"
-            onClick={() => navigate(`/admin/edit/${employeeId}`)}
-          />
-        </div>
-
+        {user?.role === "Admin" && (
+          <div className="employee-info-button-wrapper">
+            <WhiteButton
+              text="Rediger"
+              onClick={() => navigate(`/admin/edit/${employeeId}`)}
+            />
+          </div>
+        )}
         <div className="employee-info-notes-wrapper">
           <Notes employeeId={employeeId} />
         </div>

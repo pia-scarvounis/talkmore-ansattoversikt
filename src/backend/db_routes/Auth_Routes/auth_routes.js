@@ -45,7 +45,7 @@ router.post('/login', async (req, res) =>{
             {
                 userId: user.user_id,
                 username: user.username,
-                role: user.roles.toLowerCase() //ADMIN / TEAMLEDER
+                role: user.roles //ADMIN / TEAMLEDER
             },
             
                 JWT_SECRET,

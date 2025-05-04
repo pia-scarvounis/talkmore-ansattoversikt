@@ -103,7 +103,11 @@ const EditEmployee = () => {
         workPosistion_id: workPosistionId,
         licenses: employee.licenses || [],
         relative: employee.relative || [],
-        leave: employee.leave || null,
+        leave: employee.leave || {
+          leave_percentage: "",
+          leave_start_date: "",
+          leave_end_date: "",
+        },
       });
     }
   }, [employee, teams]);
@@ -124,9 +128,16 @@ const EditEmployee = () => {
   //oppdaterer formData (objektet ansatt info) med input
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    //fjern alt som ikke er tall i tlf felt
+    const cleanedValue =
+      name === "phoneNr" || name === "relative_phoneNr"
+        ? value.replace(/[^\d+]/g, "")
+        : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: cleanedValue,
     }));
   };
 
@@ -163,23 +174,42 @@ const EditEmployee = () => {
     setFormData((prev) => ({ ...prev, licenses: updated }));
   };
 
+  //Dato konverter for date i Leave (permisjon dato)
+  const formatDate = (dateStr) => {
+    if (!dateStr) return null;
+    return dateStr.split("T")[0];
+  };
+
   //lagre
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData) return;
-    // Formatterer datoene for permisjon
-    const cleanedFormData = {
+
+    // Valider permisjon: Startdato krever sluttdato
+    if (
+      formData.leave &&
+      formData.leave.leave_start_date &&
+      !formData.leave.leave_end_date
+    ) {
+      alert("Du må fylle inn sluttdato for permisjon hvis startdato er satt.");
+      return;
+    }
+
+    //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
+    const fixFormData = {
       ...formData,
       leave: formData.leave
         ? {
             ...formData.leave,
-            leave_start_date: formData.leave.leave_start_date?.split("T")[0],
-            leave_end_date: formData.leave.leave_end_date?.split("T")[0],
+            leave_start_date: formatDate(
+              formData.leave.leave_start_date || null
+            ),
+            leave_end_date: formatDate(formData.leave.leave_end_date || null),
           }
         : null,
     };
     //sender inn oppdatert ansatt objektet som formData i fetchen
-    dispatch(updateEmployee({ id, updatedEmployeeData: cleanedFormData }));
+    dispatch(updateEmployee({ id, updatedEmployeeData: fixFormData }));
   };
 
   //etter vellykket oppdatering
@@ -251,8 +281,10 @@ const EditEmployee = () => {
 
                 <label>Telefonnummer</label>
                 <input
-                  type="text"
+                  type="tel"
                   name="phoneNr"
+                  pattern="[+0-9]*"
+                  inputMode="numeric"
                   value={formData.phoneNr}
                   onChange={handleChange}
                 />
@@ -301,31 +333,37 @@ const EditEmployee = () => {
                       : ""
                   }
                   onChange={(e) => {
-                    if (formData.relative.length > 0) {
-                      const updatedRelative = {
-                        ...formData.relative[0],
-                        relative_name: e.target.value,
-                      };
-                      setFormData((prev) => ({
-                        ...prev,
-                        relative: [updatedRelative],
-                      }));
-                    }
+                    //if (formData.relative.length > 0) {
+                    const updated = {
+                      ...formData.relative[0],
+                      relative_name: e.target.value,
+                      relative_phoneNr:
+                        formData.relative[0]?.relative_phoneNr || "",
+                    };
+                    setFormData((prev) => ({
+                      ...prev,
+                      relative: [updated],
+                    }));
+                    // }
                   }}
                 />
               </div>
               <div className="column">
                 <label>Telefonnummer</label>
                 <input
-                  type="text"
+                  type="tel"
                   name="relative_phoneNr"
+                  pattern="[+0-9]*"
+                  inputMode="numeric"
                   value={formData.relative[0]?.relative_phoneNr || ""}
                   onChange={(e) => {
                     const existing = formData.relative[0] || {};
+                    //tlf
+                    const cleanednr = e.target.value.replace(/[^\d+]/g, ""); //behold kun tall
 
                     const updated = {
                       ...existing,
-                      relative_phoneNr: e.target.value,
+                      relative_phoneNr: cleanednr,
                       relative_name: existing.relative_name || "",
                     };
                     setFormData((prev) => ({ ...prev, relative: [updated] }));
@@ -411,7 +449,7 @@ const EditEmployee = () => {
               <div className="column">
                 <label>Fast / innleid</label>
                 <select
-                  name="form_of_employement"
+                  name="form_of_employeement"
                   value={formData.form_of_employeement}
                   onChange={handleChange}
                 >
