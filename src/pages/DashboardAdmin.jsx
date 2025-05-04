@@ -50,7 +50,7 @@ const DashboardAdmin = () => {
     if (!Array.isArray(employees)) return 0;
     return employees.filter(filterFn).length;
   };
-  
+  //Tester ekstra lagring
   //tester denne gpt snittet + sjekk av om employees er array og ikke undefined
   //den skal telle antall fte med 100% = 1 fte untatt de som er på permisjon/ de som har sluttet vil ikke dukke opp i get employees
   const totalFTE = Array.isArray(employees)
