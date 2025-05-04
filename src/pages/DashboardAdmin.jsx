@@ -96,7 +96,7 @@ const DashboardAdmin = () => {
                 onClick={() => handleBoxClick("admin")}
               />
               <StatBox
-                title="KUNDEAGENT"
+                title="KUNDEAGENTER"
                 value={getCount((e) => e.workPosistion_title === "Kundeagent")}
                 unit="Tilgjengelig"
                 icon={iconKA}
