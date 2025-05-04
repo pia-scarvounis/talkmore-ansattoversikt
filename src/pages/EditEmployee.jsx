@@ -128,9 +128,16 @@ const EditEmployee = () => {
   //oppdaterer formData (objektet ansatt info) med input
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    //fjern alt som ikke er tall i tlf felt
+    const cleanedValue = 
+    name === "phoneNr" || name === "relative_phoneNr"
+          ? value.replace(/[^\d+]/g, "")
+          :value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: cleanedValue,
     }));
   };
 
@@ -274,8 +281,10 @@ const EditEmployee = () => {
 
                 <label>Telefonnummer</label>
                 <input
-                  type="text"
+                  type="tel"
                   name="phoneNr"
+                  pattern="[+0-9]*"
+                  inputMode="numeric"
                   value={formData.phoneNr}
                   onChange={handleChange}
                 />
@@ -341,15 +350,20 @@ const EditEmployee = () => {
               <div className="column">
                 <label>Telefonnummer</label>
                 <input
-                  type="text"
+                  type="tel"
                   name="relative_phoneNr"
+                  pattern="[+0-9]*"
+                  inputMode="numeric"
                   value={formData.relative[0]?.relative_phoneNr || ""}
                   onChange={(e) => {
+                  
                     const existing = formData.relative[0] || {};
+                    //tlf
+                    const cleanednr = e.target.value.replace(/[^\d+]/g, ""); //behold kun tall
 
                     const updated = {
                       ...existing,
-                      relative_phoneNr: e.target.value,
+                      relative_phoneNr: cleanednr,
                       relative_name: existing.relative_name || "",
                     };
                     setFormData((prev) => ({ ...prev, relative: [updated] }));
