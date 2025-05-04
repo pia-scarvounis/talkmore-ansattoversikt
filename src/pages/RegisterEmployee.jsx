@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import NavAdmin from "../components/navigation/NavAdmin";
 import AlertBox from "../components/UI/AlertBox";
@@ -15,61 +16,60 @@ import uploadIcon from "../assets/icons/img.svg";
 
 const RegisterEmployee = () => {
   const [showSuccess, setShowSuccess] = useState(false);
-const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const navigate = useNavigate();
 
-const handleSave = () => {
-  setShowSuccess(true);
-  setTimeout(() => {
-    setShowSuccess(false);
-  }, 3000);
-};
+  const handleSave = () => {
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+  };
 
-const handleCancel = () => {
-  setShowCancelConfirm(true);
-};
+  const handleCancel = () => {
+    setShowCancelConfirm(true);
+  };
 
-const confirmCancel = () => {
-  console.log("Avbrutt registrering");
-  setShowCancelConfirm(false);
-};
+  const confirmCancel = () => {
+    navigate("/admin-dashboard/admin-panel");
+    setShowCancelConfirm(false);
+  };
 
-const cancelCancel = () => {
-  setShowCancelConfirm(false);
-};
+  const cancelCancel = () => {
+    setShowCancelConfirm(false);
+  };
 
   return (
     <div className="form-page">
       <NavAdmin />
-      
-      <div className="form-content page-header-wrapper">
-    <PageHeader title="Registrer ansatt" />
-  
-    
 
-          <div className="image-upload-container">
-            <h2 className="section-heading">Last opp bilde</h2>
-            <div className="image-box">
+      <div className="form-content page-header-wrapper">
+        <PageHeader title="Registrer ansatt" />
+
+        <div className="image-upload-container">
+          <h2 className="section-heading">Last opp bilde</h2>
+          <div className="image-box">
+            <img
+              src={defaultImage}
+              alt="Profilbilde"
+              className="profile-image"
+            />
+            <div className="icon-buttons">
               <img
-                src={defaultImage}
-                alt="Profilbilde"
-                className="profile-image"
+                src={uploadIcon}
+                alt="Last opp bilde"
+                className="icon-button"
+                title="Last opp bilde"
               />
-              <div className="icon-buttons">
-                <img
-                  src={uploadIcon}
-                  alt="Last opp bilde"
-                  className="icon-button"
-                  title="Last opp bilde"
-                />
-                <img
-                  src={trashIcon}
-                  alt="Fjern bilde"
-                  className="icon-button"
-                  title="Fjern bilde"
-                />
-              </div>
+              <img
+                src={trashIcon}
+                alt="Fjern bilde"
+                className="icon-button"
+                title="Fjern bilde"
+              />
             </div>
           </div>
+        </div>
 
         {/* SECTION: PERSONLIA */}
         <div className="form-section">
@@ -178,33 +178,29 @@ const cancelCancel = () => {
         </div>
 
         <div className="form-buttons">
-          <GreenButton
-            text="Lagre"
-            onClick={handleSave}
-          />
-          <RedButton
-            text="Avbryt"
-            onClick={handleCancel}
-          />
+          <GreenButton text="Lagre" onClick={handleSave} />
+          <RedButton text="Avbryt" onClick={handleCancel} />
         </div>
         {showSuccess && (
-  <AlertBox type="success" title="Suksess!" message="Ansatt er lagret." />
-)}
+          <AlertBox
+            type="success"
+            title="Suksess!"
+            message="Ansatt er lagret."
+          />
+        )}
 
-{showCancelConfirm && (
-  <AlertBox
-    type="confirmation"
-    title="Avbryt registrering"
-    message="Er du sikker på at du vil avbryte?"
-  >
-    <RedButton text="Ja, avbryt" onClick={confirmCancel} />
-    <WhiteButton text="Fortsett" onClick={cancelCancel} />
-  </AlertBox>
-)}
-
-        </div>
+        {showCancelConfirm && (
+          <AlertBox
+            type="confirmation"
+            title="Avbryt registrering"
+            message="Er du sikker på at du vil avbryte?"
+          >
+            <RedButton text="Ja, avbryt" onClick={confirmCancel}  />
+            <WhiteButton text="Forstett" onClick={cancelCancel} />
+          </AlertBox>
+        )}
       </div>
-   
+    </div>
   );
 };
 
