@@ -6,13 +6,15 @@ import { getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js';
 
 // CRON JOB hvis en ansatt får en slutt dato skal den settes til is_active = false (1) i sql
 //Da skal dette også oppdateres i api genesys med hjelpe av genesys_user_id
+console.log('[CRON] deactivateEmployeesCron.js er lastet inn');
 
 //API GENESYS 
 const apiInstance = platformClient.ApiClient.instance;
 const usersApi = new platformClient.UsersApi();
 
+
 //CRON JOB hver hver uke, mnd år kl 23 //tester med 5 minutter nå
-cron.schedule('*/ 5 * * * *', async () => {
+cron.schedule('0 23 * * *', async () => {
     console.log('[CRON] Starter deaktivering av ansatte med slutt dato');
     try{
         //Henter ansatt fra databasen med end_date = dagens dato 

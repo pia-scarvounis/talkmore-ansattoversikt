@@ -10,6 +10,11 @@ import metaDataGet from './db_routes/UsersRoutes/getMetaData_routes.js';
 import cors from 'cors';
 import authRoutes from './db_routes/Auth_Routes/auth_routes.js'
 import adminHistoryCrud from './db_routes/AdminRoutes/admin_empHistoryRoutes.js';
+//cron
+console.log('[APP] Starter backend og prøver å importere cron-jobber...');
+import  './cronjobs/syncEmployeesCron.js';
+import  './cronjobs/deactivateEmployeesCron.js';
+
 
 //importere rutere for admin og begge(teamleder og admin)
 

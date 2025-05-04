@@ -1,5 +1,6 @@
 import cron from 'node-cron';
-import { syncGenesysEmployees } from '../Funksj_støtte/syncGenesysEmployees';
+import { syncGenesysEmployees } from '../Funksj_stotte/syncGenesysEmployees.js';
+console.log('[CRON] syncEmployeesCron.js er lastet inn');
 
 //Denne skal kjøre hver kveld kl 23 og sjekke om det er nye ansatte fra api genesys som er lagt til
 //synsGenesysEmployees filen som ligger i funkjs_støtte mappen
