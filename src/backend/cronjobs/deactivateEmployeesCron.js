@@ -11,8 +11,8 @@ import { getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js';
 const apiInstance = platformClient.ApiClient.instance;
 const usersApi = new platformClient.UsersApi();
 
-//CRON JOB hver hver uke, mnd år kl 
-cron.schedule('0 23 * * *', async () => {
+//CRON JOB hver hver uke, mnd år kl 23 //tester med 5 minutter nå
+cron.schedule('*/ 5 * * * *', async () => {
     console.log('[CRON] Starter deaktivering av ansatte med slutt dato');
     try{
         //Henter ansatt fra databasen med end_date = dagens dato 
@@ -40,6 +40,8 @@ cron.schedule('0 23 * * *', async () => {
             //Oppdaterer den ansatt som har slutt dato og er aktiv til å ikke være aktiv
             await pool.query(`UPDATE employee SET is_active = 0 WHERE employee_id = ?`, [employee_id]);
 
+            //MÅ kommentere ut genesys mellomtiden har ikke tilgang til til endre i genesys enda
+            /** 
             if(genesys_user_id){
                 try{
 
@@ -63,12 +65,15 @@ cron.schedule('0 23 * * *', async () => {
                 }catch(geneesysError){
                     console.error(`[CRON] Feil ved oppdatering i genesys for ${genesys_user_id}`, geneesysError.message);
                 }
+            
+
             }else{
                 console.log(`[CRON] Ingen genesys_user_id registertert for employee ${employee_id}`);
             }
+             */
         }
 
     }catch(err){
-        console.error('[CRON] Generell feil under deaktivering:', err.message);
+        console.error('[CRON] Generell feil under deaktivering:', err);
     }
 })
