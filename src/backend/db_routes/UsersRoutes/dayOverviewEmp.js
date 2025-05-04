@@ -40,6 +40,7 @@ router.get('/dayOverviewEmployees', async (req, res) =>{
             LEFT JOIN workPosistion wp ON e.workPosistion_id = wp.workPosistion_id
             LEFT JOIN team t ON e.team_id = t.team_id
             LEFT JOIN employeeLeave l ON e.employee_id = l.employee_id
+            WHERE is_active = 1
         `);
 
         //filtrere ut ansatte som har permisjon eller har sluttet de skal ikke vises som del av 
