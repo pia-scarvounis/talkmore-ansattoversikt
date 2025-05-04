@@ -14,7 +14,7 @@ const usersApi = new platformClient.UsersApi();
 
 
 //CRON JOB hver hver uke, mnd , år , kl 23 ('0 23 * * *')//tester med 5 minutter nå ('*/5 * * * *')
-cron.schedule('0 23 * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
     console.log('[CRON] Starter deaktivering av ansatte med slutt dato');
     try{
         //Henter ansatt fra databasen med end_date = dagens dato 
