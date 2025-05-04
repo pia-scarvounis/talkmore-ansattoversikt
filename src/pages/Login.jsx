@@ -9,6 +9,7 @@ import logo from "../assets/images/tm-logo.png";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,6 +25,7 @@ function Login() {
       })
       .catch((err) => {
         console.error("Login error:", err);
+        setErrorMessage("E-post eller passord er feil");
       });
   };
 
@@ -67,6 +69,11 @@ function Login() {
             <div className="forgot-password">
               <a href="#">Glemt passord?</a>
             </div>
+
+            <p className="error-message">
+              {errorMessage ? errorMessage : "\u00A0"}{" "}
+              {/*"\u00A0" =  en non-breaking space - gjør sånn at boksen ikke "hopper" hvis noen har fylt inn feil brukernavn el passord */}
+            </p>
 
             {/* login-knapp nederst */}
             <div className="login-button">
