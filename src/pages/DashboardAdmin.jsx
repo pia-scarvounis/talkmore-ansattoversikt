@@ -86,7 +86,7 @@ const DashboardAdmin = () => {
                 value={getCount((e) => e.workPosistion_title === "Teamleder")}
                 unit="Tilgjengelig"
                 icon={iconTL}
-                onClick={() => handleBoxClick("teamleder")}
+                onClick={() => handleBoxClick("teamleder")} 
               />
               <StatBox
                 title="KS ADMIN"
