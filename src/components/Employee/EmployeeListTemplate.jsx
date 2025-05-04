@@ -68,12 +68,9 @@ const EmployeeListTemplate = ({
       const matchesSearch =
         employee.employee_name?.toLowerCase().includes(term) ||
         employee.epost?.toLowerCase().includes(term) ||
-        employee.form_of_employeement?.toLowerCase().includes(term) ||
-        employee.workPosistion_title?.toLowerCase().includes(term) ||
-        employee.team_name?.toLowerCase().includes(term) ||
+        employee.epost_Telenor?.toLowerCase().includes(term) ||
         employee.employeeNr_Talkmore?.toString().includes(term) ||
-        employee.employeeNr_Telenor?.toString().includes(term) ||
-        (employee.is_on_leave && "permisjon".includes(term));
+        employee.employeeNr_Telenor?.toString().includes(term)
 
       const matchesForm = selectedFilters.formOfEmployment
         ? employee.form_of_employeement === selectedFilters.formOfEmployment
