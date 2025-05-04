@@ -53,7 +53,7 @@
 }
 .profile-list-info p:nth-child(3) {
   flex: 1;
-  min-width: 130px;
+  min-width: 200px;
 }
 .profile-list-info p:nth-child(4) {
   flex: 1;
@@ -61,17 +61,16 @@
 }
 .profile-list-info p:nth-child(5) {
   flex: 2;
-  min-width: 240px;
+  min-width: 200px;
 }
 .label-info {
   font-weight: bold;
   margin-right: 5px;
 }
 
-
 .profileList-container {
-  position: relative; 
-  z-index: 1; 
+  position: relative;
+  z-index: 1;
 }
 
 .view-toggle-below {
@@ -81,6 +80,3 @@
   position: relative;
   z-index: 10;
 }
-
-
-
