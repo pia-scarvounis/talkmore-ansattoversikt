@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import NavAdmin from "../components/navigation/NavAdmin";
 import AlertBox from "../components/UI/AlertBox";
 import PageHeader from "../components/UI/PageHeader";
@@ -13,6 +14,29 @@ import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 
 const RegisterEmployee = () => {
+  const [showSuccess, setShowSuccess] = useState(false);
+const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+
+const handleSave = () => {
+  setShowSuccess(true);
+  setTimeout(() => {
+    setShowSuccess(false);
+  }, 3000);
+};
+
+const handleCancel = () => {
+  setShowCancelConfirm(true);
+};
+
+const confirmCancel = () => {
+  console.log("Avbrutt registrering");
+  setShowCancelConfirm(false);
+};
+
+const cancelCancel = () => {
+  setShowCancelConfirm(false);
+};
+
   return (
     <div className="form-page">
       <NavAdmin />
@@ -156,14 +180,28 @@ const RegisterEmployee = () => {
         <div className="form-buttons">
           <GreenButton
             text="Lagre"
-            onClick={() => console.log("Lagrer ny ansatt")}
+            onClick={handleSave}
           />
           <RedButton
             text="Avbryt"
-            onClick={() => console.log("Avbryter registrering")}
+            onClick={handleCancel}
           />
         </div>
-     
+        {showSuccess && (
+  <AlertBox type="success" title="Suksess!" message="Ansatt er lagret." />
+)}
+
+{showCancelConfirm && (
+  <AlertBox
+    type="confirmation"
+    title="Avbryt registrering"
+    message="Er du sikker på at du vil avbryte?"
+  >
+    <RedButton text="Ja, avbryt" onClick={confirmCancel} />
+    <WhiteButton text="Fortsett" onClick={cancelCancel} />
+  </AlertBox>
+)}
+
         </div>
       </div>
    
