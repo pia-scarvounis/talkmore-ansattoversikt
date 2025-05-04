@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.7.0",
+    "@tanstack/react-table": "^8.21.3",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
@@ -21,7 +22,9 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "mysql2": "^3.14.0",
+    "node-cron": "^3.0.3",
     "purecloud-platform-client-v2": "^219.0.0",
     "react": "^19.0.0",
     "react-datepicker": "^8.2.1",

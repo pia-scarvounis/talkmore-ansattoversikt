@@ -68,7 +68,7 @@ const DashboardPages = () => {
   const titleMap = {
     teamleder: "Teamleder",
     admin: "KS Admin",
-    kundeagent: "Kundeansvarlig",
+    kundeagent: "Kundeagent",
     fast: "Telenoransatt",
     innleid: "Innleid",
     heltid: "Heltid",

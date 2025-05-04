@@ -167,8 +167,19 @@ const EditEmployee = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData) return;
+    // Formatterer datoene for permisjon
+    const cleanedFormData = {
+      ...formData,
+      leave: formData.leave
+        ? {
+            ...formData.leave,
+            leave_start_date: formData.leave.leave_start_date?.split("T")[0],
+            leave_end_date: formData.leave.leave_end_date?.split("T")[0],
+          }
+        : null,
+    };
     //sender inn oppdatert ansatt objektet som formData i fetchen
-    dispatch(updateEmployee({ id, updatedEmployeeData: formData }));
+    dispatch(updateEmployee({ id, updatedEmployeeData: cleanedFormData }));
   };
 
   //etter vellykket oppdatering

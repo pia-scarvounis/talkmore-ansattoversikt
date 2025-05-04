@@ -5,6 +5,7 @@ import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
 import WhiteButton from "../components/UI/WhiteButton";
 import Notes from "../components/Employee/Notes";
+import EmployeeHistoryTable from "../components/Employee/EmployeeHistoryTable";
 import "../styles/EmployeeInfo.css";
 
 const EmployeeInfo = () => {
@@ -18,13 +19,19 @@ const EmployeeInfo = () => {
         <PageHeader title="Ansattinformasjon" />
       </div>
       <div className="page-wrapper">
-        <EmployeeDetail employeeId={employeeId}/>
+        <EmployeeDetail employeeId={employeeId} />
         <div className="employee-info-button-wrapper">
-          <WhiteButton text="Rediger" onClick={() => navigate(`/admin/edit/${employeeId}`)} />
+          <WhiteButton
+            text="Rediger"
+            onClick={() => navigate(`/admin/edit/${employeeId}`)}
+          />
         </div>
 
         <div className="employee-info-notes-wrapper">
           <Notes employeeId={employeeId} />
+        </div>
+        <div className="employee-info-history-wrapper">
+          <EmployeeHistoryTable employeeId={employeeId} />
         </div>
       </div>
     </div>

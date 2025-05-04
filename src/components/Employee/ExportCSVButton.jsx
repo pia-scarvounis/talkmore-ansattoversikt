@@ -32,6 +32,7 @@ const ExportCSVButton = ({ filteredEmployees }) => {
       "Team",
       "Avdeling",
       "Lisens(er)",
+      "Permisjon",
     ];
 
     const rows = employeesToExport.map((emp) => [
