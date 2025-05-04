@@ -66,7 +66,7 @@ router.get('/dayOverviewEmployees', async (req, res) =>{
                     return false;
                 }
             }
-           
+            //sjdhsjdhjhhshf
             //eksluder i vising hvis valgt dato i dashbord er før startdato (før en ansatt har begynt)
             if(row.start_date){
                 const startDate = new Date(row.start_date);
