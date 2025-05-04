@@ -40,11 +40,12 @@ router.get('/dayOverviewEmployees', async (req, res) =>{
             LEFT JOIN workPosistion wp ON e.workPosistion_id = wp.workPosistion_id
             LEFT JOIN team t ON e.team_id = t.team_id
             LEFT JOIN employeeLeave l ON e.employee_id = l.employee_id
-            WHERE is_active = 1
+            
         `);
 
         //filtrere ut ansatte som har permisjon eller har sluttet de skal ikke vises som del av 
-        //FTE ansatt 
+        //FTE ansatt  
+        //WHERE is_active = 1
 
         const result = rows.filter(row =>{
             //valgte dato på dashbord
@@ -57,9 +58,19 @@ router.get('/dayOverviewEmployees', async (req, res) =>{
                     return false;
                 }
             }
+            
+            //eksluder i vising hvis valgt dato er etter slutt dato (personen har sluttet)
             if(row.end_date){
-                const endDate = new Date(row.end_Date);
+                const endDate = new Date(row.end_date);
                 if(selected >= endDate){
+                    return false;
+                }
+            }
+           
+            //eksluder i vising hvis valgt dato i dashbord er før startdato (før en ansatt har begynt)
+            if(row.start_date){
+                const startDate = new Date(row.start_date);
+                if(selected < startDate){
                     return false;
                 }
             }
