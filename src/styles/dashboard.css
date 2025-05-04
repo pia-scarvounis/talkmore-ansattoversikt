@@ -212,19 +212,13 @@
 
 /*  HEADER OVER DATE PICKER  */
 .dashboard-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex; /* Bytter fra grid til flex */
+  justify-content: center;
   align-items: center;
-  margin-left: 340px;
   padding-top: 15px;
 }
 
-.dashboard-header-left {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-}
+
 
 .dashboard-search {
   display: flex;
@@ -280,4 +274,7 @@
 .datepicker-wrapper {
   display: none;
 }
-
+ 
+.dashboard-welcome {
+  font-size: 12px;
+}
