@@ -135,9 +135,9 @@ router.put('/:id', async (req, res) => {
                 VALUES (?, ?, ?, ?)`
                 ,[
                     id, 
-                    updatedData.leave.leave_percentage,
-                    updatedData.leave.leave_start_date,
-                    updatedData.leave.leave_end_date
+                    updatedData.leave.leave_percentage || null,
+                    updatedData.leave.leave_start_date || null,
+                    updatedData.leave.leave_end_date || null
                 ]
             );
             leaveId = leaveResult.insertId; // får ny id

@@ -196,8 +196,8 @@ const EditEmployee = () => {
       leave: formData.leave
       ?{
         ...formData.leave,
-        leave_start_date: formatDate(formData.leave.leave_start_date),
-        leave_end_date: formatDate(formData.leave.leave_end_date),
+        leave_start_date: formatDate(formData.leave.leave_start_date || null),
+        leave_end_date: formatDate(formData.leave.leave_end_date || null),
       }
         :null,
     };
