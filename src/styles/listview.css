@@ -77,7 +77,7 @@
 .view-toggle-below {
   display: flex;
   justify-content: flex-end;
-  margin: 20px 100px 60px 40px;
+  margin: 20px 100px 50px 40px;
   position: relative;
   z-index: 10;
 }
