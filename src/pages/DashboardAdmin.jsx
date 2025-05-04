@@ -50,11 +50,23 @@ const DashboardAdmin = () => {
     if (!Array.isArray(employees)) return 0;
     return employees.filter(filterFn).length;
   };
+  //funksjon for å hente permisjoner som er satt til dagens dato 
+  const  isONleave = (employee) => {
+    const leave = employee.leave;
+    if(!leave || !leave.leave_start_date || !leave.leave_end_date) return false;
+
+    const today = new Date(selectedDateString);
+    const start = new Date(leave.leave_start_date);
+    const end = new Date (leave.leave_end_date);
+
+    return today >= start && today <= end && Number(leave.leave_percentages) > 0;
+  };
 
   //tester denne gpt snittet + sjekk av om employees er array og ikke undefined
-  //den skal telle antall fte med 100% = 1 fte
+  //den skal telle antall fte med 100% = 1 fte untatt de som er på permisjon/ de som har sluttet vil ikke dukke opp i get employees
   const totalFTE = Array.isArray(employees)
     ? employees.reduce((acc, employee) => {
+        if(isONleave(employee)) return acc;//hopper over ansatte med permisjon
         const pct = Number(employee.employee_percentages);
         return acc + (isNaN(pct) ? 0 : pct / 100); // <- Legg til som FTE, ikke %
       }, 0)
