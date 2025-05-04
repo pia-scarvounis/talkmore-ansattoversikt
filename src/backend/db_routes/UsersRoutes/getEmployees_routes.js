@@ -258,6 +258,7 @@ router.get('/', async (req, res) => {
                 LEFT JOIN employee_license el ON employee.employee_id = el.employee_id
                 LEFT JOIN license l ON el.license_id = l.license_id
                 LEFT JOIN employeeLeave leaveTbl ON employee.employee_id = leaveTbl.employee_id
+                WHERE employee.is_active = 1
                 `);
  
                 if (rows.length === 0) {
