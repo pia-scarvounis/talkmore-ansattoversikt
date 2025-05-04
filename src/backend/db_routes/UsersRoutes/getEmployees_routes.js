@@ -110,7 +110,7 @@ router.post('/', async (req, res) => {
           continue;
         }
   
-        // --- Generer data for ny ansatt ---
+        //Generer data for ny ansatt
         const randomPhone = `+47${Math.floor(10000000 + Math.random() * 8999999)}`;
         const randomBirthday = () => new Date(1980 + Math.random() * 21, Math.random() * 12, Math.floor(Math.random() * 28) + 1)
           .toISOString().split('T')[0];
@@ -126,7 +126,7 @@ router.post('/', async (req, res) => {
         let form_of_employeement = 'Fast';
         let employee_percentages = 100;
   
-        // --- Tildel rolle basert på logikk hjelp med gpt ---
+        // Tildel rolle basert på logikk hjelp med gpt
         if(team_id === adminTeamId && currentAdminCount < 8){
           workPosistion_title = 'Admin';
           const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Admin'`);
