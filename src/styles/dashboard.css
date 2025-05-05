@@ -212,7 +212,8 @@
 
 /*  HEADER OVER DATE PICKER  */
 .dashboard-header {
-  display: flex; /* Bytter fra grid til flex */
+  position: relative;
+  display: flex; 
   justify-content: center;
   align-items: center;
   padding-top: 15px;
@@ -276,5 +277,8 @@
 }
  
 .dashboard-welcome {
+  position: absolute;
   font-size: 12px;
+  padding-bottom: 5px;
+ left: 310px;
 }
