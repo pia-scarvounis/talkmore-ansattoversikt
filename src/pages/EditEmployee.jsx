@@ -3,12 +3,15 @@ import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
 import GreenButton from "../components/UI/GreenButton";
 import RedButton from "../components/UI/RedButton";
+import WhiteButton from "../components/UI/WhiteButton";
 
 import "../styles/form.css";
 import defaultImage from "../assets/images/default-img.png";
 import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 import EditHistoryPopup from "../components/History/EditHistoryPopup"; // for å teste EditHistoryPopupen
+import AlertBox from "../components/UI/AlertBox";
+
 
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
@@ -24,6 +27,12 @@ const EditEmployee = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const employeeId = parseInt(id, 10);
+// alertbox state: 
+const [showSuccess, setShowSuccess] = useState(false);
+const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+const [showError, setShowError] = useState(false);
+const [errorMessage, setErrorMessage] = useState("");
+
 
   useEffect(() => {
     dispatch(fetchMetaData());
@@ -120,7 +129,7 @@ const EditEmployee = () => {
         (t) => t.team_department_id?.toString() === formData.department_id
       );
       setfilteredTeams(filtered);
-      console.log("✅ Filtered teams:", filtered);
+      console.log("Filtered teams:", filtered);
     }
   }, [formData?.department_id, teams]);
   console.log("formData.department_id:", formData?.department_id);
@@ -184,7 +193,7 @@ const EditEmployee = () => {
 
   //lagre
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e?.preventDefault) e.preventDefault();
     if (!formData) return;
 
     // Valider permisjon: Startdato krever sluttdato
@@ -193,13 +202,26 @@ const EditEmployee = () => {
     formData.leave.leave_start_date &&
     !formData.leave.leave_end_date
   ) {
-    alert("Du må fylle inn sluttdato for permisjon hvis startdato er satt.");
+    // Vis error AlertBox i stedet for alert()
+    setErrorMessage("Du må fylle inn sluttdato for permisjon hvis startdato er satt.");
+    setShowError(true);
+    return;
+  }
+
+  if (
+    formData.leave &&
+    formData.leave.leave_end_date &&
+    !formData.leave.leave_start_date
+  ) {
+    setErrorMessage("Du må fylle inn startdato for permisjon hvis sluttdato er satt.");
+    setShowError(true);
     return;
   }
 
     //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
     const fixFormData = {
     ...formData,
+    image: undefined, // default bilde tar for stor plass når jeg tester. fjerne dette senere?
       leave: formData.leave
       ?{
         ...formData.leave,
@@ -216,15 +238,16 @@ const EditEmployee = () => {
   useEffect(() => {
     if (success) {
       dispatch(fetchEmployees());
-      //resetter oppdateringg
       dispatch(resetUpdateState());
-      //Sette riktig alert ui her!!!!
-      alert("Ansatt oppdatert");
-      //sett inn riktig navigasjon her: tilbake til ansattprofildetaljer med id)
-      navigate(`/employee-info/${id}`);
+      setShowSuccess(true); // vise success
+      setTimeout(() => {
+        setShowSuccess(false);
+        navigate(`/employee-info/${id}`);
+      }, 3000);
     }
     if (error) {
-      alert("Feil: " + error);
+      setErrorMessage("Feil: " + error);
+      setShowError(true);
       dispatch(resetUpdateState());
     }
   }, [success, error, dispatch, navigate]);
@@ -232,6 +255,18 @@ const EditEmployee = () => {
   if (!formData) {
     return <div>Laster ansatt...</div>;
   }
+
+  // lagre og avbryt knapper - alert boxes
+  const confirmCancel = () => {
+    // Naviger tilbake til profilsiden til brukeren
+    navigate(`/employee-info/${id}`);
+  };
+  
+  const cancelCancel = () => {
+    // Lukker popupen
+    setShowCancelConfirm(false);
+  };
+  
 
   return (
     <div className="form-page">
@@ -591,15 +626,43 @@ const EditEmployee = () => {
           <div className="form-buttons">
             <GreenButton
               text="Lagre"
-              onClick={() => console.log("Lagrer endringer")}
+              onClick={handleSubmit}
             />
             {/*** navigere til sider etterhvert!! naviger tilbake profildetaljesiden*/}
             <RedButton
               text="Avbryt"
-              onClick={() => console.log("Avbryter redigering")}
+              onClick={() => setShowCancelConfirm(true)}
             />
           </div>
         </form>
+        {showCancelConfirm && (
+  <AlertBox
+    type="confirmation"
+    title="Avbryt endringer"
+    message="Er du sikker på at du vil avbryte? Endringer du har gjort vil ikke bli lagret."
+  >
+    <RedButton text="Ja, avbryt" onClick={confirmCancel} />
+    <WhiteButton text="Fortsett" onClick={cancelCancel} />
+  </AlertBox>
+)}
+{showError && (
+  <AlertBox
+    type="error"
+    title="Feil!"
+    message={errorMessage}
+  >
+    <RedButton text="Lukk" onClick={() => setShowError(false)} />
+  </AlertBox>
+)}
+{showSuccess && (
+  <AlertBox
+    type="success"
+    title="Lagret!"
+    message="Ansattdata er oppdatert."
+  >
+  </AlertBox>
+)}
+
       </div>
     </div>
   );
