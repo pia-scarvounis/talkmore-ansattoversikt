@@ -36,7 +36,7 @@ app.use('/api/auth', authRoutes);
 //rutere for å hente og vise alle ansatte
 app.use('/api/employees', employeeRoutes);
 
-//rutere for admin: post, put, delete employees
+//rutere for admin: post, put employees
 app.use('/api/employee', adminEmployeeCruds);
 
 //ruter for notes CRUDS

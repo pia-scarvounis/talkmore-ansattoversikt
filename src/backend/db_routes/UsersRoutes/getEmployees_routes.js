@@ -21,7 +21,7 @@ const router = Router();
 const [dbResult] = await pool.query("SELECT DATABASE() AS db");
 console.log("Koden kjører mot databasen:", dbResult[0].db);
 
-
+//Henter alle ansatte fra genesys api med token som parameter
 async function fetchAllGenEmployees(token){
     let allGenEmployees = [];
     //Start uri, bruker next uri for å hente alle ansatte fra genesys uten å håndtere sidetelling
@@ -110,7 +110,7 @@ router.post('/', async (req, res) => {
           continue;
         }
   
-        //Generer data for ny ansatt
+        //Generer data for ny ansatt med randomisering i variabler 
         const randomPhone = `+47${Math.floor(10000000 + Math.random() * 8999999)}`;
         const randomBirthday = () => new Date(1980 + Math.random() * 21, Math.random() * 12, Math.floor(Math.random() * 28) + 1)
           .toISOString().split('T')[0];
@@ -127,6 +127,7 @@ router.post('/', async (req, res) => {
         let employee_percentages = 100;
   
         // Tildel rolle basert på logikk hjelp med gpt
+        //MAKS 8 admin de skal tilhøre avdeling ADMIN og TEAM performance
         if(team_id === adminTeamId && currentAdminCount < 8){
           workPosistion_title = 'Admin';
           const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Admin'`);
@@ -134,6 +135,7 @@ router.post('/', async (req, res) => {
           currentAdminCount++;
           console.log(`Tildelt Admin. Totalt: ${currentAdminCount}/8`);
 
+          //MAKS 1 teamleder per Team når det skal settes inn
         }else if(!teamLeadersAssigned.has(team_id)){
           workPosistion_title = 'Teamleder';
           const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Teamleder'`);
@@ -141,6 +143,7 @@ router.post('/', async (req, res) => {
           teamLeadersAssigned.add(team_id);
           console.log(`Tildelt Teamleder til team ${team_name}`);
         }else{
+          //resten tildeles kundeagenter
           workPosistion_title = 'Kundeagent';
           const [res] = await pool.query(`SELECT workPosistion_id FROM workPosistion WHERE posistion_title = 'Kundeagent'`);
           workPosistion_id = res[0].workPosistion_id;
@@ -149,7 +152,7 @@ router.post('/', async (req, res) => {
           console.log(`Tildelt Kundeagent til ${employee.name}`);
         }
 
-        // --- Sett inn ny ansatt i databasen ---
+        //Setter inn ny ansatt i databasen
         const [result] = await pool.query(
           `INSERT INTO employee (
             employee_name, epost, phoneNr, birthdate, image_url, start_date, end_date,
@@ -212,7 +215,7 @@ router.post('/', async (req, res) => {
             ]);
 
         }
-
+        //Dette er en midlertidig del da api genesys ikke har behov for tileggsopplysingene vi legger til
         employees.push({
           ...employee,
           dbId: result.id
