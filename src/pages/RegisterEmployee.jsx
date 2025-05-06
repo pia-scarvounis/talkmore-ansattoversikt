@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import NavAdmin from "../components/navigation/NavAdmin";
 import AlertBox from "../components/UI/AlertBox";
 import PageHeader from "../components/UI/PageHeader";
@@ -13,39 +15,61 @@ import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 
 const RegisterEmployee = () => {
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSave = () => {
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+  };
+
+  const handleCancel = () => {
+    setShowCancelConfirm(true);
+  };
+
+  const confirmCancel = () => {
+    navigate("/admin-dashboard/admin-panel");
+    setShowCancelConfirm(false);
+  };
+
+  const cancelCancel = () => {
+    setShowCancelConfirm(false);
+  };
+
   return (
     <div className="form-page">
       <NavAdmin />
-      
-      <div className="form-content page-header-wrapper">
-    <PageHeader title="Registrer ansatt" />
-  
-    
 
-          <div className="image-upload-container">
-            <h2 className="section-heading">Last opp bilde</h2>
-            <div className="image-box">
+      <div className="form-content page-header-wrapper">
+        <PageHeader title="Registrer ansatt" />
+
+        <div className="image-upload-container">
+          <h2 className="section-heading">Last opp bilde</h2>
+          <div className="image-box">
+            <img
+              src={defaultImage}
+              alt="Profilbilde"
+              className="profile-image"
+            />
+            <div className="icon-buttons">
               <img
-                src={defaultImage}
-                alt="Profilbilde"
-                className="profile-image"
+                src={uploadIcon}
+                alt="Last opp bilde"
+                className="icon-button"
+                title="Last opp bilde"
               />
-              <div className="icon-buttons">
-                <img
-                  src={uploadIcon}
-                  alt="Last opp bilde"
-                  className="icon-button"
-                  title="Last opp bilde"
-                />
-                <img
-                  src={trashIcon}
-                  alt="Fjern bilde"
-                  className="icon-button"
-                  title="Fjern bilde"
-                />
-              </div>
+              <img
+                src={trashIcon}
+                alt="Fjern bilde"
+                className="icon-button"
+                title="Fjern bilde"
+              />
             </div>
           </div>
+        </div>
 
         {/* SECTION: PERSONLIA */}
         <div className="form-section">
@@ -154,19 +178,29 @@ const RegisterEmployee = () => {
         </div>
 
         <div className="form-buttons">
-          <GreenButton
-            text="Lagre"
-            onClick={() => console.log("Lagrer ny ansatt")}
-          />
-          <RedButton
-            text="Avbryt"
-            onClick={() => console.log("Avbryter registrering")}
-          />
+          <GreenButton text="Lagre" onClick={handleSave} />
+          <RedButton text="Avbryt" onClick={handleCancel} />
         </div>
-     
-        </div>
+        {showSuccess && (
+          <AlertBox
+            type="success"
+            title="Suksess!"
+            message="Ansatt er lagret."
+          />
+        )}
+
+        {showCancelConfirm && (
+          <AlertBox
+            type="confirmation"
+            title="Avbryt registrering"
+            message="Er du sikker på at du vil avbryte?"
+          >
+            <RedButton text="Ja, avbryt" onClick={confirmCancel}  />
+            <WhiteButton text="Nei" onClick={cancelCancel} />
+          </AlertBox>
+        )}
       </div>
-   
+    </div>
   );
 };
 

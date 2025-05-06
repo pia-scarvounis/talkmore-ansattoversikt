@@ -25,6 +25,7 @@ const DashboardAdmin = () => {
   const handleBoxClick = (filterKey) => {
     navigate(`/dashboardlist/${filterKey}`);
   }; // statbox trigges når den trykkes og sender videre til riktig sted
+  const user = useSelector((state) => state.auth.user);
   const selectedDateString = useSelector((state) => state.date.selectedDate);
   const selectedDate = new Date(selectedDateString);
   const { data: employees, loading } = useSelector(
@@ -56,7 +57,7 @@ const DashboardAdmin = () => {
   const totalFTE = Array.isArray(employees)
     ? employees.reduce((acc, employee) => {
         const pct = Number(employee.employee_percentages);
-        return acc + (isNaN(pct) ? 0 : pct / 100); // <- Legg til som FTE, ikke %
+        return acc + (isNaN(pct) ? 0 : pct / 100); // Legg til som FTE, ikke %
       }, 0)
     : 0;
 
@@ -66,8 +67,13 @@ const DashboardAdmin = () => {
     <div className="dashboard-layout">
       <NavAdmin />
 
+
       <div className="dashboard-header">
+    
         <div className="dashboard-header-left">
+        <div className="dashboard-welcome">
+              velkommen, {user?.username || "Ukjent bruker"}
+            </div>
           <div className="dashboard-dategroup">
             <span className="pageContent-text">{formattedDate}</span>
             <DateSelector />
@@ -86,7 +92,7 @@ const DashboardAdmin = () => {
                 value={getCount((e) => e.workPosistion_title === "Teamleder")}
                 unit="Tilgjengelig"
                 icon={iconTL}
-                onClick={() => handleBoxClick("teamleder")} 
+                onClick={() => handleBoxClick("teamleder")}
               />
               <StatBox
                 title="KS ADMIN"

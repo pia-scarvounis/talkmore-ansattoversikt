@@ -86,6 +86,15 @@
     text-decoration: underline;
     cursor: pointer;
   }
+
+  /* feil brukernavn el passord */
+  .error-message {
+    color: #BB0218;
+    font-size: 14px;
+    font-weight: lighter;
+    min-height: 20px;
+  }
+  
   
   /* Knapper */
   .login-button {

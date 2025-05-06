@@ -1,5 +1,6 @@
 /* felles stil for alle alerts */
 .alert-box {
+  width: 400px;
     padding: 40px;
     border-radius: 20px;
     font-size: 14px;
@@ -25,6 +26,7 @@
   .success {
     background-color: #DDF5D2;
     border: 2px solid #60AA3B;
+    height: 150px; 
   
   }
   

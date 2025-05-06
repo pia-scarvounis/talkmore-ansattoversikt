@@ -2,14 +2,20 @@ import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { fetchMetaData } from "../../redux/slices/metaDataCrudsSlice";
 import { logout } from "../../redux/slices/authLoginSlice/loginSlice";
 import logo from "../../assets/images/tm-logo.png";
 import "../../styles/nav.css";
 
 const NavAdmin = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  
+  // hente avdelinger og teams fra Redux
+  const metaData = useSelector((state) => state.metaData);
+const departments = metaData?.departments || [];
+const teams = metaData?.teams || [];
 
 
     // når user blir null (logget ut), send til login
@@ -18,6 +24,7 @@ const NavAdmin = () => {
         navigate("/");
       }
     }, [user, navigate]);
+
   const handleLogout = () => {
     dispatch(logout());
   };
@@ -40,65 +47,43 @@ const NavAdmin = () => {
               Alle Ansatte
             </NavLink>
           </div>
-          <div className="section">
-            <NavLink to="/nav/admin" className="nav-link main-link">
-              Admin
-            </NavLink>
-            <NavLink
-              to="/nav/performance_management"
-              className="nav-link sub-link"
-            >
-              Performance Management
-            </NavLink>
-          </div>
+          {departments.map((dep) => {
+            // hente teams som tilhører denne avdelingen
+            const departmentTeams = teams.filter(team => team.department_name === dep.department_name);
 
-          <div className="section">
-            <NavLink to="/nav/privat" className="nav-link main-link">
-              Privat
-            </NavLink>
-            <NavLink to="/nav/brooklyn" className="nav-link sub-link">
-              Brooklyn
-            </NavLink>
-            <NavLink to="/nav/havana" className="nav-link sub-link">
-              Havana
-            </NavLink>
-            <NavLink to="/nav/casablanca" className="nav-link sub-link">
-              Casablanca
-            </NavLink>
-            <NavLink to="/nav/springfield" className="nav-link sub-link">
-              Springfield
-            </NavLink>
-          </div>
+            return (
+              <div key={dep.department_id} className="section">
+                {/* avdelingsnavn (Main link) */}
+                <NavLink
+                  to={`/nav/${dep.department_name.toLowerCase().replace(/\s+/g, "_")}`}
+                  className="nav-link main-link"
+                >
+                  {dep.department_name}
+                </NavLink>
 
-          <div className="section">
-            <NavLink to="/nav/bedrift" className="nav-link main-link">
-              {" "}
-              Bedrift
-            </NavLink>
-            <NavLink to="/nav/cayman_island" className="nav-link sub-link">
-              Cayman Island{" "}
-            </NavLink>
-          </div>
+                {/* teams under avdeling (Sub-links) */}
+                {departmentTeams.map((team) => (
+                  <NavLink
+                    key={team.team_id}
+                    to={`/nav/${team.team_name.toLowerCase().replace(/\s+/g, "_")}`}
+                    className="nav-link sub-link"
+                  >
+                    {team.team_name}
+                  </NavLink>
+                ))}
+              </div>
+            );
+          })}
 
-          <div className="section">
-            <NavLink to="/nav/2.Linje" className="nav-link main-link">
-              {" "}
-              2. linje
-            </NavLink>
-            <NavLink to="/nav/olympia" className="nav-link sub-link">
-              Olympia
-            </NavLink>
-          </div>
-          <div className="section">
-            {user?.role === "Admin" && (
-              <NavLink
-                to="/admin-dashboard/admin-panel"
-                className="nav-link main-link"
-              >
+          {/* kun admin skal se dette */}
+          
+          {user?.role === "Admin" && (
+            <div className="section">
+              <NavLink to="/admin-dashboard/admin-panel" className="nav-link main-link">
                 Administrasjonspanel
               </NavLink>
-            )}{" "}
-          </div>
+            </div>
+          )}
 
           <div className="section">
           <div
