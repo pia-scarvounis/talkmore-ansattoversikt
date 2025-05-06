@@ -3,6 +3,7 @@ import axios from 'axios';
 // legge til api istedenfor axios. når det er klart
 import api from '../../backend/apiToken/axiosInstance.js';
 
+
 //Hente ut avdelinger, teams, og stillinger 
 export const fetchMetaData = createAsyncThunk(
     'metaData/fetchMetaData',
