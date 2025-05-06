@@ -5,7 +5,7 @@ import pool from   '../../config/db.js'
 const router = Router();
 
 //Legger til nytt team med department id (hvilken avdeling teamet skal tilhøre)
-router.post('/team', async (req, res) => {
+router.post('/', async (req, res) => {
     const {team_name, department_id } = req.body;
 
     if(!team_name || !department_id){
@@ -25,7 +25,7 @@ router.post('/team', async (req, res) => {
 });
 
 //Endrer team i en avdeling
-router.put('/team/:team_id', async (req, res) => {
+router.put('/:team_id', async (req, res) => {
     //henter team id fra url
     const {team_id} = req.params;
     //henter nye team navn og avd id fra body
@@ -48,7 +48,7 @@ router.put('/team/:team_id', async (req, res) => {
     }
 });
 
-router.delete('/team/:team_id', async (req, res) => {
+router.delete('/:team_id', async (req, res) => {
     //henter id fra url
     const {team_id} = req.params;
 

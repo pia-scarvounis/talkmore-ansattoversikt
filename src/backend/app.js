@@ -10,6 +10,7 @@ import metaDataGet from './db_routes/UsersRoutes/getMetaData_routes.js';
 import cors from 'cors';
 import authRoutes from './db_routes/Auth_Routes/auth_routes.js'
 import adminHistoryCrud from './db_routes/AdminRoutes/admin_empHistoryRoutes.js';
+import adminTeamCruds from './db_routes/AdminRoutes/admin_teamCruds.js';
 //cron
 console.log('[APP] Starter backend og prøver å importere cron-jobber...');
 import  './cronjobs/syncEmployeesCron.js';
@@ -36,9 +37,6 @@ app.use('/api/auth', authRoutes);
 //rutere for å hente og vise alle ansatte
 app.use('/api/employees', employeeRoutes);
 
-//rutere for admin: post, put employees
-app.use('/api/employee', adminEmployeeCruds);
-
 //ruter for notes CRUDS
 app.use('/api/note', noteRoutes );
 
@@ -55,9 +53,12 @@ app.use('/api/employee/history', employeeHistory);
 app.use('/api/metaData', metaDataGet)
 
 //rutere kun for Admin
+//rutere for admin: post, put employees
+app.use('/api/employee', adminEmployeeCruds);
 //endre historikk felter for en ansatt
 app.use('api/history', adminHistoryCrud)
 //rutere for adminstrere team POST, PUT og DELETE
+app.use('api/team', adminTeamCruds);
 
 //starte serveren
 app.listen(3000, ()=>{
