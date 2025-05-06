@@ -56,7 +56,7 @@ router.put('/:id', async (req, res) => {
 
         const newEpost = (updatedData.epost || original.epost || '').toLowerCase();
 
-        console.log('🟨 Epost-sjekk:');
+        console.log('Epost-sjekk:');
         console.log('Ny epost (trim/lower):', newEpost);
         console.log('Original epost (trim/lower):', originalEpost);
         console.log('Employee ID:', id);

@@ -45,7 +45,7 @@ router.get('/dayOverviewEmployees', async (req, res) =>{
 
         //filtrere ut ansatte som har permisjon eller har sluttet de skal ikke vises som del av 
         //FTE ansatt  
-        //WHERE is_active = 1
+       
 
         const result = rows.filter(row =>{
             //valgte dato på dashbord
@@ -66,7 +66,7 @@ router.get('/dayOverviewEmployees', async (req, res) =>{
                     return false;
                 }
             }
-            //sjdhsjdhjhhshf
+          
             //eksluder i vising hvis valgt dato i dashbord er før startdato (før en ansatt har begynt)
             if(row.start_date){
                 const startDate = new Date(row.start_date);

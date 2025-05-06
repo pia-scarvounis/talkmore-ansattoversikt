@@ -6,7 +6,7 @@ dotenv.config();
 
 const router = Router();
 
-//hente historikken til den valgte ansatte
+//hente historikken til den valgte ansatte med id til ansatte
 router.get('/:id', async (req, res) =>{
     const {id} = req.params;
 

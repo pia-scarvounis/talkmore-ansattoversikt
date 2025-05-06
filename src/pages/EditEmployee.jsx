@@ -120,7 +120,7 @@ const EditEmployee = () => {
         (t) => t.team_department_id?.toString() === formData.department_id
       );
       setfilteredTeams(filtered);
-      console.log("✅ Filtered teams:", filtered);
+      console.log("Filtered teams:", filtered);
     }
   }, [formData?.department_id, teams]);
   console.log("formData.department_id:", formData?.department_id);
@@ -164,7 +164,7 @@ const EditEmployee = () => {
       (dep) => dep.department_id.toString() === formData?.department_id
     )
   );
-
+    //Håndterer lisens endringer og oppdaterer lisenser tilgang for ansatt
   const handleLicenseChange = (e) => {
     const isChecked = e.target.checked;
     const licenseId = Number(e.target.value);
@@ -180,8 +180,6 @@ const EditEmployee = () => {
     return dateStr.split("T")[0];
   }
   
-
-
   //lagre
   const handleSubmit = (e) => {
     e.preventDefault();
