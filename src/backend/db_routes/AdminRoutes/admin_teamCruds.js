@@ -4,7 +4,7 @@ import pool from   '../../config/db.js'
 
 const router = Router();
 
-
+//Legger til nytt team med department id (hvilken avdeling teamet skal tilhøre)
 router.post('/team', async (req, res) => {
     const {team_name, department_id } = req.body;
 
@@ -23,3 +23,8 @@ router.post('/team', async (req, res) => {
         res.status(500).json({message: 'Feil vd oppretting av team'});
     }
 });
+
+//Endrer team i en avdeling
+router.put('/team/:team_id', async (req, res) = {
+
+})
