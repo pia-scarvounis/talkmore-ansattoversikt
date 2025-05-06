@@ -1,49 +1,52 @@
-import cron from 'node-cron';
-import pool from  '../config/db.js';
-import platformClient from 'purecloud-platform-client-v2';
-import { getOAuthToken} from '../apiGenesysAuth/authTokenGenesys.js';
-
+import cron from "node-cron";
+import pool from "../config/db.js";
+import platformClient from "purecloud-platform-client-v2";
+import { getOAuthToken } from "../apiGenesysAuth/authTokenGenesys.js";
 
 // CRON JOB hvis en ansatt får en slutt dato skal den settes til is_active = false (1) i sql
 //Da skal dette også oppdateres i api genesys med hjelpe av genesys_user_id
-console.log('[CRON] deactivateEmployeesCron.js er lastet inn');
+console.log("[CRON] deactivateEmployeesCron.js er lastet inn");
 
-//API GENESYS 
+//API GENESYS
 const apiInstance = platformClient.ApiClient.instance;
 const usersApi = new platformClient.UsersApi();
 
-
 //CRON JOB hver hver uke, mnd , år , kl 23 ('0 23 * * *')//tester med 5 minutter nå ('*/5 * * * *')
-cron.schedule('*/5 * * * *', async () => {
-    console.log('[CRON] Starter deaktivering av ansatte med slutt dato');
-    try{
-        //Henter ansatt fra databasen med end_date = dagens dato 
-        const [employees] = await pool.query(`
+cron.schedule("0 23 * * *", async () => {
+  console.log("[CRON] Starter deaktivering av ansatte med slutt dato");
+  try {
+    //Henter ansatt fra databasen med end_date = dagens dato
+    const [employees] = await pool.query(`
             SELECT employee_id, end_date, genesys_user_id
             FROM employee
             WHERE end_date IS NOT NULL AND end_date <= CURDATE() AND is_active = 1  
-        `)
+        `);
 
-        //Hvis ingen ansatte i databasen med slutt dato
-        if(employees.length === 0){
-            console.log('[CRON] Ingen ansatte å deaktivere idag');
-            return;
-        }
+    //Hvis ingen ansatte i databasen med slutt dato
+    if (employees.length === 0) {
+      console.log("[CRON] Ingen ansatte å deaktivere idag");
+      return;
+    }
 
-        //HENTER genesys token
-        const accessTokenGen = await getOAuthToken();
-        apiInstance.setAccessToken(accessTokenGen);
+    //HENTER genesys token
+    const accessTokenGen = await getOAuthToken();
+    apiInstance.setAccessToken(accessTokenGen);
 
-        for(const emp of employees){
-            const { employee_id, end_date, genesys_user_id } = emp;
+    for (const emp of employees) {
+      const { employee_id, end_date, genesys_user_id } = emp;
 
-            console.log(`[CRON] Deaktiverer employee_id ${employee_id}, end_date:${end_date} `);
+      console.log(
+        `[CRON] Deaktiverer employee_id ${employee_id}, end_date:${end_date} `
+      );
 
-            //Oppdaterer den ansatt som har slutt dato og er aktiv til å ikke være aktiv
-            await pool.query(`UPDATE employee SET is_active = 0 WHERE employee_id = ?`, [employee_id]);
+      //Oppdaterer den ansatt som har slutt dato og er aktiv til å ikke være aktiv
+      await pool.query(
+        `UPDATE employee SET is_active = 0 WHERE employee_id = ?`,
+        [employee_id]
+      );
 
-            //MÅ kommentere ut genesys mellomtiden har ikke tilgang til til endre i genesys enda
-            /** 
+      //MÅ kommentere ut genesys mellomtiden har ikke tilgang til til endre i genesys enda
+      /** 
             if(genesys_user_id){
                 try{
 
@@ -73,9 +76,8 @@ cron.schedule('*/5 * * * *', async () => {
                 console.log(`[CRON] Ingen genesys_user_id registertert for employee ${employee_id}`);
             }
              */
-        }
-
-    }catch(err){
-        console.error('[CRON] Generell feil under deaktivering:', err);
     }
-})
+  } catch (err) {
+    console.error("[CRON] Generell feil under deaktivering:", err);
+  }
+});
