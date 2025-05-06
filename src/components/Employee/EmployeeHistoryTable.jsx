@@ -1,5 +1,5 @@
 // src/components/Employee/EmployeeHistoryTable.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -24,20 +24,123 @@ const EmployeeHistoryTable = ({ employeeId }) => {
     }
   }, [employeeId, dispatch]);
 
+  // Flat ut historikken i én rad per faktisk endret felt
+  const flattenedData = useMemo(() => {
+    if (!Array.isArray(data)) return [];
+
+    return data.flatMap((entry) => {
+      const changes = [];
+
+      // Permisjon
+      if (entry.leave_percentage) {
+        changes.push({
+          ...entry,
+          status: "Ny permisjon",
+          permisjon: `${entry.leave_percentage}%`,
+          start_date: entry.leave_start_date,
+          end_date: entry.leave_end_date,
+          team_name: "",
+          employeeNr_Telenor: "",
+          workPosistion_title: "",
+        });
+      }
+
+      // Stillingsprosent
+      if (entry.employee_percentages) {
+        changes.push({
+          ...entry,
+          status: "stilling %",
+          permisjon: `${entry.employee_percentages}%`,
+          start_date: entry.start_date,
+          end_date: entry.end_date,
+          team_name: "",
+          employeeNr_Telenor: "",
+          workPosistion_title: "",
+        });
+      }
+
+      // Nytt ansattnummer
+      if (entry.employeeNr_Telenor) {
+        changes.push({
+          ...entry,
+          status: "Ny Ansattnr ( Telenor )",
+          start_date: entry.start_date,
+          end_date: entry.end_date,
+          permisjon: "",
+          team_name: "",
+          workPosistion_title: "",
+        });
+      }
+
+      // Endret team
+      if (entry.team_name) {
+        changes.push({
+          ...entry,
+          status: "Endret Team",
+          start_date: entry.start_date,
+          end_date: entry.end_date,
+          permisjon: "",
+          employeeNr_Telenor: "",
+          workPosistion_title: "",
+        });
+      }
+
+      // Endret stilling
+      if (entry.workPosistion_title) {
+        changes.push({
+          ...entry,
+          status: "Stilling/Rolle",
+          start_date: entry.start_date,
+          end_date: entry.end_date,
+          permisjon: "",
+          employeeNr_Telenor: "",
+          team_name: "",
+        });
+      }
+
+      // Sluttet
+      if (
+        entry.end_date &&
+        !entry.leave_percentage &&
+        !entry.workPosistion_title &&
+        !entry.team_name &&
+        !entry.employeeNr_Telenor
+      ) {
+        changes.push({
+          ...entry,
+          status: "Ansatt sluttet",
+          start_date: entry.start_date,
+          end_date: entry.end_date,
+          permisjon: "",
+          employeeNr_Telenor: "",
+          workPosistion_title: "",
+          team_name: "",
+        });
+      }
+
+      return changes;
+    });
+  }, [data]);
+
   const columns = [
     {
       header: "Start dato",
       accessorKey: "start_date",
-      cell: (info) => info.getValue()?.split("T")[0],
+      cell: (info) => {
+        const endDate = info.row.original.end_date;
+        const startDate = info.getValue()?.split("T")[0];
+        return endDate ? startDate : "";
+      },
     },
+
     {
       header: "Slutt dato",
       accessorKey: "end_date",
-      cell: (info) => info.getValue()?.split("T")[0],
+      cell: (info) => info.getValue()?.split("T")[0] || "",
     },
     {
       header: "Status",
-      accessorKey: "form_of_employeement",
+      accessorKey: "status",
     },
     {
       header: "Team",
@@ -49,8 +152,7 @@ const EmployeeHistoryTable = ({ employeeId }) => {
     },
     {
       header: "Permisjon",
-      accessorKey: "leave_percentage",
-      cell: (info) => (info.getValue() ? `${info.getValue()}%` : ""),
+      accessorKey: "permisjon",
     },
     {
       header: "Stilling",
@@ -63,7 +165,7 @@ const EmployeeHistoryTable = ({ employeeId }) => {
     {
       header: "Dato",
       accessorKey: "change_date",
-      cell: (info) => info.getValue()?.split("T")[0],
+      cell: (info) => info.getValue()?.split("T")[0] || "",
     },
     {
       header: "Endre",
@@ -79,7 +181,7 @@ const EmployeeHistoryTable = ({ employeeId }) => {
   ];
 
   const table = useReactTable({
-    data: Array.isArray(data) ? data : [],
+    data: flattenedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
