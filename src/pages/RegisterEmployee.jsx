@@ -196,7 +196,7 @@ const RegisterEmployee = () => {
             message="Er du sikker på at du vil avbryte?"
           >
             <RedButton text="Ja, avbryt" onClick={confirmCancel}  />
-            <WhiteButton text="Forstett" onClick={cancelCancel} />
+            <WhiteButton text="Nei" onClick={cancelCancel} />
           </AlertBox>
         )}
       </div>
