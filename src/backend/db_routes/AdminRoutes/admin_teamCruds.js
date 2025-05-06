@@ -25,6 +25,48 @@ router.post('/team', async (req, res) => {
 });
 
 //Endrer team i en avdeling
-router.put('/team/:team_id', async (req, res) = {
+router.put('/team/:team_id', async (req, res) => {
+    //henter team id fra url
+    const {team_id} = req.params;
+    //henter nye team navn og avd id fra body
+    const {team_name, department_id} = req.body;
 
-})
+    try{
+        //sql 
+        const [ result ] = await pool.query(
+            `UPDATE team SET team_name = ?, department_id = ? WHERE team_id = ?`,
+            [team_name, department_id, team_id]
+        );
+        //Hvis team navn ikke er funnet
+        if(result.affectedRows === 0){
+            return res.status(404).json({message: 'Fant ikke team med oppgitt ID'});
+        }
+        res.status(200).json({message:'Team navn oppdatert'});
+    }catch(err){
+        console.error('[PUT /team/:team_id] Feil', err);
+        res.status(500).json({message:'Feil ved oppdatering av team'});
+    }
+});
+
+router.delete('/team/:team_id', async (req, res) => {
+    //henter id fra url
+    const {team_id} = req.params;
+
+    try{
+        const [result] = await pool.query(
+            `DELETE FROM team WHERE team_id = ?`,
+            [team_id]
+        );
+        if(result.affectedRows === 0){
+            return res.status(404).json({message: 'Fant ikke team med oppgitt ID'});
+        }
+        res.status(200).json({message:'Team slettet'});
+
+    }catch(err){
+        console.error('[DELETE/team/team_id] Feil:', err);
+        res.status(500).json({message:'Feil ved sletting av team'});
+    }
+
+});
+
+export default router;
