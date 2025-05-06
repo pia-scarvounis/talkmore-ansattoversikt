@@ -36,7 +36,7 @@ const ManageTeams = () => {
 
       <div className="form-content page-header-wrapper">
         <PageHeader title="Administer Team" />
-        {/* === Endre Teamnavn === */}
+        {/* Endre Teamnavn  */}
         <div className="form-section team-box">
           <h2 className="section-heading">Endre Teamnavn</h2>
 
@@ -63,7 +63,7 @@ const ManageTeams = () => {
           </div>
         </div>
 
-        {/* === Opprett nytt Team === */}
+        {/* Opprett nytt Team */}
         <div className="form-section team-box">
           <h2 className="section-heading">Opprett nytt Team</h2>
 
@@ -88,7 +88,7 @@ const ManageTeams = () => {
           </div>
         </div>
 
-        {/* === Slett Team === */}
+        {/* Slett Team  */}
         <div className="form-section team-box">
           <h2 className="section-heading">Slett Team</h2>
 
@@ -112,7 +112,7 @@ const ManageTeams = () => {
           </div>
         </div>
 
-        {/* === ALERTS === */}
+        {/*  ALERTS  */}
         {showSaveAlert && (
           <AlertBox
             type="confirmation"

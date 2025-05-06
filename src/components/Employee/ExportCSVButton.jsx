@@ -32,6 +32,7 @@ const ExportCSVButton = ({ filteredEmployees }) => {
       "Team",
       "Avdeling",
       "Lisens(er)",
+      "Permisjon",
     ];
 
     const rows = employeesToExport.map((emp) => [
@@ -50,6 +51,7 @@ const ExportCSVButton = ({ filteredEmployees }) => {
       emp.team_name,
       emp.department_name,
       emp.licenses?.map((l) => l.license_title).join("; ") || "",
+      emp.leave,
     ]);
 
     const csvContent = [

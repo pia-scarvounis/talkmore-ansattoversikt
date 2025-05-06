@@ -3,12 +3,14 @@ import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
 import GreenButton from "../components/UI/GreenButton";
 import RedButton from "../components/UI/RedButton";
+import WhiteButton from "../components/UI/WhiteButton";
 
 import "../styles/form.css";
 import defaultImage from "../assets/images/default-img.png";
 import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 import EditHistoryPopup from "../components/History/EditHistoryPopup"; // for å teste EditHistoryPopupen
+import AlertBox from "../components/UI/AlertBox";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
@@ -24,6 +26,11 @@ const EditEmployee = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const employeeId = parseInt(id, 10);
+  // alertbox state:
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     dispatch(fetchMetaData());
@@ -54,6 +61,9 @@ const EditEmployee = () => {
   //vi må bruke formdata
   const [formData, setFormData] = useState(null);
   const [filteredTeams, setfilteredTeams] = useState([]);
+
+  const [didSave, setDidSave] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
 
   useEffect(() => {
     if (!employee) {
@@ -130,10 +140,10 @@ const EditEmployee = () => {
     const { name, value } = e.target;
 
     //fjern alt som ikke er tall i tlf felt
-    const cleanedValue = 
-    name === "phoneNr" || name === "relative_phoneNr"
-          ? value.replace(/[^\d+]/g, "")
-          :value;
+    const cleanedValue =
+      name === "phoneNr" || name === "relative_phoneNr"
+        ? value.replace(/[^\d+]/g, "")
+        : value;
 
     setFormData((prev) => ({
       ...prev,
@@ -176,56 +186,93 @@ const EditEmployee = () => {
 
   //Dato konverter for date i Leave (permisjon dato)
   const formatDate = (dateStr) => {
-    if(!dateStr) return null;
+    if (!dateStr) return null;
     return dateStr.split("T")[0];
-  }
-  
+  };
+
   //lagre
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e?.preventDefault) e.preventDefault();
     if (!formData) return;
 
     // Valider permisjon: Startdato krever sluttdato
-  if (
-    formData.leave &&
-    formData.leave.leave_start_date &&
-    !formData.leave.leave_end_date
-  ) {
-    alert("Du må fylle inn sluttdato for permisjon hvis startdato er satt.");
-    return;
-  }
+    if (
+      formData.leave &&
+      formData.leave.leave_start_date &&
+      !formData.leave.leave_end_date
+    ) {
+      // Vis error AlertBox i stedet for alert()
+      setErrorMessage(
+        "Du må fylle inn sluttdato for permisjon hvis startdato er satt."
+      );
+      setShowError(true);
+      return;
+    }
+
+    if (
+      formData.leave &&
+      formData.leave.leave_end_date &&
+      !formData.leave.leave_start_date
+    ) {
+      setErrorMessage(
+        "Du må fylle inn startdato for permisjon hvis sluttdato er satt."
+      );
+      setShowError(true);
+      return;
+    }
 
     //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
     const fixFormData = {
-    ...formData,
+      ...formData,
       leave: formData.leave
-      ?{
-        ...formData.leave,
-        leave_start_date: formatDate(formData.leave.leave_start_date || null),
-        leave_end_date: formatDate(formData.leave.leave_end_date || null),
-      }
-        :null,
+        ? {
+            ...formData.leave,
+            leave_start_date: formatDate(
+              formData.leave.leave_start_date || null
+            ),
+            leave_end_date: formatDate(formData.leave.leave_end_date || null),
+          }
+        : null,
     };
+    setDidSave(true);
     //sender inn oppdatert ansatt objektet som formData i fetchen
     dispatch(updateEmployee({ id, updatedEmployeeData: fixFormData }));
   };
 
+  // lagre og avbryt knapper - alert boxes
+  const confirmCancel = () => {
+    dispatch(resetUpdateState());
+    setShowSuccess(false);
+    // Naviger tilbake til profilsiden til brukeren
+    setTimeout(() => {
+      navigate(`/employee-info/${id}`);
+    }, 0);
+  };
+
+  const cancelCancel = () => {
+    // Lukker popupen
+    setShowCancelConfirm(false);
+  };
+
   //etter vellykket oppdatering
   useEffect(() => {
-    if (success) {
+    if (success && didSave && !confirmCancel) {
+      // viser kun suksess popup hvis ikke confirmcancel trykkes på.!
       dispatch(fetchEmployees());
-      //resetter oppdateringg
       dispatch(resetUpdateState());
-      //Sette riktig alert ui her!!!!
-      alert("Ansatt oppdatert");
-      //sett inn riktig navigasjon her: tilbake til ansattprofildetaljer med id)
-      navigate(`/employee-info/${id}`);
+      setShowSuccess(true); // vise success
+      setDidSave(false);
+      setTimeout(() => {
+        setShowSuccess(false);
+        navigate(`/employee-info/${id}`);
+      }, 3000);
     }
     if (error) {
-      alert("Feil: " + error);
+      setErrorMessage("Feil: " + error);
+      setShowError(true);
       dispatch(resetUpdateState());
     }
-  }, [success, error, dispatch, navigate]);
+  }, [success, error, dispatch, navigate, didSave, confirmCancel]);
 
   if (!formData) {
     return <div>Laster ansatt...</div>;
@@ -332,16 +379,17 @@ const EditEmployee = () => {
                   }
                   onChange={(e) => {
                     //if (formData.relative.length > 0) {
-                      const updated = {
-                        ...formData.relative[0],
-                        relative_name: e.target.value,
-                        relative_phoneNr: formData.relative[0]?.relative_phoneNr || "",
-                      };
-                      setFormData((prev) => ({
-                        ...prev,
-                        relative: [updated],
-                      }));
-                   // }
+                    const updated = {
+                      ...formData.relative[0],
+                      relative_name: e.target.value,
+                      relative_phoneNr:
+                        formData.relative[0]?.relative_phoneNr || "",
+                    };
+                    setFormData((prev) => ({
+                      ...prev,
+                      relative: [updated],
+                    }));
+                    // }
                   }}
                 />
               </div>
@@ -354,7 +402,6 @@ const EditEmployee = () => {
                   inputMode="numeric"
                   value={formData.relative[0]?.relative_phoneNr || ""}
                   onChange={(e) => {
-                  
                     const existing = formData.relative[0] || {};
                     //tlf
                     const cleanednr = e.target.value.replace(/[^\d+]/g, ""); //behold kun tall
@@ -589,15 +636,39 @@ const EditEmployee = () => {
           <div className="form-buttons">
             <GreenButton
               text="Lagre"
-              onClick={() => console.log("Lagrer endringer")}
+              message="Ansattdata er oppdatert."
+              onClick={handleSubmit}
             />
+            {showSuccess && (
+              <AlertBox
+                type="success"
+                title="Lagret!"
+                message="Ansattdata er oppdatert."
+              ></AlertBox>
+            )}
+
             {/*** navigere til sider etterhvert!! naviger tilbake profildetaljesiden*/}
             <RedButton
               text="Avbryt"
-              onClick={() => console.log("Avbryter redigering")}
+              onClick={() => setShowCancelConfirm(true)}
             />
           </div>
         </form>
+        {showCancelConfirm && (
+          <AlertBox
+            type="confirmation"
+            title="Avbryt endringer"
+            message="Er du sikker på at du vil avbryte? Endringer du har gjort vil ikke bli lagret."
+          >
+            <RedButton text="Ja, avbryt" onClick={confirmCancel} />
+            <WhiteButton text="Fortsett" onClick={cancelCancel} />
+          </AlertBox>
+        )}
+        {showError && (
+          <AlertBox type="error" title="Feil!" message={errorMessage}>
+            <RedButton text="Lukk" onClick={() => setShowError(false)} />
+          </AlertBox>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchMetaData } from "./redux/slices/metaDataCrudsSlice";
 import Login from "./pages/Login";
 import DashBoardAdmin from "./pages/DashboardAdmin";
 import DashboardReadOnly from "./pages/DashboardReadOnly";
@@ -22,7 +25,14 @@ import "./styles/global.css";
 import "./styles/buttons.css";
 import "./styles/alert.css";
 
+
 function App() {
+  const dispatch = useDispatch();
+
+  // hENT METADATA NÅR APPEN STARTER
+  useEffect(() => {
+    dispatch(fetchMetaData());
+  }, [dispatch]);
   return (
     <ErrorBoundry>
       <Router>

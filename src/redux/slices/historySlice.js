@@ -1,7 +1,7 @@
-import {createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 // legge til api istedenfor axios. når det er klart
-import api from '../../backend/apiToken/axiosInstance.js';
+import api from "../../backend/apiToken/axiosInstance.js";
 
 //SLICE FOR HISTORIKK
 // Historikk for en ansatt
@@ -11,45 +11,47 @@ import api from '../../backend/apiToken/axiosInstance.js';
 
 //fetch med å hente historikken til valgt ansatt (:id)
 export const fetchEmployeeHistory = createAsyncThunk(
-    'employeeHistory/fetchEmployeeHistory',
-        async(_,{rejectWithValue}) => {
-
-            try{
-                const respone = await axios.get('http://localhost:3000/api/employee/history/:id');
-                console.log('Response fra Api employeeHistoryGet:', respone.data);
-
-            }catch{
-                return rejectWithValue(error.respone.data);
-            }
-        }
+  "employeeHistory/fetchEmployeeHistory",
+  async (employeeId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/employee/history/${employeeId}`
+      );
+      console.log("Response fra API employeeHistoryGet:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(" Feil ved henting av historikk:", error);
+      return rejectWithValue(error.response?.data || "Ukjent feil");
+    }
+  }
 );
 
 const employeeHistorySlice = createSlice({
-    name: 'employeeHistory',
-    initialState: {
-        data:[],
-        loading: false,
-        error: null
-    },
-    reducers:{},
-    extraReducers: (builder) => {
-        builder
-            //fetch loader
-            .addCase(fetchEmployeeHistory.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            //fetch suksess
-            .addCase(fetchEmployeeHistory.fulfilled, (state, action) => {
-                state.loading = false;
-                state.data = action.payload;
-            })
-            //fetch failed
-            .addCase(fetchEmployeeHistory.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            });
-    }
+  name: "employeeHistory",
+  initialState: {
+    data: [],
+    loading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      //fetch loader
+      .addCase(fetchEmployeeHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      //fetch suksess
+      .addCase(fetchEmployeeHistory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      //fetch failed
+      .addCase(fetchEmployeeHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+  },
 });
 
 export default employeeHistorySlice.reducer;
