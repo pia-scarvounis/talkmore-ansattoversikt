@@ -57,6 +57,7 @@ app.use('/api/metaData', metaDataGet)
 //rutere kun for Admin
 //endre historikk felter for en ansatt
 app.use('api/history', adminHistoryCrud)
+//rutere for adminstrere team POST, PUT og DELETE
 
 //starte serveren
 app.listen(3000, ()=>{
