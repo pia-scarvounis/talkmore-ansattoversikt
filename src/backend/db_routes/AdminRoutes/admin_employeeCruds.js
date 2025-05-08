@@ -11,6 +11,8 @@ import platformClient from 'purecloud-platform-client-v2';
 import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
 //henter full employe detaljer fra backend
 import {getFullEmployeeById} from '../../Funksj_stotte/getFullEmpUpdatet.js'
+//Henter rolle håndtering logikk for endring av rolle
+import { handleUserRoleChange } from "../../Funksj_stotte/roleManagerInUpdate.js";
 
 const router = Router();
 dotenv.config();
@@ -234,11 +236,14 @@ router.put('/:id', async (req, res) => {
     }
     //returnere oppdatert ansatt med hjelpefunksjonen getfullemployeebyid sender inn conn som argument
     //Ikke anbefalt å opprette ny conn i getFullEmployeeById
-    const updatedEmployee = await getFullEmployeeById(conn, id);
+    const updatedEmployee = await getFullEmployeeById(id);
 
     //sjekk hvis ansatt stilling blir endret fra eller til Admin/teamleder
-    //------> kommer her 
-    
+    //Eller ansatt har fått admin/teamleder rolle 
+    //Setter inn verdiene i handleUserRoleChange
+    await handleUserRoleChange(conn, id, original.workPosistion_id, updatedData.workPosistion_id, updatedData.epost);
+
+
     await conn.commit();
     
     res.status(200).json({

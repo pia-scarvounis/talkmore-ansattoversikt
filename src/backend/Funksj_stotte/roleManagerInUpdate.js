@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
-import { DEFAULT_TEST_PASSWORD } from '../config/config';
+import { DEFAULT_TEST_PASSWORD } from '../config/config.js';
 
-//Denne filen inneholder logikk og sjekker for oppdatering av ansatt
+
+//Denne filen inneholder logikk og sjekker for oppdatering av ansatt / støttefunksjon
 //Når en admin endrer en ansatt fra Admin/Teamleder eller til Admin/Teamleder
 //Eller hvis uhell skjer med at en ansatt har fått admin rolle og det skulle være Kundeagent
 
@@ -16,9 +17,9 @@ export async function handleUserRoleChange (conn, employeeId, originalPosId, new
         [originalPosId, newPosId]
     );
 
-    //Eldre tittel før endring, setter data
+    //Eldre tittel før endring, setter data  
     const oldTitle = posData.find(p => p.workPosistion_id === originalPosId)?.workPosistion_title || "";
-    //Ny tittel
+    //Ny tittel 
     const newTitle = posData.find(p => p.workPosistion_id === newPosId)?.workPosistion_title || "";
 
     //hvis rolle = har tilgang
@@ -40,7 +41,7 @@ export async function handleUserRoleChange (conn, employeeId, originalPosId, new
 
         //Hvis ansatt eksisterer i userOfTool fra tidligere med aktivert false etc.
         //Eller oppdatert andre felter for admin/teameder som epost/brukernavn
-        //oppdaterer passord hvis null
+        //oppdaterer passord hvis null ved endring til Teamleder/admin
         if(existingUser.length > 0) {
             await conn.query(
                 `UPDATE userOfTool
