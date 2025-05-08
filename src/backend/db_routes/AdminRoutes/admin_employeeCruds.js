@@ -12,6 +12,7 @@ import {getFullEmployeeById} from '../../Funksj_stotte/getFullEmpUpdatet.js'
 const router = Router();
 dotenv.config();
 
+//Kilder + tips til å endre ansatt i api genesys er fra GPT
 const apiInstance = platformClient.ApiClient.instance;
 const usersApi = new platformClient.UsersApi();
 
@@ -20,9 +21,10 @@ const formatDate = (date) => {
     if (!date) return null;
     return new Date(date).toISOString().split('T')[0];
   };
+//Benytter transaction: 1. da det er avhengige tabeller fra db og oppretter rader i mange tabeller
+//Benytter transaction: 2. uten kan man få en ansatt uten tilhørende data (felter som pårørende, relative og lisenser)
 
 //Ruter for å endre en ansatt og sette endringene og verdiene i historikken til den endrede ansatte
-//Kilder til å endre ansatt i api genesys også er hentet fra GPT
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     //ny info fra body 
@@ -254,6 +256,7 @@ router.post('/', async (req, res) => {
     // henter employee fra body
     const newEmployee = req.body;
 
+    //bytter ut pool med vaiarbel coon bruker pool.getConnection
     const conn = await pool.getConnection();
 
     try{
@@ -271,8 +274,96 @@ router.post('/', async (req, res) => {
                 return res.status(400).json({ error: 'Eposten er allerede i bruk'});
             }
         }
-    }catch(err){
 
+        //Setter inn resultat fra body i employee tabellen
+        const [result] = await conn.query(
+            `INSERT INTO employee (
+                employee_name, epost, epost_Telenor, phoneNr, birthdate, image_url,
+                start_date, end_date, form_of_employeement, employeeNr_Talkmore, employeeNr_Telenor, 
+                employee_percentages, team_id, workPosistion_id
+            )
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `,
+            [
+                newEmployee.employee_name,
+                newEmployee.epost?.toLowerCase() || null,
+                newEmployee.epost_Telenor || null,
+                newEmployee.phoneNr || null,
+                formatDate(newEmployee.birthdate),
+                newEmployee.image_url || null,
+                formatDate(newEmployee.start_date),
+                formatDate(newEmployee.end_date),
+                newEmployee.form_of_employeement || null,
+                newEmployee.employeeNr_Talkmore || null,
+                newEmployee.employeeNr_Telenor || null,
+                newEmployee.employee_percentages || null,
+                newEmployee.team_id || null,
+                newEmployee.workPosistion_id || null,
+            ]
+        );
+        //henter resultat insert it fra nye ansatt setter det inn for andre felter som relative, permisjon og lisenser
+        const employeeId = result.instertId;
+
+        //legger til pårørende 
+        if(Array.isArray(newEmployee.relative)){
+            for(const r of newEmployee.relative){
+                await conn.query(
+                    `INSERT INTO relative (employee_id, relative_name, relative_phoneNr)
+                    VALUES (?, ?, ?)`,
+                    [employeeId, r.relative_name, r.relative_phoneNr]
+                );
+            }
+        }
+
+        //Legger til permisjon - selvom man ikke kan legge til permisjon i frontend feltene trenger vi et tomt felt array for denne
+        //mulig setter fjerner denne? 
+        if(newEmployee.leave){
+            await conn.query(
+                `INSERT INTO employeeLeave (employee_id, leave_percentage, leave_start_date, leave_end_date)
+                VALUES (?, ?, ?, ?)`,
+                [
+                    employeeId, 
+                    newEmployee.leave.leave_percentage || null,
+                    formatDate(newEmployee.leave.leave_start_date),
+                    formatDate(newEmployee.leave.leave_end_date)
+                ]
+            );
+        }
+
+        //Legge til Lisenser
+        if(Array.isArray(newEmployee.licenses)){
+            for(const license of newEmployee.licenses){
+                await conn.query(
+                    `INSERT INTO employee_license (employee_id, license_id)
+                    VALUES (?, ?)`,
+                    [employeeId, license.license_id]
+                );
+            }
+        }
+        // henter nye ansatt som er opprettet med employeeId
+        let createdEmployee = await getFullEmployeeById(conn, employeeId);
+
+        //sette tom felt som ikke er med i opprettelsen av ansatt
+        createdEmployee.relative = createdEmployee.relative || [];
+        createdEmployee.leave = createdEmployee.leave || [];
+        createdEmployee.licenses = createdEmployee.licenses || [];
+
+        //Sette inn logikk for hvis newEmployee blir Admin sett det inn i userOfTool med kryptert passord?
+
+        await conn.commit();
+
+        res.status(201).json({
+            message: 'Ny ansatt opprettet',
+            employee: createdEmployee
+        });
+
+    }catch(err){
+        await conn.rollback();
+        console.error('Feil ved oppretting av ansatt;', err);
+        res.status(500).json({ error: 'Kunne ikke opprette ansatt'});
+    }finally{
+        conn.release();
     }
-})
+});
+
 export default router;
