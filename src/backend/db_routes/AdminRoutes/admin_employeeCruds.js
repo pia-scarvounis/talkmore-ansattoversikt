@@ -236,7 +236,7 @@ router.put('/:id', async (req, res) => {
     }
     //returnere oppdatert ansatt med hjelpefunksjonen getfullemployeebyid sender inn conn som argument
     //Ikke anbefalt å opprette ny conn i getFullEmployeeById
-    const updatedEmployee = await getFullEmployeeById(id);
+    const updatedEmployee = await getFullEmployeeById(conn, id);
 
     //sjekk hvis ansatt stilling blir endret fra eller til Admin/teamleder
     //Eller ansatt har fått admin/teamleder rolle 

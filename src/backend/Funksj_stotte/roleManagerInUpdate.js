@@ -11,16 +11,16 @@ const privelegedRoles = ['Admin', 'Teamleder'];
 export async function handleUserRoleChange (conn, employeeId, originalPosId, newPosId, epost){
     const [posData] = await conn.query(
         //Finner stillingstittel Admin og Teamleder fra employee_id (employeeId)
-        `SELECT workPosistion_id, workPosistion_title
+        `SELECT workPosistion_id, posistion_title
         FROM workPosistion
         WHERE workPosistion_id IN (?, ?)`,
         [originalPosId, newPosId]
     );
 
     //Eldre tittel før endring, setter data  
-    const oldTitle = posData.find(p => p.workPosistion_id === originalPosId)?.workPosistion_title || "";
+    const oldTitle = posData.find(p => p.workPosistion_id === originalPosId)?.posistion_title || "";
     //Ny tittel 
-    const newTitle = posData.find(p => p.workPosistion_id === newPosId)?.workPosistion_title || "";
+    const newTitle = posData.find(p => p.workPosistion_id === newPosId)?.posistion_title || "";
 
     //hvis rolle = har tilgang
     const isPrivileged = roles => privelegedRoles.includes(roles);
@@ -52,8 +52,8 @@ export async function handleUserRoleChange (conn, employeeId, originalPosId, new
             //hvis ikke bruker finnes fra før i userOfTool
         }else{
             await conn.query(
-                `INSERT INTO userOfTool (roles, username, password_hash, active, employee_id)
-                VALUES (?, ?, ?, true, ?)`,
+                `INSERT INTO userOfTool (roles, username, password_hash, active, is_test, employee_id)
+                VALUES (?, ?, ?, true, true, ?)`,
                 [newTitle, epost?.toLowerCase(),hashedPassword, employeeId]
             );
            
@@ -61,8 +61,9 @@ export async function handleUserRoleChange (conn, employeeId, originalPosId, new
         console.log(`${newTitle} bruker opprettet eller aktivert`);
 
     //hvis ansatt får ny stillingstittel som ikke er admin/teamleder
-    }else if(!isPrivileged(newTitle) && isPrivileged(oldTitle)){
-        //oppdater bruker og sette active til false = ingen admin/teamleder rettigheter
+    }else{
+        if(existingUser){
+            //oppdater bruker og sette active til false = ingen admin/teamleder rettigheter
         await conn.query(
             `UPDATE userOfTool
             SET active = false
@@ -70,5 +71,8 @@ export async function handleUserRoleChange (conn, employeeId, originalPosId, new
             [employeeId]
         );
         console.log('Bruker av verktøy deaktivert');
+        }
+    
+       
     }
 }
