@@ -15,6 +15,12 @@ dotenv.config();
 const apiInstance = platformClient.ApiClient.instance;
 const usersApi = new platformClient.UsersApi();
 
+//Formatere dato
+const formatDate = (date) => {
+    if (!date) return null;
+    return new Date(date).toISOString().split('T')[0];
+  };
+
 //Ruter for å endre en ansatt og sette endringene og verdiene i historikken til den endrede ansatte
 //Kilder til å endre ansatt i api genesys også er hentet fra GPT
 router.put('/:id', async (req, res) => {
@@ -27,11 +33,6 @@ router.put('/:id', async (req, res) => {
         return res.status(400).json({ error: 'Ingen data å oppdatere' });
       }
       console.log("Request body:", req.body);
-
-    const formatDate = (date) => {
-        if (!date) return null;
-        return new Date(date).toISOString().split('T')[0];
-      };
      
       //må legge inn transasksjon for å rullere tilbake om feil og ungå feil i duplikat av epost -gpt
       const conn = await pool.getConnection();
@@ -247,4 +248,31 @@ router.put('/:id', async (req, res) => {
 
 });
 
+//Opprette en ansatt
+router.post('/', async (req, res) => {
+
+    // henter employee fra body
+    const newEmployee = req.body;
+
+    const conn = await pool.getConnection();
+
+    try{
+        //starter transaksjon
+        await conn.beginTransaction();
+
+        //sjekker om epost finnes fra før employee tabellen kan ikke bruke den 
+        if(newEmployee.epost){
+            const [emailCheck] = await conn.query(
+                `SELECT employee_id FROM employee WHERE epost = ?`,
+                [newEmployee.epost.toLowerCase()]
+            );
+            if(emailCheck.length > 0){
+                await conn.rollback();
+                return res.status(400).json({ error: 'Eposten er allerede i bruk'});
+            }
+        }
+    }catch(err){
+
+    }
+})
 export default router;
