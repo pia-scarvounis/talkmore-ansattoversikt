@@ -209,18 +209,6 @@ const EditEmployee = () => {
       return;
     }
 
-    if (
-      formData.leave &&
-      formData.leave.leave_end_date &&
-      !formData.leave.leave_start_date
-    ) {
-      setErrorMessage(
-        "Du må fylle inn startdato for permisjon hvis sluttdato er satt."
-      );
-      setShowError(true);
-      return;
-    }
-
     //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
     const fixFormData = {
       ...formData,
@@ -256,7 +244,7 @@ const EditEmployee = () => {
 
   //etter vellykket oppdatering
   useEffect(() => {
-    if (success && didSave && !confirmCancel) {
+    if (success && didSave) {
       // viser kun suksess popup hvis ikke confirmcancel trykkes på.!
       dispatch(fetchEmployees());
       dispatch(resetUpdateState());
@@ -330,7 +318,7 @@ const EditEmployee = () => {
                   name="phoneNr"
                   pattern="[+0-9]*"
                   inputMode="numeric"
-                  value={formData.phoneNr}
+                  value={formData.phoneNr || ""}
                   onChange={handleChange}
                 />
 
