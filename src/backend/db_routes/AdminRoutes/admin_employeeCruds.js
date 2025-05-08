@@ -247,5 +247,4 @@ router.put('/:id', async (req, res) => {
 
 });
 
-router.post('/')
 export default router;
