@@ -12,24 +12,39 @@ import { fetchMetaData } from '../metaDataCrudsSlice.js';
 
 //Opprett nytt team 
 export const createTeam = createAsyncThunk(
-    'team/createTeam', async (newTeam) =>{
-        const response = await axios.post('http://localhost:3000/api/team', newTeam);
-        return response.data;
-    });
+    'team/createTeam', async (newTeam, {dispatch, rejectWithValue}) =>{
+        try{
+            await axios.post('http://localhost:3000/api/team', newTeam);
+            //oppdatere teams
+            dispatch(fetchMetaData());
+        }catch (err){
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
 
 //Oppdatere nytt team
 export const updateTeam = createAsyncThunk(
-    'team/updateTeam', async({team_id, updateData}) => {
-        await axios.put(`http://localhost:3000/api/team/${team_id}`, updateData);
-        return {team_id, updateData}
+    'team/updateTeam', async({team_id, updateData}, {dispatch, rejectWithValue}) => {
+        try{
+            await axios.put(`http://localhost:3000/api/team/${team_id}`, updateData);
+            //oppdaterer teams
+            dispatch(fetchMetaData());
+        }catch(err){
+            return rejectWithValue(err.response.data);
+        }
     }
 );
 
 //Slette team
 export const deleteTeam = createAsyncThunk(
-    'team/deleteTeam', async(team_id) => {
-        await axios.delete(`http://localhost:3000/api/team/${team_id}`);
-        return team_id;
+    'team/deleteTeam', async(team_id, {dispatch, rejectWithValue}) => {
+        try{
+            await axios.delete(`http://localhost:3000/api/team/${team_id}`);
+            dispatch(fetchMetaData());
+        }catch(err){
+            return rejectWithValue(err.response.data);
+        }
     } 
 );
 
