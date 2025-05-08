@@ -60,7 +60,7 @@ const  teamCrudSlice = createSlice({
                     state.loading = false;
                 }
             )
-            addMatcher(
+            .addMatcher(
                 (action) => action.type.startsWith('team/') && action.type.endsWith('/rejected'),
                 (state, action) => {
                     state.loading = false;
