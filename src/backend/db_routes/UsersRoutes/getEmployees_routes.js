@@ -12,6 +12,7 @@ import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
 
 dotenv.config();
 
+//Justere denne hente dette fra config!!
 const DEFAULT_TEST_PASSWORD = process.env.DEFAULT_TEST_PASSWORD;
 console.log('DEFAULT_TEST_PASSWORD:', process.env.DEFAULT_TEST_PASSWORD);
 

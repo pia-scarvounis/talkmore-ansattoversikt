@@ -2,6 +2,9 @@ import {  Router } from "express";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
 import axios from "axios";
+//henter passord og bcrypt for admin/teamleder passord
+import bcrypt from 'bcrypt';
+import { DEFAULT_TEST_PASSWORD } from "../../config/config.js";
 //API genesys
 import platformClient from 'purecloud-platform-client-v2';
 //Token for API genesys
@@ -250,7 +253,7 @@ router.put('/:id', async (req, res) => {
 
 });
 
-//Opprette en ansatt
+//Opprette en ansatt // Vi skal ikke sette dette opp i api genesys da det er på vent
 router.post('/', async (req, res) => {
 
     // henter employee fra body
@@ -348,7 +351,26 @@ router.post('/', async (req, res) => {
         createdEmployee.leave = createdEmployee.leave || [];
         createdEmployee.licenses = createdEmployee.licenses || [];
 
-        //Sette inn logikk for hvis newEmployee blir Admin sett det inn i userOfTool med kryptert passord?
+        //Sette inn logikk for hvis newEmployee blir Admin/teamleder sett det inn i userOfTool med kryptert passord
+        //Hente workPosistion_title for sjekken
+        const [workPosistionResult] = await conn.query(
+            `SELECT workPosistion_title FROM workPosistion WHERE workPosistion_id = ?`,
+            [newEmployee.workPosistion_id]
+        );
+        const workTitle = workPosistionResult[0]?.workPosistion_title || "";
+        //sjekker om newEmployee er Admin/teamleder
+        if(['Admin', 'Teamleder'].includes(workTitle)){
+            const hashedPassword = await bcrypt.hash(DEFAULT_TEST_PASSWORD, 10);
+
+            //Hvis admin eller teamleder settes det inn i userOfTool db
+            await conn.query(
+                `INSERT INTO userOfTool(roles, username, password_hash, employee_id)
+                VALUES(?, ?, ?, ?)`,
+                [workTitle, newEmployee.epost.toLowerCase(), hashedPassword, employeeId]
+            );
+            console.log(`${workTitle} bruker opprettet i userOfTool`);
+        }
+
 
         await conn.commit();
 
