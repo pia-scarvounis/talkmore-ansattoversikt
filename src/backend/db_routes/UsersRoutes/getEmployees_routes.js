@@ -210,8 +210,8 @@ router.post('/', async (req, res) => {
               role,
               employee.email,
               testHashPassord,
-              true,
-              true,
+              1,
+              1,
               result.insertId
             ]);
 
