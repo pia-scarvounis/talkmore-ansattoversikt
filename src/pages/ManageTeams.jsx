@@ -106,6 +106,24 @@ const [deleteTeamId, setDeleteTeamId] = useState("");
 
   const confirmDelete = () => {
     setShowDeleteAlert(false);
+    if (!deleteTeamId) {
+      alert("Du må velge et team å slette.");
+      return;
+    }
+  
+    dispatch(deleteTeam(deleteTeamId))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchMetaData()); // henter oppdatert liste
+        alert("Team er slettet!");
+        setDeleteTeamId("");
+        setDeleteTeamDepartment("");
+        window.location.href = "/admin-dashboard"; // tvinger navigasjonen til å oppdatere
+      })
+      .catch((error) => {
+        console.error("Feil ved sletting:", error);
+        alert("Det oppstod en feil ved sletting.");
+      });
     console.log("Sletter team...");
   };
 
@@ -204,16 +222,30 @@ const [deleteTeamId, setDeleteTeamId] = useState("");
           <h2 className="section-heading">Slett Team</h2>
 
           <div className="two-column">
-            <div className="column">
+            <div className="column"> 
               <label>Velg Avdeling</label>
-              <select>
-                <option>Privat</option>
+              <select value={deleteTeamDepartment}
+  onChange={(e) => setDeleteTeamDepartment(e.target.value)}>
+                <option value="">Velg avdeling</option>
+                {departments.map((dep) => (
+    <option key={dep.department_id} value={dep.department_id}>
+      {dep.department_name}
+    </option>
+  ))}
               </select>
             </div>
             <div className="column">
               <label>Velg Team som skal slettes</label>
-              <select>
-                <option>Havana</option>
+              <select value={deleteTeamId}
+  onChange={(e) => setDeleteTeamId(e.target.value)}>
+                <option value="">Velg team</option>
+                {teams
+    .filter((team) => team.team_department_id === Number(deleteTeamDepartment))
+    .map((team) => (
+      <option key={team.team_id} value={team.team_id}>
+        {team.team_name}
+      </option>
+    ))}
               </select>
             </div>
           </div>
