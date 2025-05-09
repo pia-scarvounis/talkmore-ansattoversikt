@@ -139,7 +139,7 @@ const EditEmployee = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    //fjern alt som ikke er tall i tlf felt
+    //fjern alt som ikke er tall i tlf felt //
     const cleanedValue =
       name === "phoneNr" || name === "relative_phoneNr"
         ? value.replace(/[^\d+]/g, "")

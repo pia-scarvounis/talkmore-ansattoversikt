@@ -17,7 +17,8 @@ import uploadIcon from "../assets/icons/img.svg";
 //fra createEmployeeSlice
 import { useDispatch, UseDispatch, useSelector } from "react-redux";
 import { createEmployee, resetCreateEmployeeState } from "../redux/slices/AdminSlices/adminEmplCreate_CrudSlice";
-
+//hente metadata get avd, team, stillinger og lisenser
+import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice";
 
 const RegisterEmployee = () => {
 
@@ -53,9 +54,16 @@ const RegisterEmployee = () => {
   //håndtering av input endringer string og Number type -gpt
   const handleInputChange = (e) => {
     const {name, value, type } = e.target;
+
+    const cleanedValue =
+    name === "phoneNr" || name === "relative_phoneNr"
+    ? value.replace(/[^\d+]/g, "")
+    : value;
+
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'number' ? Number(value) : value
+      [name]: type === 'number' ? Number(cleanedValue) : cleanedValue
     }));
   }
 
@@ -69,19 +77,6 @@ const RegisterEmployee = () => {
       return {...prev, license: updated};
     });
   }
-  /** 
-  //håndtering av tlf felter kun tall ikke bokstaver som i editemployee
-  const cleanedValue =
-  name === "phoneNr" || name === "relative_phoneNr"
-    ? value.replace(/[^\d+]/g, "")
-    : value;
-
-  setFormData((prev) => ({
-    ...prev,
-    [name]: cleanedValue,
-    }));
-  };
-*/
 
   
   const handleSave = () => {
@@ -180,7 +175,10 @@ const RegisterEmployee = () => {
 
               <label>Epost (Telenor)</label>
               <input 
-              type="email" 
+              type="email"
+              name="epost_Telenor"
+              value={formData.epost_Telenor}
+              onChange={handleInputChange}
               />
             </div>
           </div>
@@ -192,11 +190,36 @@ const RegisterEmployee = () => {
           <div className="two-column">
             <div className="column">
               <label>Fornavn og Etternavn</label>
-              <input type="text" />
+              <input 
+              type="text" 
+              name="relative_name"
+              value={formData.relative[0]?.relative_name || ""}
+              onChange={(e) => {
+                const updated = {
+                  relative_name: e.target.value,
+                  relative_phoneNr: formData.relative[0]?.relative_phoneNr || ""
+                };
+                setFormData((prev) => ({...prev, relative: [updated]}));
+              }} 
+              />
             </div>
             <div className="column">
               <label>Telefonnummer</label>
-              <input type="text" />
+              <input 
+              type="tel"
+              name="relative_phoneNr"
+              value={formData.relative[0]?.relative_phoneNr || ""} 
+              onChange={(e) => {
+                const cleaned = e.target.value.replace(/[^\d+]/g, "");
+                const updated = {
+                  relative_name: formData.relative[0]?.relative_name || "",
+                  relative_phoneNr: cleaned
+                };
+                //setter inn i formdata
+                setFormData((prev) => ({...prev, relative: [updated]}));
+              }}
+              
+              />
             </div>
           </div>
         </div>
