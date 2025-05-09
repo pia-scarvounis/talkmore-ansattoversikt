@@ -54,7 +54,7 @@ export async function handleUserRoleChange(
       //oppdaterer passord hvis null ved endring til Teamleder/admin
       await conn.query(
         `UPDATE userOfTool
-                SET active = true, roles = ?, password_hash = COALESCE(password, ?),
+                SET active = 1, roles = ?, password_hash = COALESCE(password_hash, ?),
                 username = COALESCE(username, ?)
                 WHERE employee_id = ?`,
         [newTitle, hashedPassword, epost?.toLowerCase(), employeeId]
@@ -64,7 +64,7 @@ export async function handleUserRoleChange(
     } else {
       await conn.query(
         `INSERT INTO userOfTool (roles, username, password_hash, active, is_test, employee_id)
-                VALUES (?, ?, ?, true, true, ?)`,
+                VALUES (?, ?, ?, 1, 1, ?)`,
         [newTitle, epost?.toLowerCase(), hashedPassword, employeeId]
       );
     }
@@ -76,7 +76,7 @@ export async function handleUserRoleChange(
       //oppdater bruker og sette active til false = ingen admin/teamleder rettigheter
       await conn.query(
         `UPDATE userOfTool
-              SET active = false
+              SET active = 0
               WHERE employee_id = ?`,
         [employeeId]
       );
