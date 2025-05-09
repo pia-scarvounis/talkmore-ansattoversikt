@@ -22,6 +22,7 @@ const ManageTeams = () => {
   const [showSaveAlert, setShowSaveAlert] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [saveType, setSaveType] = useState("");
+  
 
   useEffect(() => {
     dispatch(fetchMetaData()); // henter data fra backend når komponenten lastes inn (engangsbruk fordi dependency-array er [dispatch])
@@ -35,6 +36,10 @@ const ManageTeams = () => {
   // (brukes senere når vi sender data til databasen via Redux)
 const [newTeamDepartment, setNewTeamDepartment] = useState(""); // avdeling ID
 const [newTeamNameCreate, setNewTeamNameCreate] = useState(""); // navnet på nytt team
+// disse brukes når admin skal slette et team
+const [deleteTeamDepartment, setDeleteTeamDepartment] = useState("");
+const [deleteTeamId, setDeleteTeamId] = useState("");
+
 
 
   const handleSave = (type) => {
