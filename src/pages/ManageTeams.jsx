@@ -28,7 +28,13 @@ const ManageTeams = () => {
 
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
-  const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd + teams fra dropdown
+  const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd + teams fra dropdown 
+
+  // disse brukes når admin skal opprette nytt team:
+  // (brukes senere når vi sender data til databasen via Redux)
+const [newTeamDepartment, setNewTeamDepartment] = useState(""); // avdeling ID
+const [newTeamNameCreate, setNewTeamNameCreate] = useState(""); // navnet på nytt team
+
 
   const handleSave = (type) => {
     setSaveType(type);
@@ -137,7 +143,8 @@ const ManageTeams = () => {
           <div className="two-column">
             <div className="column">
               <label>Velg Avdeling</label>
-              <select>
+              <select value={newTeamDepartment}
+        onChange={(e) => setNewTeamDepartment(e.target.value)}>
                 <option>Bedrift</option>
               </select>
             </div>
