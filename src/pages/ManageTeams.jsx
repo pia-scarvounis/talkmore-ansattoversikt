@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"; // sender handlinger til Redux. useSelector: henter data fra Redux-storen
 
 import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice"; // henter avdelinger og teams fra backend
-import { updateTeam, createTeam } from "../redux/slices/AdminSlices/adminTeamCruds"; // gir oss tilgang til updateTeam og createTeam-funksjonene vi har laget i Redux
+import { updateTeam, createTeam, deleteTeam } from "../redux/slices/AdminSlices/adminTeamCruds"; // gir oss tilgang til updateTeam og createTeam-funksjonene vi har laget i Redux
 
 
 import NavAdmin from "../components/navigation/NavAdmin";
