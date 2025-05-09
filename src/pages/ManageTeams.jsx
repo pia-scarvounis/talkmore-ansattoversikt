@@ -63,13 +63,22 @@ const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd
             </div>
             <div className="column">
               <label>Velg team som skal endres</label>
-              <select>
-                <option>Havana</option>
+              <select value={selectedTeam} onChange={(e) => setSelectedTeam(e.target.value)}>
+                <option value="">Velg team</option>
+                {teams
+      .filter((team) => team.team_department_id === Number(selectedDepartment))
+      .map((team) => (
+        <option key={team.team_id} value={team.team_id}>
+          {team.team_name}
+        </option>
+      ))}
               </select>
             </div>
             <div className="column">
               <label>Skriv inn nytt navn for dette teamet</label>
-              <input type="text" />
+              <input type="text" value={newTeamName}
+    onChange={(e) => setNewTeamName(e.target.value)}
+   />
             </div>
           </div>
           <div className="manage-teams-buttons">
