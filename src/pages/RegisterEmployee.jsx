@@ -14,7 +14,17 @@ import defaultImage from "../assets/images/default-img.png";
 import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 
+//fra createEmployeeSlice
+import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import { createEmployee, resetCreateEmployeeState } from "../redux/slices/AdminSlices/adminEmplCreate_CrudSlice";
+
 const RegisterEmployee = () => {
+
+  const dispatch = useDispatch();
+  const {success, loading, error} = useSelector((state) => state.createEmployee);
+
+
+
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const navigate = useNavigate();
