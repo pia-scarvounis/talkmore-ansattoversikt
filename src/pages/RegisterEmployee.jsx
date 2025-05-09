@@ -284,28 +284,65 @@ const RegisterEmployee = () => {
                 ))}
               </select>
 
-              <label>Stilling/rolle</label>
-              <select>
+              <label>Stilling</label>
+              <select 
+                name="workPosistion_id" 
+                value={formData.workPosistion_id}
+                onChange={handleInputChange}
+                >
                 <option>Velg</option>
+                {posistions.map(pos => (
+                  <option key={pos.workPosistion_id} value={pos.workPosistion_id}>
+                    {pos.posistion_title}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="column">
               <label>Fast / innleid</label>
-              <select>
-                <option>Velg</option>
+              <select 
+                name="form_of_employeement"
+                value={formData.form_of_employeement}
+                onChange={handleInputChange}
+                >
+                <option value="">Velg</option>
+                <option value="Fast">Fast</option>
+                <option value="Innleid">Innleid</option>
               </select>
 
               <label>Stillingsprosent</label>
-              <select>
-                <option>Velg</option>
+              <select
+                name="employee_percentages"
+                value={formData.employee_percentages}
+                onChange={handleInputChange}
+              >
+                <option value="">Velg</option>
+                {[...Array(10)].map((_, i) => {
+                  const pct = (i + 1) * 10;
+                  return (
+                    <option key={pct} value={pct}>
+                      {pct}%
+                    </option>
+                  )
+                })}
               </select>
 
               <label>Startdato</label>
-              <input type="date" />
+              <input 
+                type="date" 
+                name="start_date"
+                value={formData.start_date}
+                onChange={handleInputChange}
+              />
 
               <label>Sluttdato</label>
-              <input type="date" />
+              <input 
+                type="date" 
+                name="end_date"
+                value={formData.end_date}
+                onChange={handleInputChange}
+              />
             </div>
           </div>
         </div>
@@ -314,22 +351,17 @@ const RegisterEmployee = () => {
         <div className="form-section">
           <h2 className="section-heading">Tilganger</h2>
           <div className="checkbox-group">
-            <label>
-              <input type="checkbox" name="access" value="Lisens 1" /> Eksempel
-              Lisens 1
-            </label>
-            <label>
-              <input type="checkbox" name="access" value="Lisens 2" /> Eksempel
-              Lisens 2
-            </label>
-            <label>
-              <input type="checkbox" name="access" value="Lisens 3" /> Eksempel
-              Lisens 3
-            </label>
-            <label>
-              <input type="checkbox" name="access" value="Lisens 4" /> Eksempel
-              Lisens 4
-            </label>
+            {licenses.map(license => (
+               <label key={license.license_id}>
+                <input 
+                  type="checkbox" 
+                  value={license.license_id}
+                  checked={formData.license.some(l = l.license_id === license.license_id)}
+                  onChange={handleInputChange}
+                  /> 
+               {license.license_title}
+             </label>
+            ))}
           </div>
         </div>
 
