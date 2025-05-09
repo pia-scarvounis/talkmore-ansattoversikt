@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux"; // sender handlinger til Redux. useSelector: henter data fra Redux-storen
+
+import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice"; // henter avdelinger og teams fra backend
+import { updateTeam } from "../redux/slices/AdminSlices/adminTeamCruds"; // gir oss tilgang til updateTeam-funksjonen vi har laget i Redux
+
 import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
 import GreenButton from "../components/UI/GreenButton";
@@ -16,11 +20,16 @@ const ManageTeams = () => {
   const [saveType, setSaveType] = useState("");
   const { departments, teams } = useSelector((state) => state.metaData); // henter inn dataene vi allerede har lagret i Redux fra metaDataSlice: altså avd og teamene som vises i navigasjonen!
 
+  const dispatch = useDispatch();
+
+useEffect(() => {
+  dispatch(fetchMetaData()); // henter data fra backend når komponenten lastes inn (engangsbruk fordi dependency-array er [dispatch])
+}, [dispatch]);
+
+
   const [selectedDepartment, setSelectedDepartment] = useState("");
 const [selectedTeam, setSelectedTeam] = useState("");
 const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd + teams fra dropdown
-
-
 
 
   const handleSave = (type) => {
@@ -31,7 +40,29 @@ const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd
 
   const confirmSave = () => {
     setShowSaveAlert(false);
-    console.log("Lagrer data...");
+    if (saveType === "lagre") {
+      if (!selectedTeam || !newTeamName) {
+        alert("Du må velge team og skrive inn nytt navn.");
+        return;
+      }
+  
+      // Lager objektet som skal sendes til backend
+      const updateData = { team_name: newTeamName };
+  
+      // Sender til Redux
+      dispatch(updateTeam({ team_id: selectedTeam, updateData }))
+        .then(() => {
+          // Etter oppdatering hentes ny data
+          dispatch(fetchMetaData());
+          alert("Teamnavn oppdatert!");
+          setNewTeamName("");
+          window.location.reload(); // tvinger siden til å oppdatere navigasjonen
+        })
+        .catch((error) => {
+          console.error("Feil ved oppdatering:", error);
+          alert("Det oppstod en feil ved lagring.");
+        });
+    }
   };
 
   const confirmDelete = () => {
