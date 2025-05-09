@@ -15,7 +15,7 @@ import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
 
 //fra createEmployeeSlice
-import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createEmployee, resetCreateEmployeeState } from "../redux/slices/AdminSlices/adminEmplCreate_CrudSlice";
 //hente metadata get avd, team, stillinger og lisenser
 import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice";
@@ -24,12 +24,22 @@ const RegisterEmployee = () => {
 
 
   const dispatch = useDispatch();
-  const {success, loading, error} = useSelector((state) => state.createEmployee);
+  //const {success, loading, error} = useSelector((state) => state.createEmployee);
 
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const navigate = useNavigate();
+
+  //Henter ut getMetadat departments, teams, posistions og lisenser
+  useEffect(()=> {
+    dispatch(fetchMetaData());
+  },[dispatch]);
+
+  const {departments, teams, posistions, licenses} = useSelector((state) => state.metadata);
+
+  //filtrer team basert på valgt avdeling
+  const filteredTeams = teams.filter(team => team.department_id === Number(formData.department_id));
 
   //Form data som skal bli sendt inn i create employee
   const [formData, setFormData] = useState({
@@ -44,6 +54,7 @@ const RegisterEmployee = () => {
     employeeNr_Talkmore: '',
     employeeNr_Telenor: '',
     employee_percentages: '',
+    department_id: '',
     team_id: '',
     workPosistion_id: '',
     license: [],
@@ -229,15 +240,48 @@ const RegisterEmployee = () => {
           <h2 className="section-heading">Stillingsinfo</h2>
           <div className="two-column">
             <div className="column">
-              <label>Ansattnummer (Telenor)</label>
-              <input type="text" />
+              <label>Ansattnummer (Talkmore)</label>
+              <input 
+                type="number" 
+                name="employeeNr_Talkmore"
+                value={formData.employeeNr_Talkmore}
+                onChange={handleInputChange}
+              />
 
-              <label>Ansattnummer (Innleid)</label>
-              <input type="text" />
+              <label>Ansattnummer (Telenor)</label>
+              <input 
+                type="number" 
+                name="employeeNr_Telenor"
+                value={formData.employeeNr_Telenor}
+                onChange={handleInputChange}
+              />
+
+              <label>Avdeling</label>
+              <select 
+                name="department_id"
+                value={formData.department_id}
+                onChange={handleInputChange}
+              >
+                <option value="">Velg</option>
+                {departments.map(dep => (
+                  <option key={dep.department_id} value={dep.department_id}>
+                    {dep.department_name}
+                  </option>
+                ))}
+              </select>
 
               <label>Team</label>
-              <select>
-                <option>Velg</option>
+              <select 
+                name="team_id"
+                value={formData.team_id}
+                onChange={handleInputChange}
+              >
+                <option value="">Velg</option>
+                {filteredTeams.map(team => (
+                  <option key={team.team_id} value={team.team_id}>
+                    {team.team_name}
+                  </option>
+                ))}
               </select>
 
               <label>Stilling/rolle</label>
