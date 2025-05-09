@@ -18,17 +18,72 @@ import uploadIcon from "../assets/icons/img.svg";
 import { useDispatch, UseDispatch, useSelector } from "react-redux";
 import { createEmployee, resetCreateEmployeeState } from "../redux/slices/AdminSlices/adminEmplCreate_CrudSlice";
 
+
 const RegisterEmployee = () => {
+
 
   const dispatch = useDispatch();
   const {success, loading, error} = useSelector((state) => state.createEmployee);
-
 
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const navigate = useNavigate();
 
+  //Form data som skal bli sendt inn i create employee
+  const [formData, setFormData] = useState({
+    employee_name: '',
+    phoneNr: '',
+    epost: '',
+    epost_Telenor: '',
+    birthdate: '',
+    start_date: '',
+    end_date: '',
+    form_of_employeement: '',
+    employeeNr_Talkmore: '',
+    employeeNr_Telenor: '',
+    employee_percentages: '',
+    team_id: '',
+    workPosistion_id: '',
+    license: [],
+    relative: []
+    //ikke satt permisjon her da det ikke skal være med i opprettelse av ansatt kun endring på ansatt
+  })
+
+  //håndtering av input endringer string og Number type -gpt
+  const handleInputChange = (e) => {
+    const {name, value, type } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'number' ? Number(value) : value
+    }));
+  }
+
+  //lisenshåndtering huket av lisenser med type håndtering nr og string
+  const handleLicenseChange = (e) => {
+    const {value, checked } = e.target;
+    setFormData((prev) => {
+      const updated = checked
+      ? [...prev.license, {license_id: Number(value)}]
+      : prev.license.filter((l) => l.license_id !== Number(value));
+      return {...prev, license: updated};
+    });
+  }
+  /** 
+  //håndtering av tlf felter kun tall ikke bokstaver som i editemployee
+  const cleanedValue =
+  name === "phoneNr" || name === "relative_phoneNr"
+    ? value.replace(/[^\d+]/g, "")
+    : value;
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: cleanedValue,
+    }));
+  };
+*/
+
+  
   const handleSave = () => {
     setShowSuccess(true);
     setTimeout(() => {
@@ -88,21 +143,45 @@ const RegisterEmployee = () => {
           <div className="two-column">
             <div className="column">
               <label>Fornavn og Etternavn</label>
-              <input type="text" />
+              <input 
+              type="text" 
+              name="employee_name"
+              value={formData.employee_name}
+              onChange={handleInputChange}
+              />
 
               <label>Telefonnummer</label>
-              <input type="text" />
+              <input 
+              type="tel"
+              name="phoneNr"
+              pattern="[+0-9]*"
+              value={formData.phoneNr}
+              onChange={handleInputChange} 
+
+              />
 
               <label>Fødselsdato</label>
-              <input type="date" />
+              <input 
+              type="date" 
+              name="birthdate"
+              value={formData.birthdate}
+              onChange={handleInputChange}
+              />
             </div>
 
             <div className="column">
               <label>Epost (Talkmore)</label>
-              <input type="email" />
+              <input 
+              type="email" 
+              name="epost"
+              value={formData.epost}
+              onChange={handleInputChange}
+              />
 
               <label>Epost (Telenor)</label>
-              <input type="email" />
+              <input 
+              type="email" 
+              />
             </div>
           </div>
         </div>
