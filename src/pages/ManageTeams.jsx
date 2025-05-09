@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
 import GreenButton from "../components/UI/GreenButton";
@@ -13,6 +14,14 @@ const ManageTeams = () => {
   const [showSaveAlert, setShowSaveAlert] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [saveType, setSaveType] = useState("");
+  const { departments, teams } = useSelector((state) => state.metaData); // henter inn dataene vi allerede har lagret i Redux fra metaDataSlice: altså avd og teamene som vises i navigasjonen!
+
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+const [selectedTeam, setSelectedTeam] = useState("");
+const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd + teams fra dropdown
+
+
+
 
   const handleSave = (type) => {
     setSaveType(type);
@@ -43,8 +52,13 @@ const ManageTeams = () => {
           <div className="two-column">
             <div className="column">
               <label>Velg Avdeling</label>
-              <select>
-                <option>Privat</option>
+              <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)}>
+                <option value="">Velg avdeling</option>
+                {departments.map((dep) => (
+      <option key={dep.department_id} value={dep.department_id}>
+        {dep.department_name}
+      </option>
+    ))}
               </select>
             </div>
             <div className="column">
