@@ -15,22 +15,20 @@ import "../styles/form.css";
 import "../styles/buttons.css";
 
 const ManageTeams = () => {
+  const dispatch = useDispatch();
+  const { departments, teams } = useSelector((state) => state.metaData); // henter inn dataene vi allerede har lagret i Redux fra metaDataSlice: altså avd og teamene som vises i navigasjonen!
+
   const [showSaveAlert, setShowSaveAlert] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [saveType, setSaveType] = useState("");
-  const { departments, teams } = useSelector((state) => state.metaData); // henter inn dataene vi allerede har lagret i Redux fra metaDataSlice: altså avd og teamene som vises i navigasjonen!
 
-  const dispatch = useDispatch();
-
-useEffect(() => {
-  dispatch(fetchMetaData()); // henter data fra backend når komponenten lastes inn (engangsbruk fordi dependency-array er [dispatch])
-}, [dispatch]);
-
+  useEffect(() => {
+    dispatch(fetchMetaData()); // henter data fra backend når komponenten lastes inn (engangsbruk fordi dependency-array er [dispatch])
+  }, [dispatch]);
 
   const [selectedDepartment, setSelectedDepartment] = useState("");
-const [selectedTeam, setSelectedTeam] = useState("");
-const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd + teams fra dropdown
-
+  const [selectedTeam, setSelectedTeam] = useState("");
+  const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd + teams fra dropdown
 
   const handleSave = (type) => {
     setSaveType(type);
@@ -45,18 +43,22 @@ const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd
         alert("Du må velge team og skrive inn nytt navn.");
         return;
       }
-  
+
       // Lager objektet som skal sendes til backend
-      const updateData = { team_name: newTeamName };
-  
+      const updateData = {
+        team_name: newTeamName,
+        department_id: Number(selectedDepartment),
+      };
+
       // Sender til Redux
       dispatch(updateTeam({ team_id: selectedTeam, updateData }))
+        .unwrap() // gjør at vi kan bruke try/catch eller .then/.catch uten nested dispatch
         .then(() => {
           // Etter oppdatering hentes ny data
           dispatch(fetchMetaData());
           alert("Teamnavn oppdatert!");
           setNewTeamName("");
-          window.location.reload(); // tvinger siden til å oppdatere navigasjonen
+          window.location.href = "/admin-dashboard"; // tvinger siden til å oppdatere navigasjonen
         })
         .catch((error) => {
           console.error("Feil ved oppdatering:", error);
@@ -83,33 +85,44 @@ const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd
           <div className="two-column">
             <div className="column">
               <label>Velg Avdeling</label>
-              <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)}>
+              <select
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
+              >
                 <option value="">Velg avdeling</option>
                 {departments.map((dep) => (
-      <option key={dep.department_id} value={dep.department_id}>
-        {dep.department_name}
-      </option>
-    ))}
+                  <option key={dep.department_id} value={dep.department_id}>
+                    {dep.department_name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="column">
               <label>Velg team som skal endres</label>
-              <select value={selectedTeam} onChange={(e) => setSelectedTeam(e.target.value)}>
+              <select
+                value={selectedTeam}
+                onChange={(e) => setSelectedTeam(e.target.value)}
+              >
                 <option value="">Velg team</option>
                 {teams
-      .filter((team) => team.team_department_id === Number(selectedDepartment))
-      .map((team) => (
-        <option key={team.team_id} value={team.team_id}>
-          {team.team_name}
-        </option>
-      ))}
+                  .filter(
+                    (team) =>
+                      team.team_department_id === Number(selectedDepartment)
+                  )
+                  .map((team) => (
+                    <option key={team.team_id} value={team.team_id}>
+                      {team.team_name}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className="column">
               <label>Skriv inn nytt navn for dette teamet</label>
-              <input type="text" value={newTeamName}
-    onChange={(e) => setNewTeamName(e.target.value)}
-   />
+              <input
+                type="text"
+                value={newTeamName}
+                onChange={(e) => setNewTeamName(e.target.value)}
+              />
             </div>
           </div>
           <div className="manage-teams-buttons">
