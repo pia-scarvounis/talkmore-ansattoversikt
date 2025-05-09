@@ -24,19 +24,20 @@ const RegisterEmployee = () => {
 
 
   const dispatch = useDispatch();
-  //const {success, loading, error} = useSelector((state) => state.createEmployee);
-
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const navigate = useNavigate();
 
-  //Henter ut getMetadat departments, teams, posistions og lisenser
+  //const {success, loading, error} = useSelector((state) => state.createEmployee);
+  
+ 
   useEffect(()=> {
     dispatch(fetchMetaData());
   },[dispatch]);
 
-  const {departments, teams, posistions, licenses} = useSelector((state) => state.metadata);
+  //Henter ut getMetadat departments, teams, posistions og lisenser
+  const { departments, teams, posistions, licenses } = useSelector((state) => state.metadata);
 
   //filtrer team basert på valgt avdeling
   const filteredTeams = teams.filter(team => team.department_id === Number(formData.department_id));
