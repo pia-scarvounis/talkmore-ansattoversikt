@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"; // sender handlinger til Redux. useSelector: henter data fra Redux-storen
 
 import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice"; // henter avdelinger og teams fra backend
-import { updateTeam } from "../redux/slices/AdminSlices/adminTeamCruds"; // gir oss tilgang til updateTeam-funksjonen vi har laget i Redux
+import { updateTeam, createTeam } from "../redux/slices/AdminSlices/adminTeamCruds"; // gir oss tilgang til updateTeam og createTeam-funksjonene vi har laget i Redux
+
 
 import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
@@ -69,6 +70,31 @@ const [newTeamNameCreate, setNewTeamNameCreate] = useState(""); // navnet på ny
         .catch((error) => {
           console.error("Feil ved oppdatering:", error);
           alert("Det oppstod en feil ved lagring.");
+        });
+    }
+    if (saveType === "leggtil") {
+      if (!newTeamNameCreate || !newTeamDepartment) {
+        alert("Du må velge avdeling og skrive inn teamnavn.");
+        return;
+      }
+  
+      const newTeam = {
+        team_name: newTeamNameCreate,
+        department_id: Number(newTeamDepartment),
+      };
+  
+      dispatch(createTeam(newTeam))
+        .unwrap()
+        .then(() => {
+          dispatch(fetchMetaData());
+          alert("Nytt team er opprettet!");
+          setNewTeamNameCreate("");
+          setNewTeamDepartment("");
+          window.location.href = "/admin-dashboard";
+        })
+        .catch((error) => {
+          console.error("Feil ved oppretting:", error);
+          alert("Det oppstod en feil ved opprettelse.");
         });
     }
   };
@@ -145,12 +171,18 @@ const [newTeamNameCreate, setNewTeamNameCreate] = useState(""); // navnet på ny
               <label>Velg Avdeling</label>
               <select value={newTeamDepartment}
         onChange={(e) => setNewTeamDepartment(e.target.value)}>
-                <option>Bedrift</option>
+                <option>Velg avdeling</option>
+                {departments.map((dep) => (
+    <option key={dep.department_id} value={dep.department_id}>
+      {dep.department_name}
+    </option>
+  ))}
               </select>
             </div>
             <div className="column">
               <label>Skriv inn Teamnavn</label>
-              <input type="text" />
+              <input type="text" value={newTeamNameCreate}
+  onChange={(e) => setNewTeamNameCreate(e.target.value)}/>
             </div>
           </div>
 
