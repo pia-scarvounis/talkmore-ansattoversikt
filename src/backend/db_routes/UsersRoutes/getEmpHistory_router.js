@@ -13,7 +13,30 @@ router.get('/:id', async (req, res) =>{
     try{
         //Henter bruker sin historikk med admin navn og id som har endret sortert etter siste endring
         const [history] =await pool.query(`
-            SELECT
+            SELECT 
+                cl.changeLog_id,
+                cl.employee_id,
+                cl.admin_id,
+                cl.field_changed,
+                cl.old_value,
+                cl.new_value,
+                cl.change_date,
+                u.username AS endret_av,
+                e.employee_name AS endret_av_navn
+            FROM changeLog cl
+            JOIN userOfTool u ON cl.admin_id = u.user_id
+            JOIN employee e ON u.employee_id = e.employee_id
+            WHERE cl.employee_id = ?
+            ORDER BY cl.change_date DESC
+        `,[id]);
+
+        res.status(200).json(history);
+
+    }catch(err){
+        console.error('Feil ved henting av historikk:',err);
+        res.status(500).json({error: 'kunne ikke hente historikk'});
+    }
+    /**SELECT
                 cl.changeLog_id,
                 cl.employee_id,
                 cl.admin_id,
@@ -43,15 +66,7 @@ router.get('/:id', async (req, res) =>{
             LEFT JOIN team t ON cl.team_id = t.team_id
             LEFT JOIN workPosistion wp ON cl.workPosistion_id = wp.workPosistion_id
             WHERE cl.employee_id = ?
-            ORDER BY cl.change_date DESC
-        `,[id]);
-
-        res.status(200).json(history);
-
-    }catch(err){
-        console.error('Feil ved henting av historikk:',err);
-        res.status(500).json({error: 'kunne ikke hente historikk'});
-    }
+            ORDER BY cl.change_date DESC */
 })
 
 export default router;

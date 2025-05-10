@@ -90,7 +90,8 @@ router.put('/:id', async (req, res) => {
         values.push(updatedData.employee_name);
         }   
 
-        // Legg til andre felter som har blitt endret
+        // Legg til andre felter som har blitt endret unntatt 
+        //permisjon skal håndteres for seg da det ikke er i employee tabellen
         const keysToCheck = [
         'epost_Telenor', 'phoneNr', 'birthdate', 'image_url',
         'start_date', 'end_date', 'form_of_employeement', 'employeeNr_Talkmore',
@@ -102,8 +103,25 @@ router.put('/:id', async (req, res) => {
             const originalValue = original[key];
 
             if(newValue !== undefined && String(newValue) !== String(originalValue)){
+                await conn.query(
+                    `INSERT INTO changeLog (
+                        employee_id, admin_id,
+                        field_changed, old_value, new_value, change_date
+                    )
+                    VALUES (?, ?, ?, ?, ?, NOW())`
+                    ,
+                    [
+                        id, 
+                        amdinId,
+                        key,
+                        originalValue || 'NULL',
+                        newValue || 'NULL'
+                    ]
+                );
+                /** 
                 fields.push(`${key} = ?`);
                 values.push(['birthdate', 'start_date', 'end_date'].includes(key) ? formatDate(newValue): newValue);
+                */
             }
         }
 
@@ -131,6 +149,33 @@ router.put('/:id', async (req, res) => {
                 );
             }
         }
+
+        //oppdaterer permisjon samt hvis endret sett inn i changeLog
+        // Oppdater permisjon
+        const [existingLeave] = await conn.query(`SELECT * FROM employeeLeave WHERE employee_id = ?`, [id]);
+        const updatedLeave = updatedData.leave;
+
+        if (updatedLeave) {
+            //setter changed som ikke lik eksisterende verdi
+        const changed = !existingLeave.length ||
+        String(existingLeave[0].leave_percentage) !== String(updatedLeave.leave_percentage) ||
+        String(existingLeave[0].leave_start_date) !== String(updatedLeave.leave_start_date) ||
+        String(existingLeave[0].leave_end_date) !== String(updatedLeave.leave_end_date);
+        
+        //hvis endret slette den andre eksisterende verdien fra permisjon tabellen og sett inn de nye verdiene
+        if (changed) {
+        await conn.query(`DELETE FROM employeeLeave WHERE employee_id = ?`, [id]);
+        //sett den nye verdien i permisjon tabellen
+        await conn.query(`INSERT INTO employeeLeave (employee_id, leave_percentage, leave_start_date, leave_end_date) VALUES (?, ?, ?, ?)`
+        , [id, updatedLeave.leave_percentage || null, updatedLeave.leave_start_date || null, updatedLeave.leave_end_date || null]);
+        //deretter setter dette seg i changelog hvis endret
+        await conn.query(`INSERT INTO changeLog (employee_id, admin_id, field_changed, old_value, new_value, change_date) VALUES (?, ?, ?, ?, ?, NOW())`
+        , [id, amdinId, 'leave', existingLeave[0] ? `${existingLeave[0].leave_percentage}% fra ${existingLeave[0].leave_start_date}` 
+        : 'Ingen', `${updatedLeave.leave_percentage}% fra ${updatedLeave.leave_start_date}`]);
+      }
+    }
+
+        /** 
         //Oppdater permisjon (employeeLeave) hvis finnes
         let leaveId = null;
         if(updatedData.leave){
@@ -157,6 +202,8 @@ router.put('/:id', async (req, res) => {
                     leaveId = leaveResult[0].leave_id;
                 }
         }
+        */
+
         //oppdatere lisenser for ansatt
         if(Array.isArray(updatedData.licenses)){
             //fjerner lisenser og setter inn nye
