@@ -30,6 +30,11 @@ export function validateEmployeeForm(formData) {
     return { valid: false, error: "Ugyldig pårørende telefonnummer." };
   }
 
+  //Hvis startdato ikke er satt 
+  if (!formData.start_date || formData.start_date === "") {
+    return { valid: false, error: "Startdato er påkrevd." };
+  }
+
   // Date validering
   const isValidDate = (date) => date && !isNaN(Date.parse(date));
   if (formData.birthdate && !isValidDate(formData.birthdate)) {

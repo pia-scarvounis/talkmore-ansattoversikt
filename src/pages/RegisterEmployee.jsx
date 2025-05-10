@@ -29,6 +29,8 @@ const RegisterEmployee = () => {
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [showError, setShowError] = useState(false);    
   const navigate = useNavigate();
 
   const [filteredTeams, setfilteredTeams] = useState([]);
