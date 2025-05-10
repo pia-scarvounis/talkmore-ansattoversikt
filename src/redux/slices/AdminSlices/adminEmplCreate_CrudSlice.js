@@ -8,13 +8,13 @@ import api from '../../../backend/apiToken/axiosInstance';
 //Create employee (admin)
 export const createEmployee = createAsyncThunk(
     'employee/createEmployee',
-    async(employeeData, {rejectedWithValue}) => {
+    async(employeeData, { rejectWithValue }) => {
         try{
             const response = await axios.post('http://localhost:3000/api/employee', employeeData);
             return response.data.employee;
 
         }catch(err){
-            return rejectedWithValue(err.response?.data || 'Feil ved opprettelse');
+            return rejectWithValue(err.response?.data || 'Feil ved opprettelse');
         }
     }
 );
@@ -45,13 +45,13 @@ const createEmployeeSlice = createSlice({
             })
             .addCase(createEmployee.fulfilled, (state, action) => {
                 state.loading = false;
-                state.success = false;
+                state.success = true;
                 state.employee = action.payload;
             })
             .addCase(createEmployee.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
-                state.error = action.payload;
+                state.error = action.payload || "Feil ved oppretting av ansatt";
             })
     }
 });

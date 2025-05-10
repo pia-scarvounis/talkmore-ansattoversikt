@@ -30,7 +30,8 @@ const RegisterEmployee = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); 
-  const [showError, setShowError] = useState(false);    
+  const [showError, setShowError] = useState(false);
+  const [didSave, setDidSave] = useState(false);    
   const navigate = useNavigate();
 
   const [filteredTeams, setfilteredTeams] = useState([]);
@@ -115,17 +116,28 @@ const RegisterEmployee = () => {
     }
     try{
       await dispatch(createEmployee(formData)).unwrap();
-      dispatch(resetCreateEmployeeState());
+      setDidSave(true);
+    }catch(err){
+      setErrorMessage("Feil ved oppretting: " + (err?.message || ""));
+      setShowError(true);
+    }
+  };
 
+  useEffect(() => {
+    if (success && didSave) {
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
         navigate(`/admin-dashboard`);
+        dispatch(resetCreateEmployeeState());
       }, 3000);
-    }catch(err){
-      console.error('Feil ved oppretting');
     }
-  };
+    if (error) {
+      setErrorMessage("Feil: " + error);
+      setShowError(true);
+      dispatch(resetCreateEmployeeState());
+    }
+  }, [success, error, dispatch, navigate, didSave]);
 
   const handleCancel = () => {
     setShowCancelConfirm(true);
@@ -416,6 +428,11 @@ const RegisterEmployee = () => {
           >
             <RedButton text="Ja, avbryt" onClick={confirmCancel}  />
             <WhiteButton text="Nei" onClick={cancelCancel} />
+          </AlertBox>
+        )}
+         {showError && (
+          <AlertBox type="error" title="Feil!" message={errorMessage}>
+            <RedButton text="Lukk" onClick={() => setShowError(false)} />
           </AlertBox>
         )}
       </div>
