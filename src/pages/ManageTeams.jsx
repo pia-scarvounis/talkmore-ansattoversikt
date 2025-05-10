@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"; // sender handlinger til Redux. useSelector: henter data fra Redux-storen
 
 import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice"; // henter avdelinger og teams fra backend
-import { updateTeam, createTeam, deleteTeam } from "../redux/slices/AdminSlices/adminTeamCruds"; // gir oss tilgang til updateTeam og createTeam-funksjonene vi har laget i Redux
-
+import {
+  updateTeam,
+  createTeam,
+  deleteTeam,
+} from "../redux/slices/AdminSlices/adminTeamCruds"; // gir oss tilgang til updateTeam og createTeam-funksjonene vi har laget i Redux
 
 import NavAdmin from "../components/navigation/NavAdmin";
 import PageHeader from "../components/UI/PageHeader";
@@ -22,24 +25,31 @@ const ManageTeams = () => {
   const [showSaveAlert, setShowSaveAlert] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [saveType, setSaveType] = useState("");
-  
 
   useEffect(() => {
     dispatch(fetchMetaData()); // henter data fra backend når komponenten lastes inn (engangsbruk fordi dependency-array er [dispatch])
   }, [dispatch]);
+  
 
+  // hente ut avd + teams fra dropdown
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
-  const [newTeamName, setNewTeamName] = useState(""); // disse for å hente ut avd + teams fra dropdown 
+  const [newTeamName, setNewTeamName] = useState("");
 
-  // disse brukes når admin skal opprette nytt team:
+  // brukes når admin skal opprette nytt team:
   // (brukes senere når vi sender data til databasen via Redux)
-const [newTeamDepartment, setNewTeamDepartment] = useState(""); // avdeling ID
-const [newTeamNameCreate, setNewTeamNameCreate] = useState(""); // navnet på nytt team
-// disse brukes når admin skal slette et team
-const [deleteTeamDepartment, setDeleteTeamDepartment] = useState("");
-const [deleteTeamId, setDeleteTeamId] = useState("");
+  const [newTeamDepartment, setNewTeamDepartment] = useState(""); // avdeling ID
+  const [newTeamNameCreate, setNewTeamNameCreate] = useState(""); // navnet på nytt team
 
+  // brukes når admin skal slette et team
+  const [deleteTeamDepartment, setDeleteTeamDepartment] = useState("");
+  const [deleteTeamId, setDeleteTeamId] = useState("");
+
+  // alertbox - success & delete alerts:
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+const [updateError, setUpdateError] = useState("");
 
 
   const handleSave = (type) => {
@@ -68,13 +78,16 @@ const [deleteTeamId, setDeleteTeamId] = useState("");
         .then(() => {
           // Etter oppdatering hentes ny data
           dispatch(fetchMetaData());
-          alert("Teamnavn oppdatert!");
+          setUpdateSuccess(true);
           setNewTeamName("");
-          window.location.href = "/admin-dashboard"; // tvinger siden til å oppdatere navigasjonen
+          // window.location.href = "/admin-dashboard"; // tvinger siden til å oppdatere navigasjonen
+          setSelectedTeam("");    
+          setSelectedDepartment("");
         })
         .catch((error) => {
           console.error("Feil ved oppdatering:", error);
-          alert("Det oppstod en feil ved lagring.");
+          setUpdateError("Noe gikk galt under lagring av nytt teamnavn");
+
         });
     }
     if (saveType === "leggtil") {
@@ -82,12 +95,12 @@ const [deleteTeamId, setDeleteTeamId] = useState("");
         alert("Du må velge avdeling og skrive inn teamnavn.");
         return;
       }
-  
+
       const newTeam = {
         team_name: newTeamNameCreate,
         department_id: Number(newTeamDepartment),
       };
-  
+
       dispatch(createTeam(newTeam))
         .unwrap()
         .then(() => {
@@ -107,10 +120,10 @@ const [deleteTeamId, setDeleteTeamId] = useState("");
   const confirmDelete = () => {
     setShowDeleteAlert(false);
     if (!deleteTeamId) {
-      alert("Du må velge et team å slette.");
+      setDeleteError("Du må velge et team å slette.");
       return;
     }
-  
+
     dispatch(deleteTeam(deleteTeamId))
       .unwrap()
       .then(() => {
@@ -184,6 +197,22 @@ const [deleteTeamId, setDeleteTeamId] = useState("");
             <GreenButton text="Lagre" onClick={() => handleSave("lagre")} />{" "}
           </div>
         </div>
+        
+        {updateSuccess && (
+  <AlertBox
+    type="success"
+    title="Oppdatert!"
+    message="Teamnavnet ble oppdatert."
+  />
+)}
+
+{updateError && (
+  <AlertBox
+    type="error"
+    title="Feil"
+    message={updateError}
+  />
+)}
 
         {/* Opprett nytt Team */}
         <div className="form-section team-box">
@@ -192,20 +221,25 @@ const [deleteTeamId, setDeleteTeamId] = useState("");
           <div className="two-column">
             <div className="column">
               <label>Velg Avdeling</label>
-              <select value={newTeamDepartment}
-        onChange={(e) => setNewTeamDepartment(e.target.value)}>
+              <select
+                value={newTeamDepartment}
+                onChange={(e) => setNewTeamDepartment(e.target.value)}
+              >
                 <option>Velg avdeling</option>
                 {departments.map((dep) => (
-    <option key={dep.department_id} value={dep.department_id}>
-      {dep.department_name}
-    </option>
-  ))}
+                  <option key={dep.department_id} value={dep.department_id}>
+                    {dep.department_name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="column">
               <label>Skriv inn Teamnavn</label>
-              <input type="text" value={newTeamNameCreate}
-  onChange={(e) => setNewTeamNameCreate(e.target.value)}/>
+              <input
+                type="text"
+                value={newTeamNameCreate}
+                onChange={(e) => setNewTeamNameCreate(e.target.value)}
+              />
             </div>
           </div>
 
@@ -222,30 +256,37 @@ const [deleteTeamId, setDeleteTeamId] = useState("");
           <h2 className="section-heading">Slett Team</h2>
 
           <div className="two-column">
-            <div className="column"> 
+            <div className="column">
               <label>Velg Avdeling</label>
-              <select value={deleteTeamDepartment}
-  onChange={(e) => setDeleteTeamDepartment(e.target.value)}>
+              <select
+                value={deleteTeamDepartment}
+                onChange={(e) => setDeleteTeamDepartment(e.target.value)}
+              >
                 <option value="">Velg avdeling</option>
                 {departments.map((dep) => (
-    <option key={dep.department_id} value={dep.department_id}>
-      {dep.department_name}
-    </option>
-  ))}
+                  <option key={dep.department_id} value={dep.department_id}>
+                    {dep.department_name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="column">
               <label>Velg Team som skal slettes</label>
-              <select value={deleteTeamId}
-  onChange={(e) => setDeleteTeamId(e.target.value)}>
+              <select
+                value={deleteTeamId}
+                onChange={(e) => setDeleteTeamId(e.target.value)}
+              >
                 <option value="">Velg team</option>
                 {teams
-    .filter((team) => team.team_department_id === Number(deleteTeamDepartment))
-    .map((team) => (
-      <option key={team.team_id} value={team.team_id}>
-        {team.team_name}
-      </option>
-    ))}
+                  .filter(
+                    (team) =>
+                      team.team_department_id === Number(deleteTeamDepartment)
+                  )
+                  .map((team) => (
+                    <option key={team.team_id} value={team.team_id}>
+                      {team.team_name}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
