@@ -93,7 +93,7 @@ router.put('/:id', async (req, res) => {
         //hjelp med gpt
         const normalize = (val) => {
             if (val === null || val === undefined) return null;
-            if (typeof val === 'string') return val.trim();
+            if (typeof val === 'string') return val.trim() || null;
             if (val instanceof Date) return val.toISOString().split('T')[0];
             return String(val);
           };
@@ -167,23 +167,43 @@ router.put('/:id', async (req, res) => {
         const [existingLeave] = await conn.query(`SELECT * FROM employeeLeave WHERE employee_id = ?`, [id]);
         const updatedLeave = updatedData.leave;
 
+        const normOldPercentage = normalize(existingLeave[0]?.leave_percentage);
+        const normNewPercentage = normalize(updatedLeave.leave_percentage);
+        const normOldStart = normalize(existingLeave[0]?.leave_start_date);
+        const normNewStart = normalize(updatedLeave.leave_start_date);
+        const normOldEnd = normalize(existingLeave[0]?.leave_end_date);
+        const normNewEnd = normalize(updatedLeave.leave_end_date);
+
+        let changed = false
+
         if (updatedLeave) {
             //setter changed som ikke lik eksisterende verdi
+            changed =
+            normOldPercentage !== normNewPercentage ||
+            normOldStart !== normNewStart ||
+            normOldEnd !== normNewEnd;
+        /** 
         const changed = !existingLeave.length ||
         String(existingLeave[0].leave_percentage) !== String(updatedLeave.leave_percentage) ||
         String(existingLeave[0].leave_start_date) !== String(updatedLeave.leave_start_date) ||
         String(existingLeave[0].leave_end_date) !== String(updatedLeave.leave_end_date);
-        
+        */
+       
         //hvis endret slette den andre eksisterende verdien fra permisjon tabellen og sett inn de nye verdiene
         if (changed) {
         await conn.query(`DELETE FROM employeeLeave WHERE employee_id = ?`, [id]);
         //sett den nye verdien i permisjon tabellen
         await conn.query(`INSERT INTO employeeLeave (employee_id, leave_percentage, leave_start_date, leave_end_date) VALUES (?, ?, ?, ?)`
         , [id, updatedLeave.leave_percentage || null, updatedLeave.leave_start_date || null, updatedLeave.leave_end_date || null]);
+
         //deretter setter dette seg i changelog hvis endret
         await conn.query(`INSERT INTO changeLog (employee_id, admin_id, field_changed, old_value, new_value, change_date) VALUES (?, ?, ?, ?, ?, NOW())`
-        , [id, amdinId, 'leave', existingLeave[0] ? `${existingLeave[0].leave_percentage}% fra ${existingLeave[0].leave_start_date}` 
-        : 'Ingen', `${updatedLeave.leave_percentage}% fra ${updatedLeave.leave_start_date}`]);
+        , [id, amdinId, 'leave', normOldPercentage
+        ? `${normOldPercentage}% fra ${normOldStart}`
+        : 'Ingen',
+      normNewPercentage
+        ? `${normNewPercentage}% fra ${normNewStart}`
+        : 'Ingen']);
       }
     }
 
