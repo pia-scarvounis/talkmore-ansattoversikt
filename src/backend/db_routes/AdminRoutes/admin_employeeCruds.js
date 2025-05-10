@@ -167,6 +167,7 @@ router.put('/:id', async (req, res) => {
         const [existingLeave] = await conn.query(`SELECT * FROM employeeLeave WHERE employee_id = ?`, [id]);
         const updatedLeave = updatedData.leave;
 
+        //setter det i variabel istedenfor mht til changelog logikk -gpt
         const normOldPercentage = normalize(existingLeave[0]?.leave_percentage);
         const normNewPercentage = normalize(updatedLeave.leave_percentage);
         const normOldStart = normalize(existingLeave[0]?.leave_start_date);
