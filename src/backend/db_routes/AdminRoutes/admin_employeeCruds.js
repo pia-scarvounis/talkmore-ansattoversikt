@@ -275,6 +275,8 @@ router.post('/', async (req, res) => {
         //starter transaksjon
         await conn.beginTransaction();
 
+        console.log("Request body:", req.body);
+
         //sjekker om epost finnes fra før employee tabellen kan ikke bruke den 
         if(newEmployee.epost){
             const [emailCheck] = await conn.query(
@@ -314,7 +316,7 @@ router.post('/', async (req, res) => {
             ]
         );
         //henter resultat insert it fra nye ansatt setter det inn for andre felter som relative, permisjon og lisenser
-        const employeeId = result.instertId;
+        const employeeId = result.insertId;
 
         //legger til pårørende 
         if(Array.isArray(newEmployee.relative)){
@@ -363,7 +365,7 @@ router.post('/', async (req, res) => {
         //Sette inn logikk for hvis newEmployee blir Admin/teamleder sett det inn i userOfTool med kryptert passord
         //Hente workPosistion_title for sjekken
         const [workPosistionResult] = await conn.query(
-            `SELECT workPosistion_title FROM workPosistion WHERE workPosistion_id = ?`,
+            `SELECT posistion_title FROM workPosistion WHERE workPosistion_id = ?`,
             [newEmployee.workPosistion_id]
         );
         const workTitle = workPosistionResult[0]?.workPosistion_title || "";

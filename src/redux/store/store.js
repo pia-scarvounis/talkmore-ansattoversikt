@@ -9,6 +9,7 @@ import updateEmployeeReducer from '../slices/AdminSlices/adminEmpl_CrudsSlice';
 import adminUpdateHistoryReducer from '../slices/AdminSlices/adminHistoryCrudSlice';
 import metaDataReducer from '../slices/metaDataCrudsSlice';
 import adminTeamCrudsReducer from '../slices/AdminSlices/adminTeamCruds';
+import adminCreateEmployeeReducer from '../slices/AdminSlices/adminEmplCreate_CrudSlice';
 import authReducer from '../slices/authLoginSlice/loginSlice';
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
     date: dateReducer,
     employees: employeeReducer,
     updateEmployee:updateEmployeeReducer,
+    createEmployee: adminCreateEmployeeReducer,
     notes: noteReducer,
     employeeHistory: employeeHistoryReducer,
     dayOverviewEmployees: dayOverviewEmployeesReducer,

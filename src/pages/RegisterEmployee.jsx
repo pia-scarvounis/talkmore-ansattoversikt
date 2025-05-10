@@ -29,7 +29,8 @@ const RegisterEmployee = () => {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const navigate = useNavigate();
 
-  //const {success, loading, error} = useSelector((state) => state.createEmployee);
+  const [filteredTeams, setfilteredTeams] = useState([]);
+  const {success, loading, error} = useSelector((state) => state.createEmployee);
   
  
   useEffect(()=> {
@@ -37,10 +38,7 @@ const RegisterEmployee = () => {
   },[dispatch]);
 
   //Henter ut getMetadat departments, teams, posistions og lisenser
-  const { departments, teams, posistions, licenses } = useSelector((state) => state.metadata);
-
-  //filtrer team basert på valgt avdeling
-  const filteredTeams = teams.filter(team => team.department_id === Number(formData.department_id));
+  const { departments, teams, posistions, licenses } = useSelector((state) => state.metaData);
 
   //Form data som skal bli sendt inn i create employee
   const [formData, setFormData] = useState({
@@ -58,11 +56,23 @@ const RegisterEmployee = () => {
     department_id: '',
     team_id: '',
     workPosistion_id: '',
-    license: [],
+    licenses: [],
     relative: []
     //ikke satt permisjon her da det ikke skal være med i opprettelse av ansatt kun endring på ansatt
   })
 
+  //filtrer team basert på valgt avdeling
+  useEffect(() => {
+    if (formData?.department_id && teams.length > 0) {
+      const filtered = teams.filter(
+        (t) => t.team_department_id?.toString() === formData.department_id
+      );
+      setfilteredTeams(filtered);
+      console.log("Filtered teams:", filtered);
+    }
+  }, [formData?.department_id, teams]);
+      
+  
   //håndtering av input endringer string og Number type -gpt
   const handleInputChange = (e) => {
     const {name, value, type } = e.target;
@@ -75,7 +85,7 @@ const RegisterEmployee = () => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'number' ? Number(cleanedValue) : cleanedValue
+      [name]: cleanedValue
     }));
   }
 
@@ -84,18 +94,25 @@ const RegisterEmployee = () => {
     const {value, checked } = e.target;
     setFormData((prev) => {
       const updated = checked
-      ? [...prev.license, {license_id: Number(value)}]
-      : prev.license.filter((l) => l.license_id !== Number(value));
-      return {...prev, license: updated};
+      ? [...prev.licenses, {license_id: Number(value)}]
+      : prev.licenses.filter((l) => l.license_id !== Number(value));
+      return {...prev, licenses: updated};
     });
   }
 
-  
-  const handleSave = () => {
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
+  //lagre
+  const handleSave =  async() => {
+    try{
+      await dispatch(createEmployee(formData)).unwrap();
+      dispatch(resetCreateEmployeeState());
+
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+    }catch(err){
+      console.error('Feil ved oppretting');
+    }
   };
 
   const handleCancel = () => {
@@ -279,7 +296,7 @@ const RegisterEmployee = () => {
               >
                 <option value="">Velg</option>
                 {filteredTeams.map(team => (
-                  <option key={team.team_id} value={team.team_id}>
+                  <option key={team.team_id} value={team.team_id.toString()}>
                     {team.team_name}
                   </option>
                 ))}
@@ -357,8 +374,9 @@ const RegisterEmployee = () => {
                 <input 
                   type="checkbox" 
                   value={license.license_id}
-                  checked={formData.license.some(l = l.license_id === license.license_id)}
-                  onChange={handleInputChange}
+                  checked={formData.licenses.some(
+                    (l) => l.license_id === license.license_id)}
+                  onChange={handleLicenseChange}
                   /> 
                {license.license_title}
              </label>
