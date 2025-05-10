@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { createEmployee, resetCreateEmployeeState } from "../redux/slices/AdminSlices/adminEmplCreate_CrudSlice";
 //hente metadata get avd, team, stillinger og lisenser
 import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice";
+//tileggfunskjon for å validering for formdata
+import { validateEmployeeForm } from "../utilsFunksj./employeeValidation";
 
 const RegisterEmployee = () => {
 
@@ -75,7 +77,7 @@ const RegisterEmployee = () => {
   
   //håndtering av input endringer string og Number type -gpt
   const handleInputChange = (e) => {
-    const {name, value, type } = e.target;
+    const {name, value } = e.target;
 
     const cleanedValue =
     name === "phoneNr" || name === "relative_phoneNr"
@@ -102,6 +104,13 @@ const RegisterEmployee = () => {
 
   //lagre
   const handleSave =  async() => {
+    //validering sjekk
+    const { valid, error } = validateEmployeeForm(formData);
+    if(!valid){
+      setErrorMessage(error);
+      setShowError(true);
+      return;
+    }
     try{
       await dispatch(createEmployee(formData)).unwrap();
       dispatch(resetCreateEmployeeState());
