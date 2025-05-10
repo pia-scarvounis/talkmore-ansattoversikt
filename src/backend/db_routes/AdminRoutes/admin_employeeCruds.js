@@ -88,7 +88,16 @@ router.put('/:id', async (req, res) => {
         if (updatedData.employee_name && updatedData.employee_name !== original.employee_name) {
         fields.push('employee_name = ?');
         values.push(updatedData.employee_name);
-        }   
+        }  
+
+        //hjelp med gpt
+        const normalize = (val) => {
+            if (val === null || val === undefined) return null;
+            if (typeof val === 'string') return val.trim();
+            if (val instanceof Date) return val.toISOString().split('T')[0];
+            return String(val);
+          };
+        
 
         // Legg til andre felter som har blitt endret unntatt 
         //permisjon skal håndteres for seg da det ikke er i employee tabellen
@@ -102,7 +111,10 @@ router.put('/:id', async (req, res) => {
             const newValue = updatedData[key];
             const originalValue = original[key];
 
-            if(newValue !== undefined && String(newValue) !== String(originalValue)){
+            const normNew = normalize(newValue);
+            const normOld = normalize(originalValue);
+            //newValue !== undefined && String(newValue) !== String(originalValue)
+            if(normNew !== normOld){
                 await conn.query(
                     `INSERT INTO changeLog (
                         employee_id, admin_id,
@@ -114,14 +126,14 @@ router.put('/:id', async (req, res) => {
                         id, 
                         amdinId,
                         key,
-                        originalValue || 'NULL',
-                        newValue || 'NULL'
+                        normOld ?? 'NULL',
+                        normNew ?? 'NULL'
                     ]
                 );
-                /** 
+                
                 fields.push(`${key} = ?`);
-                values.push(['birthdate', 'start_date', 'end_date'].includes(key) ? formatDate(newValue): newValue);
-                */
+                values.push(newValue ?? null);
+                
             }
         }
 
@@ -216,6 +228,7 @@ router.put('/:id', async (req, res) => {
                 );
             }
         }
+        /** 
         //Denne skal insert inn i changelog tabellen /historikk for ansatt
         await conn.query(`
             INSERT INTO changeLog (
@@ -244,7 +257,7 @@ router.put('/:id', async (req, res) => {
             formatDate(updatedData.leave?.leave_start_date) || null,
             formatDate(updatedData.leave?.leave_end_date) || null
         ]);
-
+        */
         //Oppdatere ansatt i api genesys hvis endring i navn eller epost
         //genesys_user_id link mellom api og databasen
         if(original.genesys_user_id){
