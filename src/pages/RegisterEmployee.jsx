@@ -109,6 +109,7 @@ const RegisterEmployee = () => {
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
+        navigate(`/admin-dashboard`);
       }, 3000);
     }catch(err){
       console.error('Feil ved oppretting');
