@@ -182,12 +182,6 @@ router.put('/:id', async (req, res) => {
             normOldPercentage !== normNewPercentage ||
             normOldStart !== normNewStart ||
             normOldEnd !== normNewEnd;
-        /** 
-        const changed = !existingLeave.length ||
-        String(existingLeave[0].leave_percentage) !== String(updatedLeave.leave_percentage) ||
-        String(existingLeave[0].leave_start_date) !== String(updatedLeave.leave_start_date) ||
-        String(existingLeave[0].leave_end_date) !== String(updatedLeave.leave_end_date);
-        */
        
         //hvis endret slette den andre eksisterende verdien fra permisjon tabellen og sett inn de nye verdiene
         if (changed) {
