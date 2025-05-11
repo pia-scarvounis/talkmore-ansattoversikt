@@ -188,7 +188,7 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
               displayNew = newPosistion?.posistion_title || normNew;
             }
           }
-
+          
           await conn.query(
             `INSERT INTO changeLog (
                         employee_id, admin_id,
