@@ -13,6 +13,8 @@ import { getOAuthToken } from "../../apiGenesysAuth/authTokenGenesys.js";
 import { getFullEmployeeById } from "../../Funksj_stotte/getFullEmpUpdatet.js";
 //Henter rolle håndtering logikk for endring av rolle
 import { handleUserRoleChange } from "../../Funksj_stotte/roleManagerInUpdate.js";
+//middleware admin rute skal settes i router 
+import { authenticateToken, requireAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
 
 const router = Router();
 dotenv.config();
@@ -30,7 +32,7 @@ const formatDate = (date) => {
 //Benytter transaction: 2. uten kan man få en ansatt uten tilhørende data (felter som pårørende, relative og lisenser)
 
 //Ruter for å endre en ansatt og sette endringene og verdiene i historikken til den endrede ansatte
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   //ny info fra body
   const updatedData = req.body;
@@ -427,7 +429,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //Opprette en ansatt // Vi skal ikke sette dette opp i api genesys da det er på vent
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, requireAdmin, async (req, res) => {
   // henter employee fra body
   const newEmployee = req.body;
 
