@@ -54,7 +54,7 @@ export function validateEmployeeForm(formData) {
 
     const hasStart = leave_start_date && leave_start_date.trim() !== "";
     const hasEnd = leave_end_date && leave_end_date.trim() !== "";
-    const hasPercent = leave_percentage && leave_percentage.trim() !== "";
+    const hasPercent = leave_percentage !== undefined && leave_percentage !== null && leave_percentage !== "";
 
     //hvis start dato er satt og ikke slutt dato -permisjon
     if(hasStart && !hasEnd){
@@ -77,6 +77,12 @@ export function validateEmployeeForm(formData) {
         error: 'Du må fylle inn permisjon % hvis du har satt datoer'
       }
     }
-
+    if (!hasStart && !hasEnd && hasPercent) {
+      return {
+        valid: false,
+        error: 'Du kan ikke fylle inn permisjonsprosent uten å sette start- og sluttdato.'
+      };
+    }
   }
+  return { valid: true, error: null };
 }
