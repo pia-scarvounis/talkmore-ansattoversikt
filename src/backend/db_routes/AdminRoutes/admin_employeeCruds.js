@@ -98,7 +98,6 @@ router.put('/:id', async (req, res) => {
             return String(val);
           };
         
-
         // Legg til andre felter som har blitt endret unntatt 
         //permisjon skal håndteres for seg da det ikke er i employee tabellen
         const keysToCheck = [
@@ -106,6 +105,10 @@ router.put('/:id', async (req, res) => {
         'start_date', 'end_date', 'form_of_employeement', 'employeeNr_Talkmore',
         'employeeNr_Telenor', 'employee_percentages', 'team_id', 'workPosistion_id'
         ];
+
+        //lage keys for changeLog, kun disse skal settes i changeLog (permisjon kommer i egen)
+        const keysToLog = ['start_date, end_date', 'team_id', 'workPosistion_id']
+
         //for loop setter inn fields
         for(const key of keysToCheck){
             const newValue = updatedData[key];
@@ -114,7 +117,38 @@ router.put('/:id', async (req, res) => {
             const normNew = normalize(newValue);
             const normOld = normalize(originalValue);
             //newValue !== undefined && String(newValue) !== String(originalValue)
+
             if(normNew !== normOld){
+                if(keysToLog.includes(key)){
+                    let displayOld = normOld;
+                    let displayNew = normNew;
+
+                    //henter tidligere team navn basert på team id før endring
+                    if(key === 'team_id'){
+                        if(normOld){
+                            const [[oldTeam]] = await conn.query(`SELECT team_name FROM team WHERE team_id = ?`, [normOld]);
+                            displayOld = oldTeam?.team_name || normOld;
+                        }
+                        //ny team navn
+                        if(normNew){
+                            const [[newTeam]] = await conn.query(`SELECT team_name FROM team WHERE team_id = ?`, [normNew]);
+                            displayNew = newTeam?.team_name || normNew
+                        }
+                    }
+                    //Henter stilling navn basert på id før endring
+                    if(key === 'workPosistion_id'){
+                        if(normOld){
+                            const [[oldPosistion]] = await conn.query(`SELECT posistion_title FROM workPosistion WHERE workPosistion_id = ?`, [normOld]);
+                            displayOld = oldPosistion?.posistion_title || normOld;
+                        
+                        }
+                        //ny stilling navn
+                        if(normNew){
+                            const [[newPosistion]] = await conn.query(`SELECT posistion_title FROM workPosistion WHERE workPosistion_id = ?`, [normNew]);
+                            displayNew = newPosistion?.posistion_title || normNew;
+                        }
+                    }
+                
                 await conn.query(
                     `INSERT INTO changeLog (
                         employee_id, admin_id,
@@ -126,14 +160,13 @@ router.put('/:id', async (req, res) => {
                         id, 
                         amdinId,
                         key,
-                        normOld ?? 'NULL',
-                        normNew ?? 'NULL'
+                        displayOld ?? 'NULL',
+                        displayNew ?? 'NULL'
                     ]
-                );
-                
+                );     
                 fields.push(`${key} = ?`);
-                values.push(newValue ?? null);
-                
+                values.push(newValue ?? null);  
+                }
             }
         }
 
