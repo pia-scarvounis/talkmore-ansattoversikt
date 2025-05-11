@@ -1,13 +1,15 @@
 import { Router } from "express";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
+//middleware
+import { authenticateToken, requireTeamLeaderOrAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
 
 dotenv.config();
 
 const router = Router();
 
 //hente historikken til den valgte ansatte med id til ansatte
-router.get('/:id', async (req, res) =>{
+router.get('/:id', authenticateToken, requireTeamLeaderOrAdmin, async (req, res) =>{
     const {id} = req.params;
 
     try{
