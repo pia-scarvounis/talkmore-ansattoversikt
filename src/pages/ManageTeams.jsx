@@ -112,15 +112,14 @@ const [createError, setCreateError] = useState("");
           setCreateSuccess(true);
           setNewTeamNameCreate("");
           setNewTeamDepartment("");
-          //window.location.href = "/admin-dashboard";
         })
         .catch((error) => {
           console.error("Feil ved oppretting:", error);
-          alert("Det oppstod en feil ved opprettelse.");
+          setCreateError("Det oppstod en feil ved opprettelse.");
         });
     }
   };
-
+// delete team
   const confirmDelete = () => {
     setShowDeleteAlert(false);
     if (!deleteTeamId) {
@@ -132,14 +131,13 @@ const [createError, setCreateError] = useState("");
       .unwrap()
       .then(() => {
         dispatch(fetchMetaData()); // henter oppdatert liste
-        alert("Team er slettet!");
+        setDeleteSuccess(true);
         setDeleteTeamId("");
         setDeleteTeamDepartment("");
-        window.location.href = "/admin-dashboard"; // tvinger navigasjonen til å oppdatere
       })
       .catch((error) => {
         console.error("Feil ved sletting:", error);
-        alert("Det oppstod en feil ved sletting.");
+        setDeleteError("Det oppstod en feil ved sletting.");
       });
     console.log("Sletter team...");
   };
@@ -166,6 +164,16 @@ useEffect(() => {
   }
 }, [createSuccess]);
 
+// delete team - suksessmld fjernes etter 3 sek
+useEffect(() => {
+  if (deleteSuccess) {
+    const timer = setTimeout(() => {
+      setDeleteSuccess(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }
+}, [deleteSuccess]);
 
 
   return (
@@ -339,6 +347,25 @@ useEffect(() => {
               </select>
             </div>
           </div>
+
+          {deleteSuccess && (
+  <AlertBox
+    type="success"
+    title="Slettet!"
+    message="Teamet ble slettet."
+  />
+)}
+
+{deleteError && (
+  <AlertBox
+    type="error"
+    title="Feil"
+    message={deleteError}
+  >
+    <RedButton text="Lukk" onClick={() => setDeleteError("")} />
+  </AlertBox>
+)}
+
 
           <div className="manage-teams-buttons">
             <RedButton text="Slett" onClick={handleDelete} />
