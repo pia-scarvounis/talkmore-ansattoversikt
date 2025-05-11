@@ -1,9 +1,12 @@
 import { application, json, Router } from "express";
-import dBpool from "../../config/db.js";
+import pool from "../../config/db.js";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
-import axios from "axios";
+//middleware
+import { authenticateToken, requireTeamLeaderOrAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
 
+// denne ruteren/filen er ikke i bruk nå men kan videreutvikles senere 
+//funkjsonen her er at den henter ansatte som er logget inn (random) skulle egentlig vises på dashbord
 dotenv.config();
 
 const router = Router();
@@ -65,7 +68,7 @@ const isLoggedInToday = (employeeId, date) => {
 }
 
 //Denne ruteren henter tilgjengelige ansatte for å vise i de gønne boksene på dashbordet
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, requireTeamLeaderOrAdmin, async (req, res) => {
     try{
         //henter valgt dato i request eller ny valgt dato
         const selectedDate = req.query.date ? new Date (req.query.date) : new Date ();

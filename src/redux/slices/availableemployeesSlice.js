@@ -1,6 +1,9 @@
+// denne henter fra available employees ruten og er ikke bruk nå
+
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 // legge til api istedenfor axios. når det er klart
+// api inneholder header og token med axios
 import api from '../../backend/apiToken/axiosInstance.js';
 
 //fetch for backend url /api/availableemployees
@@ -8,7 +11,7 @@ export const fetchAvailableEmployees = createAsyncThunk(
     'availableEmployees/fetchAvailableEmployees',
         async(selectedDate, thunkAPI) =>{
             try{
-                const response = await axios.get(`http://localhost:3000/api/availableemployees?date=${selectedDate}`);
+                const response = await api.get(`http://localhost:3000/api/availableemployees?date=${selectedDate}`);
                 return response.data;
             }catch(error){
                 return thunkAPI.rejectWithValue(error.response.data);
