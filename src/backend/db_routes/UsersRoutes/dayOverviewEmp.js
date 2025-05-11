@@ -1,7 +1,10 @@
 import { application, json, Router } from "express";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
-import axios from "axios";
+
+//middleware for ruten enten admin eller teamleder(leserolle) 
+import { authenticateToken, requireTeamLeaderOrAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
+
 
 dotenv.config();
 
@@ -13,7 +16,7 @@ const router = Router();
 //selv om en ansatt er 30% skal den vises her og beregnes
 //Vi har en annen ruter som skal vise faktiske ansatte som innlogget/på jobb
 
-router.get('/dayOverviewEmployees', async (req, res) =>{
+router.get('/dayOverviewEmployees', authenticateToken, requireTeamLeaderOrAdmin, async (req, res) =>{
 
     try{
 

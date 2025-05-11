@@ -8,7 +8,7 @@ export const fetchDayOverviewEmployees = createAsyncThunk(
     'dayOverviewEmployees/fetchDayOverviewEmployees',
         async(selectedDate, thunkAPI) =>{
             try{
-                const response = await axios.get(`http://localhost:3000/api/dayOverviewEmployees?date=${selectedDate}`);
+                const response = await api.get(`http://localhost:3000/api/dayOverviewEmployees?date=${selectedDate}`);
                 return response.data;
             }catch(error){
                 return thunkAPI.rejectWithValue(error.response.data);
