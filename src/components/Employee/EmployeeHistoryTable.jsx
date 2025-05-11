@@ -33,8 +33,6 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
     const fieldDescriptions = {
       employeeNr_Talkmore: "Ansattnummer (Talkmore)",
       employeeNr_Telenor: "Ansattnummer (Telenor)",
-      department_id: "Avdeling",
-      department_name: "Avdeling Navn",
       team_id: "Team",
       team_name: "Team Navn",
       workPosistion_id: "Stillingstittel",
