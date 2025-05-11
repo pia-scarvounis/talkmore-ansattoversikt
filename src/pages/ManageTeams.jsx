@@ -51,6 +51,9 @@ const ManageTeams = () => {
   const [deleteError, setDeleteError] = useState("");
   const [updateSuccess, setUpdateSuccess] = useState(false);
 const [updateError, setUpdateError] = useState("");
+const [createSuccess, setCreateSuccess] = useState(false);
+const [createError, setCreateError] = useState("");
+
 
 
   const handleSave = (type) => {
@@ -82,7 +85,6 @@ const [updateError, setUpdateError] = useState("");
           dispatch(fetchMetaData());
           setUpdateSuccess(true);
           setNewTeamName("");
-          // window.location.href = "/admin-dashboard"; // tvinger siden til å oppdatere navigasjonen
           setSelectedTeam("");    
           setSelectedDepartment("");
         })
@@ -94,7 +96,7 @@ const [updateError, setUpdateError] = useState("");
     }
     if (saveType === "leggtil") {
       if (!newTeamNameCreate || !newTeamDepartment) {
-        alert("Du må velge avdeling og skrive inn teamnavn.");
+        setCreateError("Du må velge avdeling og skrive inn teamnavn.");
         return;
       }
 
@@ -107,10 +109,10 @@ const [updateError, setUpdateError] = useState("");
         .unwrap()
         .then(() => {
           dispatch(fetchMetaData());
-          alert("Nytt team er opprettet!");
+          setCreateSuccess(true);
           setNewTeamNameCreate("");
           setNewTeamDepartment("");
-          window.location.href = "/admin-dashboard";
+          //window.location.href = "/admin-dashboard";
         })
         .catch((error) => {
           console.error("Feil ved oppretting:", error);
@@ -153,7 +155,17 @@ const [updateError, setUpdateError] = useState("");
     }
   }, [updateSuccess]);
 
-  // oppdater team
+  // opprett team - suksessmld fjernes etter 3 sek
+useEffect(() => {
+  if (createSuccess) {
+    const timer = setTimeout(() => {
+      setCreateSuccess(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }
+}, [createSuccess]);
+
 
 
   return (
@@ -260,6 +272,25 @@ const [updateError, setUpdateError] = useState("");
               />
             </div>
           </div>
+
+          {createSuccess && (
+  <AlertBox
+    type="success"
+    title="Team opprettet!"
+    message="Nytt team ble lagt til."
+  />
+)}
+
+{createError && (
+  <AlertBox
+    type="error"
+    title="Feil"
+    message={createError}
+  >
+    <RedButton text="Lukk" onClick={() => setCreateError("")} />
+  </AlertBox>
+)}
+
 
           <div className="manage-teams-buttons">
             <GreenButton
