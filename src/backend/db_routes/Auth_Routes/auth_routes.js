@@ -17,7 +17,9 @@ router.post('/login', async (req, res) =>{
     try{
         //hent bruker fra userOfTool tabellen som er aktiv med 1 og ikke uaktiv med 0
         const [rows] = await pool.query(
-            `SELECT * FROM userOfTool WHERE username = ? AND active = 1`,
+            `SELECT user_id, username, roles, employee_id, password_hash
+                FROM userOfTool
+            WHERE username = ? AND active = 1`,
             [username]
         );
 

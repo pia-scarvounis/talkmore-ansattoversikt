@@ -36,7 +36,11 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   //ny info fra body
   const updatedData = req.body;
-  const amdinId = req.user?.user_id || 1; //hente fra middleware senere men får nå henter admin id fra databasen employee_id 7 er admin
+
+  console.log("TOKEN payload (req.user):", req.user);
+
+  const adminId = req.user?.userId; //hente fra middleware senere men får nå henter admin id fra databasen employee_id 7 er admin
+  console.log("adminId brukt i query:", adminId);
 
   if (!updatedData || typeof updatedData !== "object") {
     return res.status(400).json({ error: "Ingen data å oppdatere" });
@@ -191,7 +195,7 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
                         field_changed, old_value, new_value, change_date
                     )
                     VALUES (?, ?, ?, ?, ?, NOW())`,
-            [id, amdinId, key, displayOld ?? "NULL", displayNew ?? "NULL"]
+            [id, adminId, key, displayOld ?? "NULL", displayNew ?? "NULL"]
           );
           fields.push(`${key} = ?`);
           values.push(newValue ?? null);
