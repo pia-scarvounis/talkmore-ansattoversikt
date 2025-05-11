@@ -15,28 +15,18 @@ router.patch('/:changleLog_id', async (req, res) => {
     const fields = [];
     const values = [];
 
-    //formaterer dato til isostring
-    const formatDate = (date) =>{
-        return date ? new Date(date).toDateString().split('T')[0] : null;
-    }
-
+    //felter fra historikk loggen disse skal brukes ved endring av historikk fra gammel verdi til ny verdi
     const allowedFields = 
-    ['department_id', 'team_id', 'workPosistion_id'
-    , 'form_of_employeement', 'employee_percentages',  
-    'start_date', 'end_date',
-    'leave_percentage', 'leave_start_date', 'leave_end_date'
-    ];
+    ['field_changed', 'old_value', 'new_value'];
 
     for(const field of allowedFields){
         if(field in req.body){
-            const value = ['start_date', 'end_date', 'leave_start_date', 'leave_end_date'].includes(field)
-            ? formatDate(req.body[field])
-            :req.body[field]
-            //setter inn feltene i []
+            //pusher inn field i fields
             fields.push(`${field} = ?`);
-            //henter inn verdien fra body og setter inn felt
+            //pusher verdiene fra body i values
             values.push(req.body[field]);
         }
+      
     }
     if(fields.length === 0){
         return res.status(400).json({error: 'ingen gyldige felter å oppdatere'});
