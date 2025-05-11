@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 // legge til api istedenfor axios. når det er klart
+//henter token header i api
 import api from '../../backend/apiToken/axiosInstance.js';
 
 
@@ -10,10 +11,10 @@ export const fetchMetaData = createAsyncThunk(
     async(_, {rejectedWithValue}) => {
         try{
             const [departmentsRes, teamsRes, posistionsRes, licensesRes] = await Promise.all([
-                axios.get('http://localhost:3000/api/metaData/departments'),
-                axios.get('http://localhost:3000/api/metaData/teams'),
-                axios.get('http://localhost:3000/api/metaData/posistions'),
-                axios.get('http://localhost:3000/api/metaData/licenses')
+                api.get('http://localhost:3000/api/metaData/departments'),
+                api.get('http://localhost:3000/api/metaData/teams'),
+                api.get('http://localhost:3000/api/metaData/posistions'),
+                api.get('http://localhost:3000/api/metaData/licenses')
             ]);
             return{
                 departments: departmentsRes.data,

@@ -1,12 +1,14 @@
 import {Router} from 'express';
 import pool from '../../config/db.js';
 import dotenv from 'dotenv';
+//middleware
+import { authenticateToken, requireTeamLeaderOrAdmin } from '../../AuthenticateUsers/AuthMiddleware.js';
 
 const router = Router();
 dotenv.config();
 
 //Hente alle avdelinger
-router.get('/departments', async (req, res) =>{
+router.get('/departments', authenticateToken, requireTeamLeaderOrAdmin, async (req, res) =>{
     try{
         const [departments] = await pool.query(`
             SELECT * FROM department
@@ -19,7 +21,7 @@ router.get('/departments', async (req, res) =>{
 })
 
 //Hente alle Team og join med department tabellen
-router.get('/teams', async (req, res) => {
+router.get('/teams', authenticateToken, requireTeamLeaderOrAdmin, async (req, res) => {
     try{
         const [teams] = await pool.query(`
         SELECT 
@@ -39,7 +41,7 @@ router.get('/teams', async (req, res) => {
 })
 
 //Hente alle stillinger
-router.get('/posistions', async (req, res) =>{
+router.get('/posistions', authenticateToken, requireTeamLeaderOrAdmin, async (req, res) =>{
     try{
         const [posistions] = await pool.query(`
             SELECT * FROM workPosistion
@@ -52,7 +54,7 @@ router.get('/posistions', async (req, res) =>{
     }
 });
 
-router.get('/licenses', async (req, res) =>{
+router.get('/licenses', authenticateToken, requireTeamLeaderOrAdmin, async (req, res) =>{
     try{
         const [licenses] = await pool.query(`
             SELECT * FROM license
