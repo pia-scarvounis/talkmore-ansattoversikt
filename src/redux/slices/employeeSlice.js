@@ -4,10 +4,10 @@ import axios from 'axios';
 import { updateEmployee } from './AdminSlices/adminEmpl_CrudsSlice';
 //henter create employee slicen
 import { createEmployee } from './AdminSlices/adminEmplCreate_CrudSlice';
-// legge til api istedenfor axios. når det er klart
+// legge til api istedenfor axios. når det er klart/ api har header og token
 import api from '../../backend/apiToken/axiosInstance.js';
 
-//SLICE for EMPLOYEES
+//SLICE for å hente EMPLOYEES
 
 //async THUNK som skal returnere en promise og håndtere asynkrone handlinger/fetch
 //https://redux.js.org/tutorials/fundamentals/part-6-async-logic

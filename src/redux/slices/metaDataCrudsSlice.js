@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 // legge til api istedenfor axios. når det er klart
-//henter token header i api
+//henter token header i api/  api har header og token
 import api from '../../backend/apiToken/axiosInstance.js';
 
 

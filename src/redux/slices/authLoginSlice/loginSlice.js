@@ -3,6 +3,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from  'axios';
 import { jwtDecode } from "jwt-decode";
+// api har header og token
 import api from '../../../backend/apiToken/axiosInstance.js';
 
 //hente token fra localstorage

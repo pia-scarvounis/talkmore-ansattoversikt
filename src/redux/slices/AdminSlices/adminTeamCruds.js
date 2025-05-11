@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 //setter denne når ruter beskytter er lagt denne henter token for url fetchen til admin/teamleder
+// api har header og token
 import api from '../../../backend/apiToken/axiosInstance.js';
 //importerer fetchMetadata da get teams ligger i en annen slice, den skal helst ikke det men når vi skal hente ut mye på en gang
 //har vi laget egen get for avdeling, teams, stillinger og lisenser i en slice
@@ -9,7 +10,7 @@ import api from '../../../backend/apiToken/axiosInstance.js';
 
 import { fetchMetaData } from '../metaDataCrudsSlice.js';
 
-
+//Adminstrere TEAM POST, PUT og DELETE -admin
 //Opprett nytt team 
 export const createTeam = createAsyncThunk(
     'team/createTeam', async (newTeam, {dispatch, rejectWithValue}) =>{

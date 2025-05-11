@@ -6,7 +6,7 @@ import api from '../../../backend/apiToken/axiosInstance.js';
 //async THUNK som skal returnere en promise og håndtere asynkrone handlinger/fetch
 //https://redux.js.org/tutorials/fundamentals/part-6-async-logic
 
-//Her ligger slice for UPDATE, POST kun for admin : cruds for employees
+//Her ligger slice for UPDATE employees
 
 //UPDATE EMPLOYEE (Admin)
 export const updateEmployee = createAsyncThunk(

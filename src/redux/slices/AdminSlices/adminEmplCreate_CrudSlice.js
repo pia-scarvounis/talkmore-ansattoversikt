@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-//denne skal settes inn senere for token
+//denne skal settes inn senere for token / Henter header og token med api.
 import api from '../../../backend/apiToken/axiosInstance';
 
 // SLICE for å opprette bruker av Admin
