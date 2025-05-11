@@ -1,4 +1,5 @@
 // src/components/Employee/EmployeeHistoryTable.jsx
+/** 
 import React, { useEffect, useMemo } from "react";
 import {
   useReactTable,
@@ -218,6 +219,56 @@ const EmployeeHistoryTable = ({ employeeId }) => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default EmployeeHistoryTable;
+*/
+
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEmployeeHistory } from "../../redux/slices/historySlice";
+
+const EmployeeHistoryTable = ({ employeeId }) => {
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.employeeHistory);
+
+  useEffect(() => {
+    if (employeeId) {
+      dispatch(fetchEmployeeHistory(employeeId));
+    }
+  }, [employeeId, dispatch]);
+
+  if (loading) return <div>Laster historikk...</div>;
+  if (error) return <div>Feil: {error}</div>;
+  if (!data.length) return <div>Ingen historikk funnet.</div>;
+
+  return (
+    <div className="form-section history-table-wrapper">
+      <h2 className="section-heading">Endringshistorikk</h2>
+      <table className="history-table">
+        <thead>
+          <tr>
+            <th>Felt</th>
+            <th>Gammel verdi</th>
+            <th>Ny verdi</th>
+            <th>Endret av</th>
+            <th>Dato</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((entry) => (
+            <tr key={entry.changeLog_id}>
+              <td>{entry.field_changed}</td>
+              <td>{entry.old_value}</td>
+              <td>{entry.new_value}</td>
+              <td>{entry.endret_av_navn}</td>
+              <td>{entry.change_date?.split("T")[0]}</td>
             </tr>
           ))}
         </tbody>

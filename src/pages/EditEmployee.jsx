@@ -9,7 +9,6 @@ import "../styles/form.css";
 import defaultImage from "../assets/images/default-img.png";
 import trashIcon from "../assets/icons/trash.svg";
 import uploadIcon from "../assets/icons/img.svg";
-import EditHistoryPopup from "../components/History/EditHistoryPopup"; // for å teste EditHistoryPopupen
 import AlertBox from "../components/UI/AlertBox";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -20,12 +19,14 @@ import {
 } from "../redux/slices/AdminSlices/adminEmpl_CrudsSlice";
 import { fetchEmployees } from "../redux/slices/employeeSlice";
 import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice";
+//hjelpefunksjon for validering
+import { validateEmployeeForm } from '../utilsFunksj./employeeValidation';
 
 const EditEmployee = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const employeeId = parseInt(id, 10);
+
   // alertbox state:
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
@@ -54,7 +55,7 @@ const EditEmployee = () => {
   //alle lisenser
   const { licenses: allLicenses } = useSelector((state) => state.metaData);
   //Henter fra updateEmployeeSlicen
-  const { loading, success, error } = useSelector(
+  const { success, error } = useSelector(
     (state) => state.updateEmployee
   );
 
@@ -139,7 +140,7 @@ const EditEmployee = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    //fjern alt som ikke er tall i tlf felt
+    //fjern alt som ikke er tall i tlf felt //
     const cleanedValue =
       name === "phoneNr" || name === "relative_phoneNr"
         ? value.replace(/[^\d+]/g, "")
@@ -195,6 +196,14 @@ const EditEmployee = () => {
     if (e?.preventDefault) e.preventDefault();
     if (!formData) return;
 
+    //validering sjekk
+    const { valid, error } = validateEmployeeForm(formData);
+    if(!valid){
+      setErrorMessage(error);
+      setShowError(true);
+      return;
+    }
+    /** 
     // Valider permisjon: Startdato krever sluttdato
     if (
       formData.leave &&
@@ -205,9 +214,9 @@ const EditEmployee = () => {
       setErrorMessage(
         "Du må fylle inn sluttdato for permisjon hvis startdato er satt."
       );
+      
       setShowError(true);
-      return;
-    }
+      */
 
     //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
     const fixFormData = {

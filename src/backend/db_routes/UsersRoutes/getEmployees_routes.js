@@ -12,6 +12,7 @@ import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
 
 dotenv.config();
 
+//Justere denne hente dette fra config!!
 const DEFAULT_TEST_PASSWORD = process.env.DEFAULT_TEST_PASSWORD;
 console.log('DEFAULT_TEST_PASSWORD:', process.env.DEFAULT_TEST_PASSWORD);
 
@@ -157,10 +158,10 @@ router.post('/', async (req, res) => {
           `INSERT INTO employee (
             employee_name, epost, phoneNr, birthdate, image_url, start_date, end_date,
             form_of_employeement, employeeNr_Talkmore, employeeNr_Telenor,
-            employee_percentages, is_test, team_id, workPosistion_id,
+            employee_percentages, is_test, is_active, team_id, workPosistion_id,
             team_name, workPosistion_title,
             genesys_user_id, genesys_version, genesys_self_uri
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
             employee.name,
             employee.email,
             randomPhone,
@@ -172,7 +173,8 @@ router.post('/', async (req, res) => {
             employeNr_TM,
             employeNr_TN,
             employee_percentages,
-            true,
+            1,
+            1,
             team_id,
             workPosistion_id,
             team_name,
@@ -209,8 +211,8 @@ router.post('/', async (req, res) => {
               role,
               employee.email,
               testHashPassord,
-              true,
-              true,
+              1,
+              1,
               result.insertId
             ]);
 

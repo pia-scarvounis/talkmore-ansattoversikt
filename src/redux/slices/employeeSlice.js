@@ -1,6 +1,9 @@
 import {createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+//henter update employe slicen
 import { updateEmployee } from './AdminSlices/adminEmpl_CrudsSlice';
+//henter create employee slicen
+import { createEmployee } from './AdminSlices/adminEmplCreate_CrudSlice';
 // legge til api istedenfor axios. når det er klart
 import api from '../../backend/apiToken/axiosInstance.js';
 
@@ -53,9 +56,14 @@ const employeeSlice = createSlice({
             .addCase(updateEmployee.fulfilled, (state, action) =>{
                 const updated = action.payload.employee;
                 const index = state.data.findIndex(emp => emp.employee_id === updated.employee_id);
-                if(index !==1){
+                if(index !== -1){
                     state.data[index] = updated;
                 }
+            })
+            //setter inn det ny opprettet ansatt i employees data
+            .addCase(createEmployee.fulfilled, (state, action) => {
+                const newEmployee = action.payload;
+                state.data.push(newEmployee);
             })
     }
 });
