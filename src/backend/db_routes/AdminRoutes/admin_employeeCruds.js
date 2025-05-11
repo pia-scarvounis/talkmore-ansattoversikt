@@ -155,8 +155,7 @@ router.put('/:id', async (req, res) => {
                         field_changed, old_value, new_value, change_date
                     )
                     VALUES (?, ?, ?, ?, ?, NOW())`
-                    ,
-                    [
+                    ,[
                         id, 
                         amdinId,
                         key,
