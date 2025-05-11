@@ -30,6 +30,7 @@ const ManageTeams = () => {
     dispatch(fetchMetaData()); // henter data fra backend når komponenten lastes inn (engangsbruk fordi dependency-array er [dispatch])
   }, [dispatch]);
   
+  
 
   // hente ut avd + teams fra dropdown
   const [selectedDepartment, setSelectedDepartment] = useState("");
@@ -139,6 +140,17 @@ const [updateError, setUpdateError] = useState("");
       });
     console.log("Sletter team...");
   };
+
+  useEffect(() => {
+    if (updateSuccess) {
+      const timer = setTimeout(() => {
+        setUpdateSuccess(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [updateSuccess]);
+
 
   return (
     <div className="form-page">
