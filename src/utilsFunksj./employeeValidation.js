@@ -47,17 +47,36 @@ export function validateEmployeeForm(formData) {
     return { valid: false, error: "Ugyldig sluttdato." };
   }
 
-  // Leave (permisjon) validering
-  if (
-    formData.leave &&
-    formData.leave.leave_start_date &&
-    !formData.leave.leave_end_date
-  ) {
-    return {
-      valid: false,
-      error: "Du må fylle inn sluttdato for permisjon hvis startdato er satt.",
-    };
-  }
+  // Leave (permisjon) validering / man kan ikke ha tomme felter hvis man har fylt inn et av feltene
+  if (formData.leave){
 
-  return { valid: true, error: null };
+    const { leave_start_date, leave_end_date, leave_percentage } = formData.leave;
+
+    const hasStart = leave_start_date && leave_start_date.trim() !== "";
+    const hasEnd = leave_end_date && leave_end_date.trim() !== "";
+    const hasPercent = leave_percentage && leave_percentage.trim() !== "";
+
+    //hvis start dato er satt og ikke slutt dato -permisjon
+    if(hasStart && !hasEnd){
+      return {
+        valid: false,
+        error: 'Du må fylle inn sluttdato for permisjon hvis du har satt startdato'
+      };
+    }
+    //Hvis slutt dato er satt og ikke start dato er satt -permisjon
+    if(!hasStart && hasEnd){
+      return{
+        valid: false,
+        error: 'Du må fylle inne startdato hvis du har satt sluttdato'
+      }
+    }
+    //hvis begge datoer er satt og ikke % 
+    if(hasStart && hasEnd && !hasPercent){
+      return{
+        valid: false,
+        error: 'Du må fylle inn permisjon % hvis du har satt datoer'
+      }
+    }
+
+  }
 }
