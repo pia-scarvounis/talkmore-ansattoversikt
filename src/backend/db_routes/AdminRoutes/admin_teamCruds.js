@@ -1,11 +1,13 @@
 // rutere for Admin cruds på team
 import {Router} from 'express';
 import pool from   '../../config/db.js'
+//middleware admin
+import { authenticateToken, requireAdmin } from '../../AuthenticateUsers/AuthMiddleware.js';
 
 const router = Router();
 
 //Legger til nytt team med department id (hvilken avdeling teamet skal tilhøre)
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, requireAdmin, async (req, res) => {
     const {team_name, department_id } = req.body;
 
     if(!team_name || !department_id){
@@ -25,7 +27,7 @@ router.post('/', async (req, res) => {
 });
 
 //Endrer team i en avdeling
-router.put('/:team_id', async (req, res) => {
+router.put('/:team_id', authenticateToken, requireAdmin, async (req, res) => {
     //henter team id fra url
     const {team_id} = req.params;
     //henter nye team navn og avd id fra body
@@ -48,7 +50,7 @@ router.put('/:team_id', async (req, res) => {
     }
 });
 
-router.delete('/:team_id', async (req, res) => {
+router.delete('/:team_id', authenticateToken, requireAdmin, async (req, res) => {
     //henter id fra url
     const {team_id} = req.params;
 
