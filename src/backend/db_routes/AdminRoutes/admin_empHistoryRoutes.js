@@ -2,6 +2,8 @@
 import {  Router } from "express";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
+//middleware admin
+import { authenticateToken, requireAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
 
 const router = Router();
 dotenv.config();
@@ -9,7 +11,7 @@ dotenv.config();
 //Post histotikk skjer i employee put rute når man endrer en ansatt- da legges det til i historikken
 
 //Endre historikk med changeLog id
-router.patch('/:changleLog_id', async (req, res) => {
+router.patch('/:changleLog_id', authenticateToken, requireAdmin, async (req, res) => {
 
     const {changeLog_id} = req.params;
     const fields = [];
