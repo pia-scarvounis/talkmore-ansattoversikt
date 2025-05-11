@@ -25,6 +25,7 @@ const router = Router();
 const [dbResult] = await pool.query("SELECT DATABASE() AS db");
 console.log("Koden kjører mot databasen:", dbResult[0].db);
 
+
 //Henter alle ansatte fra genesys api med token som parameter
 async function fetchAllGenEmployees(token){
     let allGenEmployees = [];
@@ -50,6 +51,7 @@ async function fetchAllGenEmployees(token){
 //API Genesys implementasjon
 //Hente ut alle brukere fra API genesys og hvis det ikke ligger i vår database, legg dem til.
 //sammenligne email fra api med det som ligger i databasen epost 
+//setter ikke midleware på denne da den skjer automatisk i bakgrunn i cronjob
 router.post('/', async (req, res) => {
     try {
       const accessTokenGen = await getOAuthToken();
