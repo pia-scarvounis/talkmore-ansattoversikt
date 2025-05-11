@@ -10,6 +10,9 @@ import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
 //Så det krever at vi setter inn authmiddleware i rutene her som sjekker om brukeren
 //har tilgang til ruterene dette kommer senere!!
 
+//middleware
+import { authenticateToken, requireTeamLeaderOrAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
+
 dotenv.config();
 
 //Justere denne hente dette fra config!!
@@ -236,7 +239,7 @@ router.post('/', async (req, res) => {
 
 
 // router for å fetche employees fra databasen vår
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, requireTeamLeaderOrAdmin, async (req, res) => {
     try {
       //henter ut alt vi trenger i employee json objektet
       const [rows] = await pool.query(`
