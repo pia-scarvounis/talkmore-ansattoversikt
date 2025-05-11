@@ -12,7 +12,7 @@
   height: 30px;
 }
 
-/* Historikk tabell container */
+/* Historikk tabell styling */
 .history-table-container {
   background-color: #fff;
   border-radius: 8px;
@@ -20,54 +20,26 @@
   width: 100%;
 }
 
-/* Rosa eller blå boble rundt hele kolonneoverskriftene */
-.history-table-header {
-  border: 2px solid #8fd1ef; /* Default blå */
-  border-radius: 12px;
-  padding: 8px;
-  margin-bottom: 8px;
-  display: block;
-  width: auto;
-  max-width: 100%;
-  text-align: left;
-  box-sizing: border-box;
-}
-
-.history-table-header.pink-border {
-  border-color: #f29fc8;
-}
-
-.history-table-header.blue-border {
-  border-color: #8fd1ef;
-}
-
-/* Historikk tabell styling */
 .history-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   background-color: #fff;
   table-layout: auto;
 }
 
-/* Sikrer at headeren holder seg stabil */
-.history-table thead {
-  display: table;
-  width: 100%;
-  box-sizing: border-box;
-}
-
+/* Kolonneoverskrifter (th) */
 .history-table th {
-  padding: 12px 10px;
+  padding: 12px 8px;
   text-align: left;
   font-weight: 600;
-  background-color: transparent;
+  background-color: #f3f4f6;
   white-space: nowrap;
+  border-bottom: 1px solid #ddd;
 }
 
 /* Rader i tabellen */
 .history-table td {
-  padding: 12px 10px;
+  padding: 12px 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
   font-size: 14px;
