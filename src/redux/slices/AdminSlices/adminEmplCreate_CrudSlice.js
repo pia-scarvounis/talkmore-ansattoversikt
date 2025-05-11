@@ -10,7 +10,7 @@ export const createEmployee = createAsyncThunk(
     'employee/createEmployee',
     async(employeeData, { rejectWithValue }) => {
         try{
-            const response = await axios.post('http://localhost:3000/api/employee', employeeData);
+            const response = await api.post('http://localhost:3000/api/employee', employeeData);
             return response.data.employee;
 
         }catch(err){

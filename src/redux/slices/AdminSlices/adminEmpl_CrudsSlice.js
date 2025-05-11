@@ -13,7 +13,7 @@ export const updateEmployee = createAsyncThunk(
     'updateEmployee/updateEmployee',
     async ({ id, updatedEmployeeData}, {rejectedWithValue}) =>{
         try{
-            const response = await axios.put(`http://localhost:3000/api/employee/${id}`, 
+            const response = await api.put(`http://localhost:3000/api/employee/${id}`, 
             updatedEmployeeData,
             {
                 headers:{ 
