@@ -107,7 +107,7 @@ router.put('/:id', async (req, res) => {
         ];
 
         //lage keys for changeLog, kun disse skal settes i changeLog (permisjon kommer i egen)
-        const keysToLog = ['start_date, end_date', 'team_id', 'workPosistion_id']
+        const keysToLog = ['start_date', 'end_date', 'form_of_employeement', 'employee_percentages', 'employeeNr_Talkmore', 'employeeNr_Telenor', 'team_id', 'workPosistion_id']
 
         //for loop setter inn fields
         for(const key of keysToCheck){
