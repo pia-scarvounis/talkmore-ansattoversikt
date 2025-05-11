@@ -276,7 +276,7 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
                 VALUES (?, ?, ?, ?, ?, NOW())`,
           [
             id,
-            amdinId,
+            adminId,
             "leave",
             normOldPercentage
               ? `${normOldPercentage}% fra ${normOldStart} til ${normOldEnd}`
