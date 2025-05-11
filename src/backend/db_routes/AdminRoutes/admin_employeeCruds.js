@@ -224,12 +224,15 @@ router.put('/:id', async (req, res) => {
         , [id, updatedLeave.leave_percentage || null, updatedLeave.leave_start_date || null, updatedLeave.leave_end_date || null]);
 
         //deretter setter dette seg i changelog hvis endret
-        await conn.query(`INSERT INTO changeLog (employee_id, admin_id, field_changed, old_value, new_value, change_date) VALUES (?, ?, ?, ?, ?, NOW())`
+       
+        await conn.query(
+                `INSERT INTO changeLog (employee_id, admin_id, field_changed, old_value, new_value, change_date) 
+                VALUES (?, ?, ?, ?, ?, NOW())`
         , [id, amdinId, 'leave', normOldPercentage
-        ? `${normOldPercentage}% fra ${normOldStart}`
+        ? `${normOldPercentage}% fra ${normOldStart} til ${normOldEnd}`
         : 'Ingen',
       normNewPercentage
-        ? `${normNewPercentage}% fra ${normNewStart}`
+        ? `${normNewPercentage}% fra ${normNewStart} til ${normNewEnd}`
         : 'Ingen']);
       }
     }
