@@ -2,6 +2,8 @@ import { application, json, Router } from "express";
 import dBpool from "../../config/db.js";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
+//middleware
+import { authenticateToken, requireTeamLeaderOrAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
 
 dotenv.config();
 
@@ -14,7 +16,7 @@ console.log("Koden kjører mot databasen:", dbResult[0].db);
 //NOTES rutere for opprette, endre og slette notater (admin og leserollen)
 
 //NOTE POST - opprette notat
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, requireTeamLeaderOrAdmin, async (req, res) => {
   const { employee_id, note } = req.body;
   if (!employee_id || !note) {
     return res.status(400).json({ error: "mangler data" });
@@ -40,7 +42,7 @@ router.post("/", async (req, res) => {
 });
 
 //NOTE PUT - endre notat
-router.put("/:noteId", async (req, res) => {
+router.put("/:noteId", authenticateToken, requireTeamLeaderOrAdmin, async (req, res) => {
   //henter id fra url
   const noteId = req.params.noteId;
   //notat som endres i body (input)
@@ -61,7 +63,7 @@ router.put("/:noteId", async (req, res) => {
 });
 
 //NOTE GET - hente notat for en ansatt
-router.get("/:employeeId", async (req, res) => {
+router.get("/:employeeId", authenticateToken, requireTeamLeaderOrAdmin, async (req, res) => {
   const employee_id = req.params.employeeId;
 
   try {
@@ -77,7 +79,7 @@ router.get("/:employeeId", async (req, res) => {
 });
 
 //NOTE DELETE - slette et notat
-router.delete("/:noteId", async (req, res) => {
+router.delete("/:noteId", authenticateToken, requireTeamLeaderOrAdmin, async (req, res) => {
   const { noteId } = req.params;
 
   try {
