@@ -63,7 +63,8 @@ const [updateError, setUpdateError] = useState("");
     setShowSaveAlert(false);
     if (saveType === "lagre") {
       if (!selectedTeam || !newTeamName) {
-        alert("Du må velge team og skrive inn nytt navn.");
+        setUpdateError("Noe gikk galt under lagring av nytt teamnavn. Du må velge avdeling, team som skal endres, og skrive inn nytt navn.");
+        ;
         return;
       }
 
@@ -141,6 +142,7 @@ const [updateError, setUpdateError] = useState("");
     console.log("Sletter team...");
   };
 
+  // oppdater team - suksessmld fjernes etter 3 sek
   useEffect(() => {
     if (updateSuccess) {
       const timer = setTimeout(() => {
@@ -150,6 +152,8 @@ const [updateError, setUpdateError] = useState("");
       return () => clearTimeout(timer);
     }
   }, [updateSuccess]);
+
+  // oppdater team
 
 
   return (
@@ -222,8 +226,10 @@ const [updateError, setUpdateError] = useState("");
   <AlertBox
     type="error"
     title="Feil"
-    message={updateError}
-  />
+    message={updateError}>
+      <RedButton text="Lukk" onClick={() => setUpdateError("")} />
+    </AlertBox>
+ 
 )}
 
         {/* Opprett nytt Team */}
