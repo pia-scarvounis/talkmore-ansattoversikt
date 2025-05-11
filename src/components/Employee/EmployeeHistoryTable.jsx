@@ -57,7 +57,6 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
 
   return (
     <div className="history-table-wrapper">
-      {/* Historikk-overskriften med ikon */}
       <div className="history-header">
         <img src={historyIcon} alt="Historikk" className="history-icon" />
         <h2>Historikk</h2>

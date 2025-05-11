@@ -12,12 +12,25 @@
   height: 30px;
 }
 
-/* Rosa eller blå boble rundt kun kolonneoverskriftene */
-.history-table-header {
+/* Historikk tabell container */
+.history-table-container {
   background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Rosa eller blå boble rundt hele kolonneoverskriftene */
+.history-table-header {
   border: 2px solid #8fd1ef; /* Default blå */
   border-radius: 12px;
-  margin-bottom: 40px;
+  padding: 8px;
+  margin-bottom: 8px;
+  display: block;
+  width: auto;
+  max-width: 100%;
+  text-align: left;
+  box-sizing: border-box;
 }
 
 .history-table-header.pink-border {
@@ -29,31 +42,41 @@
 }
 
 /* Historikk tabell styling */
-.history-table-container {
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
 .history-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background-color: #fff;
+  table-layout: auto;
 }
 
-.history-table th,
+/* Sikrer at headeren holder seg stabil */
+.history-table thead {
+  display: table;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.history-table th {
+  padding: 12px 10px;
+  text-align: left;
+  font-weight: 600;
+  background-color: transparent;
+  white-space: nowrap;
+}
+
+/* Rader i tabellen */
 .history-table td {
-  padding: 12px 8px;
+  padding: 12px 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
   font-size: 14px;
+  white-space: nowrap;
 }
 
-/* Overskrifter i tabellen */
-.history-table th {
-  font-weight: 600;
-  background-color: transparent; /* Fjernet grå bakgrunn */
-  border-bottom: 2px solid transparent;
+/* Hover-effekt for radene i tabellen */
+.history-table tr:hover {
+  background-color: #f9f9f9;
 }
 
 /* Redigeringsikon styling */
