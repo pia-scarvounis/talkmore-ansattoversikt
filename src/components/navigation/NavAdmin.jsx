@@ -10,13 +10,23 @@ import "../../styles/nav.css";
 const NavAdmin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
-  
+
   // hente avdelinger og teams fra Redux
   const metaData = useSelector((state) => state.metaData);
 const departments = metaData?.departments || [];
 const teams = metaData?.teams || [];
+console.log("Teams i navigasjonen:", teams);
 
+
+  useEffect(() => {
+    if (teams.length === 0 || departments.length === 0) {
+      dispatch(fetchMetaData());
+    }
+  }, [dispatch, teams.length, departments.length]);
+  
+  
+  const { user } = useSelector((state) => state.auth);
+ 
 
     // når user blir null (logget ut), send til login
     useEffect(() => {

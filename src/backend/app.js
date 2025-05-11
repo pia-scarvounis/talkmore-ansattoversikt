@@ -56,9 +56,9 @@ app.use('/api/metaData', metaDataGet)
 //rutere for admin: post, put employees
 app.use('/api/employee', adminEmployeeCruds);
 //endre historikk felter for en ansatt
-app.use('api/history', adminHistoryCrud)
+app.use('/api/history', adminHistoryCrud)
 //rutere for adminstrere team POST, PUT og DELETE
-app.use('api/team', adminTeamCruds);
+app.use('/api/team', adminTeamCruds);
 
 //starte serveren
 app.listen(3000, ()=>{
