@@ -91,20 +91,23 @@ const EditHistoryPopup = ({
         return;
       }
 
-      const percentageOnly = editData.new_value?.toString().split("%")[0];
+      let newValue = editData.new_value;
+
+      //håndtere dato og leave dato
+      if (type === "leave" || type === "leave_percentage") {
+        const percent = editData.new_value?.toString().split("%")[0];
+        newValue = `${percent}% fra ${editData.start_date} til ${editData.end_date}`;
+      } else if (type === "end_date") {
+        newValue = editData.end_date; 
+      }
+      
       // Bygger oppdatert data basert på type
       const updatedData = {
         field_changed:history.field_changed,
         old_value: editData.old_value,
-        new_value:  type === "leave" || type === "leave_percentage"
-        ? `${percentageOnly}% fra ${editData.start_date} til ${editData.end_date}`
-        : editData.new_value,
-      };
-
-      // Legger til sluttdato hvis type er end_date
-      if (type === "end_date") {
-        updatedData.end_date = editData.end_date;
+        new_value: newValue
       }
+
 
       console.log("Sending ChangeLog ID:", history.changeLog_id);
       console.log("Updated Data:", updatedData);
