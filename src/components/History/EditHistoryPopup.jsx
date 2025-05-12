@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import GreenButton from "../UI/GreenButton";
 import RedButton from "../UI/RedButton";
 import "../../styles/popup.css";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { updateChangeLog } from "../../redux/slices/AdminSlices/adminHistoryCrudSlice";
 
@@ -91,7 +90,9 @@ const EditHistoryPopup = ({
       const updatedData = {
         field_changed:history.field_changed,
         old_value: editData.old_value,
-        new_value: editData.new_value,
+        new_value: type === "leave" || type === "leave_percentage"
+        ? `${editData.new_value}% fra ${editData.start_date} til ${editData.end_date}`
+        : editData.new_value,
       };
 
       // Legger til sluttdato hvis type er end_date
