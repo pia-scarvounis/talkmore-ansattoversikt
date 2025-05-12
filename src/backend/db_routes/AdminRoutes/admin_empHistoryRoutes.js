@@ -39,6 +39,42 @@ router.patch('/:changleLog_id', authenticateToken, requireAdmin, async (req, res
             `UPDATE changeLog SET ${(fields.join(', '))} WHERE changeLog_id = ?`,
             [...values, changeLog_id]
         );
+        //Setter inn i de nye endringene i feltene i employee tabellen
+        //henter changelog med changelog id og employee_id som skal brukes videre til å sette inn i emp tabellen
+        const [[logRow]] = await pool.query(
+            `SELECT employee_id, field_changed, new_value FROM changeLog WHERE changeLog_id = ?`,
+            [changeLog_id]
+        );
+        
+        const employeeId = logRow.employee_id;
+        const field = logRow.field_changed;
+        const value = logRow.new_value;
+
+        const employeeFields = [
+            'start_date', 'end_date', 'team_id', 'workPosistion_id',
+            'form_of_employeement', 'employee_percentages'
+        ];
+        if(employeeFields.includes(field)) {
+            await pool.query(
+                `UPDATE employee SET ${field} = ? WHERE employee_id = ?`,
+                [value, employeeId]
+            );
+        }
+
+        //hvis permisjon er endret i historikken
+        if (field === 'permisjon') {
+            // trekk ut prosent og dato fra tekst, f.eks. "50% fra 2023-01-01 til 2023-06-01"
+            const match = value.match(/(\d+)% fra (\d{4}-\d{2}-\d{2}) til (\d{4}-\d{2}-\d{2})/);
+            if (match) {
+              const [, percentage, start, end] = match;
+              await pool.query(`
+                UPDATE employeeLeave 
+                SET leave_percentage = ?, leave_start_date = ?, leave_end_date = ?
+                WHERE employee_id = ?
+              `, [percentage, start, end, employeeId]);
+            }
+          }
+
         res.status(200).json({message: 'Historikk oppdatert'});
 
      }catch(err){
