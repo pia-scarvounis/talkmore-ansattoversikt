@@ -13,38 +13,38 @@ dotenv.config();
 //Endre historikk med changeLog id
 router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) => {
 
-    console.log("REQ.PARAMS:", req.params);
-  console.log("REQ.BODY:", req.body);
-
   const { changeLog_id } = req.params;
   const {field_changed, old_value, new_value} = req.body;
-  const fields = [];
-  const values = [];
+  
 
-  //felter fra historikk loggen disse skal brukes ved endring av historikk fra gammel verdi til ny verdi
-  const allowedFields = ["field_changed", "old_value", "new_value"];
+  console.log("REQ.PARAMS:", req.params);
+  console.log("REQ.BODY:", req.body);
 
-  for (const field of allowedFields) {
-    if (field in req.body) {
-      //pusher inn field i fields
-      fields.push(`${field} = ?`);
-      //pusher verdiene fra body i values
-      values.push(req.body[field]);
+
+  if (!field_changed || !old_value || !new_value) {
+    return res.status(400).json({ message: 'Manglende felt i request body' });
+  }
+
+    try{
+        //felter fra historikk loggen disse skal brukes ved endring av historikk fra gammel verdi til ny verdi
+        const allowedFields = ["field_changed", "old_value", "new_value"];
+        const fields = [];
+        const values = [];
+
+        for (const field of allowedFields) {
+            if (field in req.body) {
+        //pusher inn field i fields
+        fields.push(`${field} = ?`);
+        //pusher verdiene fra body i values
+        values.push(req.body[field]);
+        }
     }
-    if (!field_changed || !old_value || !new_value) {
-        return res.status(400).json({ message: 'Manglende felt i request body' });
-      }
-    
-     try{
 
         const [result] = await pool.query(
             `UPDATE changeLog SET ${(fields.join(', '))} WHERE changeLog_id = ?`,
             [...values, changeLog_id]
         );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Fant ikke endringslogg med gitt ID' });
-          }
         //Setter inn i de nye endringene i feltene i employee tabellen
         //henter changelog med changelog id og employee_id som skal brukes videre til å sette inn i emp tabellen
         const [[logRow]] = await pool.query(
@@ -80,14 +80,13 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
               `, [percentage, start, end, employeeId]);
             }
           }
-
-        res.status(200).json({message: 'Historikk oppdatert'});
+          
+          res.status(200).json({message: 'Historikk oppdatert'});
 
      }catch(err){
         console.error('Feil ved oppdatering av historikk', err);
         res.status(500).json({error:'Kunne ikke oppdatere historikk'});
     }
-}
 });
 
 //Delete ruter for å slette felt i historikken??? man kan kun endre bør ikke slette felt i historikk
