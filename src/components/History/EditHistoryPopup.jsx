@@ -108,6 +108,9 @@ const EditHistoryPopup = ({
         new_value: newValue
       }
 
+      if (type === "end_date") {
+        updatedData.end_date = editData.end_date;
+      }
 
       console.log("Sending ChangeLog ID:", history.changeLog_id);
       console.log("Updated Data:", updatedData);
