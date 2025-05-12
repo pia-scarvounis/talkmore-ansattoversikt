@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchMetaData } from "./redux/slices/metaDataCrudsSlice";
+
 import Login from "./pages/Login";
 import DashBoardAdmin from "./pages/DashboardAdmin";
 import ProfileCards from "./components/Employee/ProfileCards";
@@ -14,9 +15,9 @@ import ManageSystems from "./pages/ManageSystems";
 import ManageTeams from "./pages/ManageTeams";
 import RegisterEmployee from "./pages/RegisterEmployee";
 
-
-
 import ErrorBoundry from "./ErrorBoundry";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+
 
 import "./styles/global.css";
 import "./styles/buttons.css";
@@ -34,9 +35,11 @@ function App() {
     <ErrorBoundry>
       <Router>
         <Routes>
+          {/* Login-side */}
           <Route path="/" element={<Login />} />
-          <Route path="/admin-dashboard" element={<DashBoardAdmin />} />
-          <Route path="/profilecards" element={<ProfileCards />} />
+          {/* Dashboard for både Admin og Teamleder */}
+          <Route path="/admin-dashboard" element={<ProtectedRoute allowedRoles={['Admin', 'ReadOnly']}><DashBoardAdmin /></ProtectedRoute>} />
+
           <Route path="/register" element={<RegisterEmployee />} />
           <Route path="/admin/edit/:id" element={<EditEmployee />} />
           <Route
