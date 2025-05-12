@@ -1,14 +1,16 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import axios from "axios";
 import { fetchEmployeeHistory } from "../../redux/slices/historySlice";
 import editIcon from "../../assets/icons/edit.svg";
 import historyIcon from "../../assets/icons/history.svg";
 import "../../styles/historyTable.css";
+import EditHistoryPopup from "../History/EditHistoryPopup";
 
 const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
   const dispatch = useDispatch();
@@ -16,10 +18,18 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
     (state) => state.employeeHistory
   );
 
-  // Henter den innloggede brukeren (forutsatt at den ligger i Redux)
+  // Henter den innloggede brukeren
   const loggedInUser = useSelector(
     (state) => state.user?.name || "Ukjent Bruker"
   );
+
+  // Henter team og stillinger fra Redux
+  const teams = useSelector((state) => state.metaData.teams);
+  const positions = useSelector((state) => state.metaData.posistions);
+
+  // State for popup
+  const [editPopup, setEditPopup] = useState(false);
+  const [selectedHistory, setSelectedHistory] = useState(null);
 
   // Henter historikk for ansatt ved lasting av komponenten
   useEffect(() => {
@@ -51,6 +61,26 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
     return fieldDescriptions[fieldName] || fieldName;
   };
 
+  // Åpner redigerings-popupen
+  const handleEdit = (history) => {
+    setSelectedHistory(history);
+    setEditPopup(true);
+  };
+
+  // Håndterer lagring av redigert historikk
+  const saveEdit = async (updatedData) => {
+    try {
+      await axios.patch(
+        `/api/history/${selectedHistory.changeLog_id}`,
+        updatedData
+      );
+      dispatch(fetchEmployeeHistory(employeeId)); // Oppdaterer historikken
+      setEditPopup(false);
+    } catch (error) {
+      console.error("Feil ved lagring av historikk", error);
+    }
+  };
+
   // Definerer kolonnene for tabellen
   const columns = useMemo(
     () => [
@@ -74,7 +104,6 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
       {
         accessorKey: "endret_av_navn",
         header: "Endret av",
-        // Viser den innloggede brukeren hvis "endret_av_navn" ikke finnes
         cell: ({ getValue }) => getValue() || loggedInUser,
       },
       {
@@ -87,7 +116,15 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
       },
       {
         header: "Rediger",
-        cell: () => <img src={editIcon} alt="Rediger" className="edit-icon" />,
+        cell: ({ row }) => (
+          <img
+            src={editIcon}
+            alt="Rediger"
+            className="edit-icon"
+            onClick={() => handleEdit(row.original)}
+            style={{ cursor: "pointer" }}
+          />
+        ),
       },
     ],
     [loggedInUser] // Avhenger av den innloggede brukeren
@@ -145,6 +182,18 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Popup for redigering */}
+      {editPopup && (
+        <EditHistoryPopup
+          history={selectedHistory}
+          type={selectedHistory?.field_changed}
+          teams={teams}
+          positions={positions}
+          onClose={() => setEditPopup(false)}
+          onSave={() => dispatch(fetchEmployeeHistory(employeeId))}
+        />
+      )}
     </div>
   );
 };
