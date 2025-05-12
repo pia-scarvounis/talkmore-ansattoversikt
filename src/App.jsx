@@ -39,7 +39,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/admin-dashboard" element={<DashBoardAdmin />} />
-          <Route path="/readonly-dashboard" element={<DashboardReadOnly />} />
           <Route path="/profilecards" element={<ProfileCards />} />
           <Route path="/profilecardlists" element={<ProfileCardLists />} />
           <Route path="/register" element={<RegisterEmployee />} />
