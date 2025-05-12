@@ -10,7 +10,7 @@ export const updateChangeLog = createAsyncThunk(
   "changeLog/updateChangeLog",
   async ({ changeLogId, updatedFields }, { rejectedWithValue }) => {
     try {
-      const response = await axios.patch(
+      const response = await api.patch(
         `http://localhost:3000/api/history/${changeLogId}`,
         updatedFields,
         {

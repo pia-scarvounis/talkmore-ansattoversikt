@@ -56,7 +56,7 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
                 [value, employeeId]
             );
         }
-
+        
         //hvis permisjon er endret i historikken
         if (field === 'permisjon') {
             // trekk ut prosent og dato fra tekst, f.eks. "50% fra 2023-01-01 til 2023-06-01"
