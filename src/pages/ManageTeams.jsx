@@ -29,19 +29,17 @@ const ManageTeams = () => {
   useEffect(() => {
     dispatch(fetchMetaData()); // henter data fra backend når komponenten lastes inn (engangsbruk fordi dependency-array er [dispatch])
   }, [dispatch]);
-  
 
-  // hente ut avd + teams fra dropdown
+  //  Endre teamnavn:
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
   const [newTeamName, setNewTeamName] = useState("");
 
-  // brukes når admin skal opprette nytt team:
-  // (brukes senere når vi sender data til databasen via Redux)
+  // Opprette nytt team:
   const [newTeamDepartment, setNewTeamDepartment] = useState(""); // avdeling ID
   const [newTeamNameCreate, setNewTeamNameCreate] = useState(""); // navnet på nytt team
 
-  // brukes når admin skal slette et team
+  // Slett team:
   const [deleteTeamDepartment, setDeleteTeamDepartment] = useState("");
   const [deleteTeamId, setDeleteTeamId] = useState("");
 
@@ -49,8 +47,9 @@ const ManageTeams = () => {
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const [updateSuccess, setUpdateSuccess] = useState(false);
-const [updateError, setUpdateError] = useState("");
-
+  const [updateError, setUpdateError] = useState("");
+  const [createSuccess, setCreateSuccess] = useState(false);
+  const [createError, setCreateError] = useState("");
 
   const handleSave = (type) => {
     setSaveType(type);
@@ -62,7 +61,9 @@ const [updateError, setUpdateError] = useState("");
     setShowSaveAlert(false);
     if (saveType === "lagre") {
       if (!selectedTeam || !newTeamName) {
-        alert("Du må velge team og skrive inn nytt navn.");
+        setUpdateError(
+          "Noe gikk galt under lagring av nytt teamnavn. Du må velge avdeling, team som skal endres, og skrive inn nytt navn."
+        );
         return;
       }
 
@@ -80,19 +81,17 @@ const [updateError, setUpdateError] = useState("");
           dispatch(fetchMetaData());
           setUpdateSuccess(true);
           setNewTeamName("");
-          // window.location.href = "/admin-dashboard"; // tvinger siden til å oppdatere navigasjonen
-          setSelectedTeam("");    
+          setSelectedTeam("");
           setSelectedDepartment("");
         })
         .catch((error) => {
           console.error("Feil ved oppdatering:", error);
           setUpdateError("Noe gikk galt under lagring av nytt teamnavn");
-
         });
     }
     if (saveType === "leggtil") {
       if (!newTeamNameCreate || !newTeamDepartment) {
-        alert("Du må velge avdeling og skrive inn teamnavn.");
+        setCreateError("Du må velge avdeling og skrive inn teamnavn.");
         return;
       }
 
@@ -105,14 +104,13 @@ const [updateError, setUpdateError] = useState("");
         .unwrap()
         .then(() => {
           dispatch(fetchMetaData());
-          alert("Nytt team er opprettet!");
+          setCreateSuccess(true);
           setNewTeamNameCreate("");
           setNewTeamDepartment("");
-          window.location.href = "/admin-dashboard";
         })
         .catch((error) => {
           console.error("Feil ved oppretting:", error);
-          alert("Det oppstod en feil ved opprettelse.");
+          setCreateError("Det oppstod en feil ved opprettelse.");
         });
     }
   };
@@ -128,17 +126,49 @@ const [updateError, setUpdateError] = useState("");
       .unwrap()
       .then(() => {
         dispatch(fetchMetaData()); // henter oppdatert liste
-        alert("Team er slettet!");
+        setDeleteSuccess(true);
         setDeleteTeamId("");
         setDeleteTeamDepartment("");
-        window.location.href = "/admin-dashboard"; // tvinger navigasjonen til å oppdatere
       })
       .catch((error) => {
         console.error("Feil ved sletting:", error);
-        alert("Det oppstod en feil ved sletting.");
+        setDeleteError("Det oppstod en feil ved sletting.");
       });
     console.log("Sletter team...");
   };
+
+  // oppdater team - suksessmld fjernes etter 3 sek
+  useEffect(() => {
+    if (updateSuccess) {
+      const timer = setTimeout(() => {
+        setUpdateSuccess(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [updateSuccess]);
+
+  // opprett team - suksessmld fjernes etter 3 sek
+  useEffect(() => {
+    if (createSuccess) {
+      const timer = setTimeout(() => {
+        setCreateSuccess(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [createSuccess]);
+
+  // delete team - suksessmld fjernes etter 3 sek
+  useEffect(() => {
+    if (deleteSuccess) {
+      const timer = setTimeout(() => {
+        setDeleteSuccess(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [deleteSuccess]);
 
   return (
     <div className="form-page">
@@ -146,6 +176,7 @@ const [updateError, setUpdateError] = useState("");
 
       <div className="form-content page-header-wrapper">
         <PageHeader title="Administer Team" />
+
         {/* Endre Teamnavn  */}
         <div className="form-section team-box">
           <h2 className="section-heading">Endre Teamnavn</h2>
@@ -197,22 +228,20 @@ const [updateError, setUpdateError] = useState("");
             <GreenButton text="Lagre" onClick={() => handleSave("lagre")} />{" "}
           </div>
         </div>
-        
-        {updateSuccess && (
-  <AlertBox
-    type="success"
-    title="Oppdatert!"
-    message="Teamnavnet ble oppdatert."
-  />
-)}
 
-{updateError && (
-  <AlertBox
-    type="error"
-    title="Feil"
-    message={updateError}
-  />
-)}
+        {updateSuccess && (
+          <AlertBox
+            type="success"
+            title="Oppdatert!"
+            message="Teamnavnet ble oppdatert."
+          />
+        )}
+
+        {updateError && (
+          <AlertBox type="error" title="Feil" message={updateError}>
+            <RedButton text="Lukk" onClick={() => setUpdateError("")} />
+          </AlertBox>
+        )}
 
         {/* Opprett nytt Team */}
         <div className="form-section team-box">
@@ -242,6 +271,20 @@ const [updateError, setUpdateError] = useState("");
               />
             </div>
           </div>
+
+          {createSuccess && (
+            <AlertBox
+              type="success"
+              title="Team opprettet!"
+              message="Nytt team ble lagt til."
+            />
+          )}
+
+          {createError && (
+            <AlertBox type="error" title="Feil" message={createError}>
+              <RedButton text="Lukk" onClick={() => setCreateError("")} />
+            </AlertBox>
+          )}
 
           <div className="manage-teams-buttons">
             <GreenButton
@@ -290,6 +333,20 @@ const [updateError, setUpdateError] = useState("");
               </select>
             </div>
           </div>
+
+          {deleteSuccess && (
+            <AlertBox
+              type="success"
+              title="Slettet!"
+              message="Teamet ble slettet."
+            />
+          )}
+
+          {deleteError && (
+            <AlertBox type="error" title="Feil" message={deleteError}>
+              <RedButton text="Lukk" onClick={() => setDeleteError("")} />
+            </AlertBox>
+          )}
 
           <div className="manage-teams-buttons">
             <RedButton text="Slett" onClick={handleDelete} />
