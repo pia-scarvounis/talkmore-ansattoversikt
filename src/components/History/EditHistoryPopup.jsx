@@ -28,8 +28,13 @@ const EditHistoryPopup = ({
 
   useEffect(() => {
     if (history) {
+      let formattedOldValue = history.old_value || "";
+
+    if ((type === "leave" || type === "leave_percentage") && history.start_date && history.end_date) {
+    formattedOldValue = `${history.old_value}% fra ${history.start_date} til ${history.end_date}`;
+      }
       setEditData({
-        old_value: history.old_value || "",
+        old_value: formattedOldValue,
         new_value: history.new_value || "",
         start_date:
           history.start_date ||
@@ -86,12 +91,13 @@ const EditHistoryPopup = ({
         return;
       }
 
+      const percentageOnly = editData.new_value?.toString().split("%")[0];
       // Bygger oppdatert data basert på type
       const updatedData = {
         field_changed:history.field_changed,
         old_value: editData.old_value,
-        new_value: type === "leave" || type === "leave_percentage"
-        ? `${editData.new_value}% fra ${editData.start_date} til ${editData.end_date}`
+        new_value:  type === "leave" || type === "leave_percentage"
+        ? `${percentageOnly}% fra ${editData.start_date} til ${editData.end_date}`
         : editData.new_value,
       };
 
