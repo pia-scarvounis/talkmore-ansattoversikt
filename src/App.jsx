@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchMetaData } from "./redux/slices/metaDataCrudsSlice";
 
 import Login from "./pages/Login";
@@ -25,11 +25,15 @@ import "./styles/alert.css";
 
 function App() {
   const dispatch = useDispatch();
+  const { token, user } = useSelector((state) => state.auth);
 
-  // hENT METADATA NÅR APPEN STARTER
+
+  // HENT METADATA NÅR APPEN STARTER. 
+  // grunnen til at vi sjekker token og user her: Hvis vi henter metadata før login, så får vi 401-feil fra backend.
   useEffect(() => {
-    dispatch(fetchMetaData());
-  }, [dispatch]);
+    if (token && user) {
+    dispatch(fetchMetaData()); }
+  }, [dispatch, token, user]);
   return (
     <ErrorBoundry>
       <Router>
