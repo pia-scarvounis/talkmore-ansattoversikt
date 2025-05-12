@@ -11,7 +11,7 @@ export const updateChangeLog = createAsyncThunk(
   async ({ changeLogId, updatedFields }, { rejectedWithValue }) => {
     try {
       const response = await api.patch(
-        `http://localhost:3000/api/history/${changeLogId}`,
+        `/history/${changeLogId}`,
         updatedFields,
         {
           headers: {

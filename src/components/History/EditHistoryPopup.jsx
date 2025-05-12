@@ -65,6 +65,7 @@ const EditHistoryPopup = ({
         return "Rediger historikk";
     }
   };
+  
 
   // Håndterer endring av inputverdier
   const handleChange = (e) => {
@@ -85,6 +86,7 @@ const EditHistoryPopup = ({
 
       // Bygger oppdatert data basert på type
       const updatedData = {
+        field_changed:history.field_changed,
         old_value: editData.old_value,
         new_value: editData.new_value,
       };
@@ -98,15 +100,19 @@ const EditHistoryPopup = ({
       console.log("Updated Data:", updatedData);
 
       // Bruk Redux-thunk for å oppdatere historikk
-      await dispatch(
+      const result = await dispatch(
         updateChangeLog({
           changeLogId: history.changeLog_id,
           updatedFields: updatedData,
         })
       );
-
-      onSave(); // Oppdaterer historikken i parent
-      onClose(); // Lukker popupen
+        if(result.meta.requestStatus === "fulfilled"){
+          onSave(); // Oppdaterer historikken i parent
+          onClose(); // Lukker popupen
+        }else{
+          console.error("Oppdatering feilet:", result.payload);
+        }
+     
     } catch (error) {
       console.error("Feil ved lagring av historikk", error);
     }

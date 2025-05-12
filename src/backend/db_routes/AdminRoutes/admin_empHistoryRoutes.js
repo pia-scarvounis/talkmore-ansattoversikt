@@ -12,7 +12,12 @@ dotenv.config();
 
 //Endre historikk med changeLog id
 router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) => {
+
+    console.log("REQ.PARAMS:", req.params);
+  console.log("REQ.BODY:", req.body);
+
   const { changeLog_id } = req.params;
+  const {field_changed, old_value, new_value} = req.body;
   const fields = [];
   const values = [];
 
@@ -26,15 +31,20 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
       //pusher verdiene fra body i values
       values.push(req.body[field]);
     }
-    if(fields.length === 0){
-        return res.status(400).json({error: 'ingen gyldige felter å oppdatere'});
-    }
+    if (!field_changed || !old_value || !new_value) {
+        return res.status(400).json({ message: 'Manglende felt i request body' });
+      }
+    
      try{
 
-        await pool.query(
+        const [result] = await pool.query(
             `UPDATE changeLog SET ${(fields.join(', '))} WHERE changeLog_id = ?`,
             [...values, changeLog_id]
         );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Fant ikke endringslogg med gitt ID' });
+          }
         //Setter inn i de nye endringene i feltene i employee tabellen
         //henter changelog med changelog id og employee_id som skal brukes videre til å sette inn i emp tabellen
         const [[logRow]] = await pool.query(
