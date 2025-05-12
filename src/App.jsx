@@ -35,7 +35,7 @@ function App() {
         <Routes>
           {/* Login-side */}
           <Route path="/" element={<Login />} />
-          {/* Dashboard for både Admin og Teamleder */}
+          {/* Dashboard - både Teamleder og Admin */}
           <Route
             path="/admin-dashboard"
             element={
@@ -44,7 +44,44 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* Register-side for kun Admin */}
+          {/* EditEmployee.jsx - kun Admin */}
+          <Route
+            path="/admin/edit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <EditEmployee />{" "}
+              </ProtectedRoute>
+            }
+          />
+          {/* EmployeeInfo.jsx - både Teamleder og Admin */}
+          <Route path="/employee-info/:id" element={<EmployeeInfo />} />{" "}
+          <Route
+            path="/nav/:team"
+            element={
+              <ProtectedRoute allowedRoles={["Admin", "Teamleder"]}>
+                <NavPages />
+              </ProtectedRoute>
+            }
+          />
+          {/* DashboardPages - både Teamleder og Admin */}
+          <Route
+            path="/dashboardlist/:filterKey"
+            element={
+              <ProtectedRoute allowedRoles={["Admin", "Teamleder"]}>
+                <DashboardPages />
+              </ProtectedRoute>
+            }
+          />
+          {/* AdminPanel.jsx - kun Admin */}
+          <Route
+            path="/admin-dashboard/admin-panel"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+          {/* Register.jsx - kun Admin */}
           <Route
             path="/register"
             element={
@@ -53,23 +90,23 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* EditEmployee.jsx for kun Admin */}
-          <Route path="/admin/edit/:id" element={<ProtectedRoute allowedRoles={['Admin']}><EditEmployee /> </ProtectedRoute>} />
-          {/* ManageTeams.jsx for kun Admin */}
+          {/* ManageTeams.jsx - kun Admin */}
           <Route
             path="/admin-dashboard/manage-team"
-            element={<ManageTeams />}
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <ManageTeams />{" "}
+              </ProtectedRoute>
+            }
           />
-          <Route path="/employee-info/:id" element={<EmployeeInfo />} />{" "}
-          <Route path="/nav/:team" element={<NavPages />} />
-          <Route
-            path="/dashboardlist/:filterKey"
-            element={<DashboardPages />}
-          />
-          <Route path="/admin-dashboard/admin-panel" element={<AdminPanel />} />
+          {/* ManageSystems.jsx - kun Admin */}
           <Route
             path="/admin-dashboard/manage-systems"
-            element={<ManageSystems />}
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <ManageSystems />
+              </ProtectedRoute>
+            }
           />
         </Routes>
       </Router>
