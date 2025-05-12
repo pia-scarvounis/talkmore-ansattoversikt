@@ -4,14 +4,11 @@ import { useDispatch } from "react-redux";
 import { fetchMetaData } from "./redux/slices/metaDataCrudsSlice";
 import Login from "./pages/Login";
 import DashBoardAdmin from "./pages/DashboardAdmin";
-import DashboardReadOnly from "./pages/DashboardReadOnly";
 import ProfileCards from "./components/Employee/ProfileCards";
-import ProfileCardLists from "./pages/ProfileCardLists";
 import EditEmployee from "./pages/EditEmployee";
 import EmployeeInfo from "./pages/EmployeeInfo";
 import NavPages from "./pages/NavPages";
 import DashboardPages from "./pages/DashboardPages";
-
 import AdminPanel from "./pages/AdminPanel"; 
 import ManageSystems from "./pages/ManageSystems";
 import ManageTeams from "./pages/ManageTeams";
@@ -40,7 +37,6 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/admin-dashboard" element={<DashBoardAdmin />} />
           <Route path="/profilecards" element={<ProfileCards />} />
-          <Route path="/profilecardlists" element={<ProfileCardLists />} />
           <Route path="/register" element={<RegisterEmployee />} />
           <Route path="/admin/edit/:id" element={<EditEmployee />} />
           <Route
