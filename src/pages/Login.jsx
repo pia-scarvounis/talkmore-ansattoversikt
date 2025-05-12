@@ -1,5 +1,5 @@
-import { loginUser } from "../redux/slices/authLoginSlice/loginSlice";
-import { useState } from "react";
+import { loginUser, logout } from "../redux/slices/authLoginSlice/loginSlice";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +31,10 @@ function Login() {
         setErrorMessage("E-post eller passord er feil");
       });
   };
+  useEffect(() => {
+    dispatch(logout());
+  }, [dispatch]);
+  
 
   return (
     <div className="login-page">
