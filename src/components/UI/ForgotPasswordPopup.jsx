@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { sendForgotPassword, clearResetState } from "../../redux/slices/authResetSlice";
 import GreenButton from "./GreenButton";
 import RedButton from "./RedButton";
 import "../../styles/popup.css"; 
