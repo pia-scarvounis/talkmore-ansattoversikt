@@ -14,6 +14,7 @@ import AdminPanel from "./pages/AdminPanel";
 import ManageSystems from "./pages/ManageSystems";
 import ManageTeams from "./pages/ManageTeams";
 import RegisterEmployee from "./pages/RegisterEmployee";
+import Unauthorized from "./pages/Unauthorized";
 
 import ErrorBoundry from "./ErrorBoundry";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
@@ -108,6 +109,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+            <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
       </Router>
     </ErrorBoundry>
