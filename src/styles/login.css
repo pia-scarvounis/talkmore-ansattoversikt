@@ -102,7 +102,20 @@
     justify-content: center;
   }
   
+  /* glemt passord */
+.forgot-popup-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
 
-  
+/* tekst over glemt passord inputfeltet */
+.popup-text {
+  font-size: 14px;
+  margin-bottom: 1rem;
+}
 
-  

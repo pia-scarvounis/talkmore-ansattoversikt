@@ -1,6 +1,4 @@
-  
-  
-  /* selve boksen */
+/* selve boksen */
   .popup-box {
     all: unset;
     background-color: white;
@@ -28,5 +26,25 @@
     margin-top: 40px;
   }
   
+  /* popupboks glemt passord - større */
+
+.popup-box-large {
+  max-width: 700px;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 50px;
+}
+
+/* midtstilt tittel og tekst */
+
+.popup-text {
+  text-align: center;
+  font-size: 14px;
+}
+
+
+
 
   

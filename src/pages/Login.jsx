@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import ForgotPasswordPopup from "../components/UI/ForgotPasswordPopup";
 import "../styles/login.css";
 import logo from "../assets/images/tm-logo.png";
 
@@ -10,6 +11,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showForgotPopup, setShowForgotPopup] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -67,7 +70,15 @@ function Login() {
 
             {/* glemt passord */}
             <div className="forgot-password">
-              <a href="#">Glemt passord?</a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault(); // hindrer reload..
+                  setShowForgotPopup(true); // viser popupen
+                }}
+              >
+                Glemt passord?
+              </a>
             </div>
 
             <p className="error-message">
@@ -84,6 +95,10 @@ function Login() {
           </form>
         </div>
       </div>
+         {/* glemt passord popup */}
+         {showForgotPopup && (
+        <ForgotPasswordPopup onClose={() => setShowForgotPopup(false)} />
+      )}
     </div>
   );
 }
