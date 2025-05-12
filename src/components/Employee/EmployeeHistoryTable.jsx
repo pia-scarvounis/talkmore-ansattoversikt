@@ -11,6 +11,7 @@ import editIcon from "../../assets/icons/edit.svg";
 import historyIcon from "../../assets/icons/history.svg";
 import "../../styles/historyTable.css";
 import EditHistoryPopup from "../History/EditHistoryPopup";
+import { updateChangeLog } from "../../redux/slices/AdminSlices/adminHistoryCrudSlice";
 
 const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
   const dispatch = useDispatch();
@@ -70,12 +71,19 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
   // Håndterer lagring av redigert historikk
   const saveEdit = async (updatedData) => {
     try {
-      await axios.patch(
-        `/api/history/${selectedHistory.changeLog_id}`,
-        updatedData
+      const result = await dispatch(
+        updateChangeLog({
+          changeLogId: selectedHistory.changeLog_id,
+          updatedFields: updatedData,
+        })
       );
-      dispatch(fetchEmployeeHistory(employeeId)); // Oppdaterer historikken
-      setEditPopup(false);
+      if(result,meta.requestStatus === 'fulfilled'){
+        dispatch(fetchEmployeeHistory(employeeId)); // Oppdaterer historikken
+        setEditPopup(false);
+      }else{
+        console.error("oppdatering feilet", result.payload);
+      }
+      
     } catch (error) {
       console.error("Feil ved lagring av historikk", error);
     }
@@ -92,14 +100,32 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
       {
         accessorKey: "old_value",
         header: "Opprinnelig",
-        cell: ({ getValue }) =>
-          getValue() === "NULL" || getValue() === null ? "" : getValue(),
+        cell: ({ row, getValue }) => {
+        const field = row.original.field_changed;
+        const value = getValue();
+    
+        if (field === "team_id") {
+          const team = teams?.find((t) => t.team_id.toString() === value);
+          return team ? team.team_name : value;
+        }
+    
+        return value === "NULL" || value === null ? "" : value;
+      },
       },
       {
         accessorKey: "new_value",
         header: "Oppdatert",
-        cell: ({ getValue }) =>
-          getValue() === "NULL" || getValue() === null ? "" : getValue(),
+        cell: ({ row, getValue }) => {
+        const field = row.original.field_changed;
+        const value = getValue();
+    
+        if (field === "team_id") {
+          const team = teams?.find((t) => t.team_id.toString() === value);
+          return team ? team.team_name : value;
+        }
+    
+        return value === "NULL" || value === null ? "" : value;
+      },
       },
       {
         accessorKey: "endret_av_navn",

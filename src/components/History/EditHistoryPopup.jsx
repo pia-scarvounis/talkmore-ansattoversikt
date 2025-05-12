@@ -42,6 +42,9 @@ const EditHistoryPopup = ({
     }
   }, [history]);
 
+  //useeffekt for hvis team
+  
+
   const getTitle = () => {
     switch (type) {
       case "workPosistion_id":
@@ -140,6 +143,22 @@ const EditHistoryPopup = ({
               ))}
             </select>
           </>
+          ) : type === "team_id" || type === "team_name" ? (
+            <>
+              <label>Velg team</label>
+              <select
+                name="new_value"
+                value={editData.new_value}
+                onChange={handleChange}
+              >
+                <option value="">Velg team</option>
+                {teams?.map((team) => (
+                  <option key={team.team_id} value={team.team_id}>
+                    {team.team_name}
+                  </option>
+                ))}
+              </select>
+            </>
         ) : type === "employee_percentages" ? (
           <>
             <label>Velg stillingsprosent</label>

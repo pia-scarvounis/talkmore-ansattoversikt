@@ -27,7 +27,7 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
 
     try{
         //felter fra historikk loggen disse skal brukes ved endring av historikk fra gammel verdi til ny verdi
-        const allowedFields = ["field_changed", "old_value", "new_value"];
+        const allowedFields = ["field_changed", "old_value", "new_value", "start_date", "end_date"];
         const fields = [];
         const values = [];
 
