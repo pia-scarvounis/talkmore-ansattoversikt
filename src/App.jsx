@@ -10,7 +10,7 @@ import EditEmployee from "./pages/EditEmployee";
 import EmployeeInfo from "./pages/EmployeeInfo";
 import NavPages from "./pages/NavPages";
 import DashboardPages from "./pages/DashboardPages";
-import AdminPanel from "./pages/AdminPanel"; 
+import AdminPanel from "./pages/AdminPanel";
 import ManageSystems from "./pages/ManageSystems";
 import ManageTeams from "./pages/ManageTeams";
 import RegisterEmployee from "./pages/RegisterEmployee";
@@ -18,11 +18,9 @@ import RegisterEmployee from "./pages/RegisterEmployee";
 import ErrorBoundry from "./ErrorBoundry";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
-
 import "./styles/global.css";
 import "./styles/buttons.css";
 import "./styles/alert.css";
-
 
 function App() {
   const dispatch = useDispatch();
@@ -38,10 +36,26 @@ function App() {
           {/* Login-side */}
           <Route path="/" element={<Login />} />
           {/* Dashboard for både Admin og Teamleder */}
-          <Route path="/admin-dashboard" element={<ProtectedRoute allowedRoles={['Admin', 'ReadOnly']}><DashBoardAdmin /></ProtectedRoute>} />
-
-          <Route path="/register" element={<RegisterEmployee />} />
-          <Route path="/admin/edit/:id" element={<EditEmployee />} />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Admin", "Teamleder"]}>
+                <DashBoardAdmin />
+              </ProtectedRoute>
+            }
+          />
+          {/* Register-side for kun Admin */}
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <RegisterEmployee />
+              </ProtectedRoute>
+            }
+          />
+          {/* EditEmployee.jsx for kun Admin */}
+          <Route path="/admin/edit/:id" element={<ProtectedRoute allowedRoles={['Admin']}><EditEmployee /> </ProtectedRoute>} />
+          {/* ManageTeams.jsx for kun Admin */}
           <Route
             path="/admin-dashboard/manage-team"
             element={<ManageTeams />}
@@ -53,8 +67,10 @@ function App() {
             element={<DashboardPages />}
           />
           <Route path="/admin-dashboard/admin-panel" element={<AdminPanel />} />
-          <Route path="/admin-dashboard/manage-systems" element={<ManageSystems />} />
-
+          <Route
+            path="/admin-dashboard/manage-systems"
+            element={<ManageSystems />}
+          />
         </Routes>
       </Router>
     </ErrorBoundry>
