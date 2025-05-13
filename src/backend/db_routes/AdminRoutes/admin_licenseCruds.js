@@ -2,7 +2,7 @@ import {Router} from "express";
 import dotenv from "dotenv";
 import pool from "../../config/db.js";
 
-import { authenticateToken, requireAdmin } from "../../AuthenticateUsers/AuthMiddleware";
+import { authenticateToken, requireAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
 
 const router = Router();
 dotenv.config();
