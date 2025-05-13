@@ -153,3 +153,16 @@ label {
   visibility: hidden;
   height: 48px;
 }
+
+/* unauthorized sider */ 
+.unauthorized-container {
+  padding: 4rem;
+  text-align: center;
+ background-color: #f8d7da;   
+  color: #721c24;             
+  border: 1px solid #f5c6cb;
+  margin: 4rem auto;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

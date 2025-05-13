@@ -67,13 +67,11 @@ const DashboardAdmin = () => {
     <div className="dashboard-layout">
       <NavAdmin />
 
-
       <div className="dashboard-header">
-    
         <div className="dashboard-header-left">
-        <div className="dashboard-welcome">
-              velkommen, {user?.username || "Ukjent bruker"}
-            </div>
+          <div className="dashboard-welcome">
+            velkommen, {user?.username || "Ukjent bruker"}
+          </div>
           <div className="dashboard-dategroup">
             <span className="pageContent-text">{formattedDate}</span>
             <DateSelector />
@@ -143,7 +141,7 @@ const DashboardAdmin = () => {
                 title="FULLTIDSEKVIVALENTER"
                 //setter en 100 % stilling = 1
                 value={formattedFTE}
-                unit="FTE (KA)"
+                unit="FTE"
                 highlight
                 className="fte"
                 icon={iconFTE}
