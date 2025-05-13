@@ -63,7 +63,8 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
 
         const employeeFields = [
             'start_date', 'end_date', 'team_id', 'workPosistion_id',
-            'form_of_employeement', 'employee_percentages'
+            'form_of_employeement', 'employee_percentages', 
+            'employeeNr_Talkmore', 'employeeNr_Telenor'
         ];
         if(employeeFields.includes(field)) {
             await pool.query(
