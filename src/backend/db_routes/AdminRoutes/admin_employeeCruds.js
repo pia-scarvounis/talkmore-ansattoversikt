@@ -101,7 +101,7 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
       values.push(updatedData.employee_name);
     }
 
-    //hjelp med gpt
+    //hjelp med gpt oppsette for verdier string og date
     const normalize = (val) => {
       if (val === null || val === undefined) return null;
       if (typeof val === "string") return val.trim() || null;
@@ -289,35 +289,6 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
       }
     }
 
-    /**
-        //Oppdater permisjon (employeeLeave) hvis finnes
-        let leaveId = null;
-        if(updatedData.leave){
-            //Fjerner tidligere permisjon hvis endringer
-            await conn.query(`DELETE FROM employeeLeave WHERE employee_id = ?`, [id]);
- 
- 
-            const [leaveResult] = await conn.query(
-                `INSERT INTO employeeLeave (employee_id, leave_percentage, leave_start_date, leave_end_date)
-                VALUES (?, ?, ?, ?)`
-                ,[
-                    id,
-                    updatedData.leave.leave_percentage || null,
-                    updatedData.leave.leave_start_date || null,
-                    updatedData.leave.leave_end_date || null
-                ]
-            );
-            leaveId = leaveResult.insertId; // får ny id
-        }else{
-            //hvis ikke ny hent eksisterende
-            const [leaveResult] = await conn.query(`
-                SELECT * FROM employeeLeave WHERE employee_id = ?`, [id]);
-                if(leaveResult.length > 0){
-                    leaveId = leaveResult[0].leave_id;
-                }
-        }
-        */
-
     //oppdatere lisenser for ansatt
     if (Array.isArray(updatedData.licenses)) {
       //fjerner lisenser og setter inn nye
@@ -332,36 +303,7 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
         );
       }
     }
-    /**
-        //Denne skal insert inn i changelog tabellen /historikk for ansatt
-        await conn.query(`
-            INSERT INTO changeLog (
-                employee_id, admin_id,
-                employeeNr_Talkmore, employeeNr_Telenor,
-                department_id, team_id, workPosistion_id,
-                form_of_employeement, employee_percentages,
-                start_date, end_date,
-                leave_id, leave_percentage, leave_start_date, leave_end_date
-                )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?)
-        `,[
-            id,
-            amdinId,
-            updatedData.employeeNr_Talkmore || original.employeeNr_Talkmore,
-            updatedData.employeeNr_Telenor || original.employeeNr_Telenor,
-            updatedData.department_id || original.department_id,
-            updatedData.team_id || original.team_id,
-            updatedData.workPosistion_id || original.workPosistion_id,
-            updatedData.form_of_employeement || original.form_of_employeement,
-            updatedData.employee_percentages || original.employee_percentages,
-            formatDate(updatedData.start_date) || formatDate(original.start_date),
-            formatDate(updatedData.end_date) || formatDate(original.end_date),
-            updatedData.leave_id || original.leave_id,
-            updatedData.leave?.leave_percentage || original.leave_percentage,
-            formatDate(updatedData.leave?.leave_start_date) || null,
-            formatDate(updatedData.leave?.leave_end_date) || null
-        ]);
-        */
+  
     //Oppdatere ansatt i api genesys hvis endring i navn eller epost
     //genesys_user_id link mellom api og databasen
     if (original.genesys_user_id) {

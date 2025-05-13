@@ -139,9 +139,11 @@ const EditEmployee = () => {
   const adminPos = posistions.find(p => p.posistion_title === "Admin");
   const isAdminRole = formData?.workPosistion_id === String(adminPos?.workPosistion_id);
   
+  //Filtrer ut avdeling admin hvis Admin stilling er valgt
   const filteredDepartments = isAdminRole
   ? departments.filter(d => d.department_name === "Admin")
   : departments;
+
   //effekt når admin stilling er valgt så skal avdeling settes til kun Admin, så man kun velge team 'Performance Management"
   useEffect(() => {
   if (!formData || !departments || !teams) return;
