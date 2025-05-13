@@ -136,10 +136,44 @@ const EditEmployee = () => {
   }, [formData?.department_id, teams]);
   console.log("formData.department_id:", formData?.department_id);
 
+  const adminPos = posistions.find(p => p.posistion_title === "Admin");
+  const isAdminRole = formData?.workPosistion_id === String(adminPos?.workPosistion_id);
+  
+  const filteredDepartments = isAdminRole
+  ? departments.filter(d => d.department_name === "Admin")
+  : departments;
+  //effekt når admin stilling er valgt så skal avdeling settes til kun Admin, så man kun velge team 'Performance Management"
+  useEffect(() => {
+  if (!formData || !departments || !teams) return;
+  
+  const adminPosistion = posistions.find(p => p.posistion_title === "Admin");
+  const adminDepartment = departments.find(d => d.department_name === "Admin");
+  const performanceTeam = teams.find(t => t.team_name === "Performance management");
+
+  const isAdmin = formData.workPosistion_id === adminPosistion?.workPosistion_id?.toString();
+
+  if (isAdmin && adminDepartment && performanceTeam) {
+    setFormData((prev) => ({
+      ...prev,
+      department_id: String(adminDepartment.department_id),
+      team_id: String(performanceTeam.team_id),
+    }));
+
+    const filtered = 
+    teams.filter((t) => t.team_department_id?.toString() === adminDep.department_id.toString());
+    setfilteredTeams(filtered);
+  }
+}, [formData?.workPosistion_id, posistions, departments, teams]);  
+
+
   //oppdaterer formData (objektet ansatt info) med input
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    // Hindre endring hvis Admin-rolle og man prøver å endre department
+    if (name === "department_id" && isAdminRole) {
+      return; 
+    };
     //fjern alt som ikke er tall i tlf felt //
     const cleanedValue =
       name === "phoneNr" || name === "relative_phoneNr"
@@ -203,20 +237,6 @@ const EditEmployee = () => {
       setShowError(true);
       return;
     }
-    /** 
-    // Valider permisjon: Startdato krever sluttdato
-    if (
-      formData.leave &&
-      formData.leave.leave_start_date &&
-      !formData.leave.leave_end_date
-    ) {
-      // Vis error AlertBox i stedet for alert()
-      setErrorMessage(
-        "Du må fylle inn sluttdato for permisjon hvis startdato er satt."
-      );
-      
-      setShowError(true);
-      */
 
     //returner en ny formData med riktig date toIso string for leave feltene i formdata + formdata
     const fixFormData = {
@@ -445,7 +465,7 @@ const EditEmployee = () => {
                   onChange={handleDepartmentChange}
                 >
                   <option value="">Velg avdeling</option>
-                  {departments.map((dep) => (
+                  {filteredDepartments.map((dep) => (
                     <option
                       key={dep.department_id}
                       value={dep.department_id.toString()}
