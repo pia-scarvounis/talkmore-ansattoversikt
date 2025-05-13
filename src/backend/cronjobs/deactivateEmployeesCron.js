@@ -12,7 +12,7 @@ const apiInstance = platformClient.ApiClient.instance;
 const usersApi = new platformClient.UsersApi();
 
 //CRON JOB hver hver uke, mnd , år , kl 23 ('0 23 * * *')//tester med 5 minutter nå ('*/5 * * * *')
-cron.schedule("0 23 * * *", async () => {
+cron.schedule("*/5 * * * *", async () => {
   console.log("[CRON] Starter deaktivering av ansatte med slutt dato");
   try {
     //Henter ansatt fra databasen med end_date = dagens dato
@@ -45,6 +45,16 @@ cron.schedule("0 23 * * *", async () => {
         [employee_id]
       );
 
+      //oppdaterer lisenser og fjerner lisenser fra  ansatt med slutt dato idag
+      await pool.query(
+        `DELETE FROM employee_license WHERE employee_id = ?`,
+        [employee_id]
+        );
+
+        console.log(`[CRON] Fjernet alle lisenser for employee_id ${employee_id}`);
+
+
+        ///API GENESYS -- endirng av state i genesys 
       //MÅ kommentere ut genesys mellomtiden har ikke tilgang til til endre i genesys enda
       /** 
             if(genesys_user_id){
