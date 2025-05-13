@@ -70,18 +70,63 @@ const RegisterEmployee = () => {
   useEffect(() => {
     if (formData?.department_id && teams.length > 0) {
       const filtered = teams.filter(
-        (t) => t.team_department_id?.toString() === formData.department_id
+        (t) => String(t.team_department_id) === String(formData.department_id)
       );
       setfilteredTeams(filtered);
       console.log("Filtered teams:", filtered);
     }
   }, [formData?.department_id, teams]);
       
+  // Hvis stilling = Admin så blir avdeling og team feltet disabled til : avd: "Admin", Team: "Performance Management"
+  const adminPosistion = posistions.find(p => p.posistion_title === 'Admin');
+  const isAdminRole = formData.workPosistion_id === String(adminPosistion?.workPosistion_id);
+
+  const filteredDepartments = isAdminRole
+  ? departments.filter(d => d.department_name === "Admin")
+  : departments;
+
+  useEffect(()=> {
+    const adminDepartment = departments.find(d => d.department_name === 'Admin');
+    //const adminTeam = teams.find(t => t.team_name === "Performance management");
+
+    if(isAdminRole && adminDepartment){
+      const newDepId = adminDepartment.department_id;
+
+      setFormData(prev => {
+        if (prev.department_id !== newDepId) {
+          const filtered = teams.filter(
+            (t) => String(t.team_department_id) === String(newDepId)
+          );
+          setfilteredTeams(filtered);
   
+          return {
+            ...prev,
+            department_id: newDepId
+          };
+        }
+        return prev;
+      });
+    }else if(!isAdminRole) {
+      // Nullstill avdeling hvis man bytter fra admin til noe annet
+      setFormData(prev => ({
+        ...prev,
+        department_id: '',
+        team_id: ''
+      }));
+      setfilteredTeams([])
+    }
+  }, [isAdminRole, departments, teams]);
+
+
   //håndtering av input endringer string og Number type -gpt
   const handleInputChange = (e) => {
     const {name, value } = e.target;
 
+    // Hindre endring hvis Admin-rolle og man prøver å endre department
+    if (name === "department_id" && isAdminRole) {
+    return; 
+  };
+  
     const cleanedValue =
     name === "phoneNr" || name === "relative_phoneNr"
     ? value.replace(/[^\d+]/g, "")
@@ -303,13 +348,14 @@ const RegisterEmployee = () => {
                 name="department_id"
                 value={formData.department_id}
                 onChange={handleInputChange}
+                
               >
                 <option value="">Velg</option>
-                {departments.map(dep => (
-                  <option key={dep.department_id} value={dep.department_id}>
-                    {dep.department_name}
-                  </option>
-                ))}
+              {filteredDepartments.map(dep => (
+                <option key={dep.department_id} value={dep.department_id}>
+                  {dep.department_name}
+                </option>
+            ))}
               </select>
 
               <label>Team</label>
