@@ -52,6 +52,36 @@ const ManageSystems = () => {
 
   const confirmSave = () => {
     setShowSaveAlert(false);
+
+    // Oppdatering av system (lisens)
+    if (saveType === "lagre") {
+      if (!selectedLicenseEdit || !newLicenseNameEdit) {
+        setUpdateError("Du må velge et system og skrive inn nytt navn.");
+        return;
+      }
+
+      const updateData = {
+        license_title: newLicenseNameEdit,
+      };
+
+      dispatch(updateLicense({ licenseId: selectedLicenseEdit, updateData }))
+        .unwrap()
+        .then(() => {
+          setUpdateSuccess(true);
+          setNewLicenseNameEdit("");
+          setSelectedLicenseEdit("");
+          dispatch(fetchMetaData()); // Oppdaterer listen med nye data
+          console.log("Lisens oppdatert med suksess.");
+        })
+        .catch((error) => {
+          console.error("Feil ved oppdatering:", error);
+          setUpdateError(
+            error.message || "Det oppstod en feil ved oppdatering."
+          );
+        });
+    }
+
+    // Opprettelse av system (lisens)
     if (saveType === "leggtil") {
       if (!newLicenseNameCreate) {
         setCreateError("Du må skrive inn systemnavn.");
@@ -63,6 +93,7 @@ const ManageSystems = () => {
         .then(() => {
           setCreateSuccess(true);
           setNewLicenseNameCreate("");
+          dispatch(fetchMetaData());
           console.log("Lisens opprettet med suksess.");
         })
         .catch((error) => {
