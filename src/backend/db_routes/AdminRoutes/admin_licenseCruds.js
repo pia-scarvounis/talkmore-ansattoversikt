@@ -15,12 +15,12 @@ router.post('/', authenticateToken, requireAdmin, async (req, res) => {
 });
 
 //endre lisenser
-router.put('/', authenticateToken, requireAdmin, async (req, res) => {
+router.put('/:licenseId', authenticateToken, requireAdmin, async (req, res) => {
     
 });
 
 //slette lisenser
-router.delete('/', authenticateToken, requireAdmin, async (req, res) => {
+router.delete('/licenseId', authenticateToken, requireAdmin, async (req, res) => {
     
 });
 
