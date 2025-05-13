@@ -82,10 +82,11 @@ textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #60aa3b;
   border-radius: 8px;
   font-size: 14px;
   box-sizing: border-box;
+  outline: none;
 }
 label {
   display: block;
@@ -154,12 +155,12 @@ label {
   height: 48px;
 }
 
-/* unauthorized sider */ 
+/* unauthorized sider */
 .unauthorized-container {
   padding: 4rem;
   text-align: center;
- background-color: #f8d7da;   
-  color: #721c24;             
+  background-color: #f8d7da;
+  color: #721c24;
   border: 1px solid #f5c6cb;
   margin: 4rem auto;
   max-width: 600px;
