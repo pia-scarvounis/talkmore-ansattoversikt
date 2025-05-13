@@ -11,6 +11,7 @@ import cors from 'cors';
 import authRoutes from './db_routes/Auth_Routes/auth_routes.js'
 import adminHistoryCrud from './db_routes/AdminRoutes/admin_empHistoryRoutes.js';
 import adminTeamCruds from './db_routes/AdminRoutes/admin_teamCruds.js';
+import adminLicenseCruds from './db_routes/AdminRoutes/admin_licenseCruds.js';
 //cron
 console.log('[APP] Starter backend og prøver å importere cron-jobber...');
 import  './cronjobs/syncEmployeesCron.js';
@@ -59,6 +60,8 @@ app.use('/api/employee', adminEmployeeCruds);
 app.use('/api/history', adminHistoryCrud)
 //rutere for adminstrere team POST, PUT og DELETE
 app.use('/api/team', adminTeamCruds);
+//rutere for å adminstrere lisenser POST, PUT, DELETE
+app.use('/api/license', adminLicenseCruds);
 
 //starte serveren
 app.listen(3000, ()=>{
