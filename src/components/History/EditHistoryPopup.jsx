@@ -156,6 +156,20 @@ const EditHistoryPopup = ({
               ))}
             </select>
           </>
+           ) : type === "form_of_employeement" ? (
+            <>
+              <label>Velg ansettelsesform</label>
+              <select
+                name="new_value"
+                value={editData.new_value}
+                onChange={handleChange}
+              >
+                <option value="">Velg type</option>
+                <option value="Fast">Fast</option>
+                <option value="Innleid">Innleid</option>
+              </select>
+            </>
+          
           ) : type === "team_id" || type === "team_name" ? (
             <>
               <label>Velg team</label>
