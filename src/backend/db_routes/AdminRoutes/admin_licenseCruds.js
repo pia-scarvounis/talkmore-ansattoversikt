@@ -12,17 +12,16 @@ dotenv.config();
 //legge til lisenser
 router.post('/', authenticateToken, requireAdmin, async (req, res) => {
 
-})
+});
 
 //endre lisenser
 router.put('/', authenticateToken, requireAdmin, async (req, res) => {
     
-})
+});
 
 //slette lisenser
 router.delete('/', authenticateToken, requireAdmin, async (req, res) => {
     
-})
-
+});
 
 export default router;
