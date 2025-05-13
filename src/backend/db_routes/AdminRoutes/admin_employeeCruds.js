@@ -203,6 +203,7 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
       }
     }
 
+    //Pusher endringene i employee
     if (fields.length > 0) {
       const sql = `UPDATE employee
                 SET ${fields.join(", ")}
