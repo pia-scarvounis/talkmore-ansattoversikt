@@ -27,7 +27,7 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
 
     try{
         //felter fra historikk loggen disse skal brukes ved endring av historikk fra gammel verdi til ny verdi
-        const allowedFields = ["field_changed", "old_value", "new_value", "start_date", "end_date"];
+        const allowedFields = ["field_changed", "old_value", "new_value"];
         const fields = [];
         const values = [];
 
@@ -53,12 +53,18 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
         );
         
         const employeeId = logRow.employee_id;
-        const field = logRow.field_changed;
-        const value = logRow.new_value;
+        const field = logRow.field_changed?.trim(); 
+        let value = logRow.new_value;
+
+
+        if (field === 'end_date' && req.body.end_date) {
+            value = req.body.end_date;
+        }
 
         const employeeFields = [
             'start_date', 'end_date', 'team_id', 'workPosistion_id',
-            'form_of_employeement', 'employee_percentages'
+            'form_of_employeement', 'employee_percentages', 
+            'employeeNr_Talkmore', 'employeeNr_Telenor'
         ];
         if(employeeFields.includes(field)) {
             await pool.query(
