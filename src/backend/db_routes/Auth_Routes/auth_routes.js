@@ -17,12 +17,12 @@ router.post("/login", async (req, res) => {
   try {
     //hent bruker fra userOfTool tabellen som er aktiv med 1 og ikke uaktiv med 0
     const [rows] = await pool.query(
-      `SELECT user_id, username, roles, employee_id, password_hash
-                FROM userOfTool
-            WHERE username = ? AND active = 1`,
+      `SELECT u.user_id, u.username, u.roles, u.employee_id, e.employee_name, u.password_hash
+       FROM userOfTool u 
+       JOIN employee e ON u.employee_id = e.employee_id
+       WHERE u.username = ? AND u.active = 1`,
       [username]
     );
-
     const user = rows[0];
 
     if (!user || !user.password_hash) {
@@ -50,6 +50,7 @@ router.post("/login", async (req, res) => {
         userId: user.user_id,
         username: user.username,
         role: user.roles, //ADMIN / TEAMLEDER
+        employee_name: user.employee_name,
       },
 
       JWT_SECRET,

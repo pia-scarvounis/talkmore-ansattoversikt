@@ -55,8 +55,16 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.user = jwtDecode(action.payload);
         state.token = action.payload;
+        const decodedToken = jwtDecode(action.payload);
+
+        state.user = {
+          userId: decodedToken.userId,
+          username: decodedToken.username,
+          role: decodedToken.role,
+          employee_name: decodedToken.employee_name || "Ukjent navn",
+        };
+
         state.loading = false;
         state.error = null;
       })

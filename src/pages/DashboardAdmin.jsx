@@ -33,6 +33,9 @@ const DashboardAdmin = () => {
   );
   console.log("dagsoversikt:", employees);
 
+  console.log(" Innlogget bruker:", user);
+  console.log(" Alle ansatte (employees):", employees);
+
   const rawDate = format(selectedDate, "EEEE d. MMMM yyyy", {
     locale: nb,
   });
@@ -70,7 +73,8 @@ const DashboardAdmin = () => {
       <div className="dashboard-header">
         <div className="dashboard-header-left">
           <div className="dashboard-welcome">
-            Velkommen, {user?.username || "Ukjent bruker"}
+            Velkommen,{" "}
+            {user?.employee_name || user?.username || "Ukjent bruker"}
           </div>
           <div className="dashboard-dategroup">
             <span className="pageContent-text">{formattedDate}</span>
