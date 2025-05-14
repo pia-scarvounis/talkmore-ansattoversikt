@@ -19,10 +19,9 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
     (state) => state.employeeHistory
   );
 
-  // Henter den innloggede brukeren
-  const loggedInUser = useSelector(
-    (state) => state.user?.name || "Ukjent Bruker"
-  );
+  // Henter den innloggede brukeren og rollen
+  const { user } = useSelector((state) => state.auth);
+  const userRole = user?.role;
 
   // Henter team og stillinger fra Redux
   const teams = useSelector((state) => state.metaData.teams);
@@ -62,10 +61,12 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
     return fieldDescriptions[fieldName] || fieldName;
   };
 
-  // Åpner redigerings-popupen
+  // Åpner redigerings-popupen (kun for admin)
   const handleEdit = (history) => {
-    setSelectedHistory(history);
-    setEditPopup(true);
+    if (userRole === "Admin") {
+      setSelectedHistory(history);
+      setEditPopup(true);
+    }
   };
 
   // Håndterer lagring av redigert historikk
@@ -77,13 +78,12 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
           updatedFields: updatedData,
         })
       );
-      if(result,meta.requestStatus === 'fulfilled'){
+      if ((result, meta.requestStatus === "fulfilled")) {
         dispatch(fetchEmployeeHistory(employeeId)); // Oppdaterer historikken
         setEditPopup(false);
-      }else{
+      } else {
         console.error("oppdatering feilet", result.payload);
       }
-      
     } catch (error) {
       console.error("Feil ved lagring av historikk", error);
     }
@@ -101,31 +101,31 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
         accessorKey: "old_value",
         header: "Opprinnelig",
         cell: ({ row, getValue }) => {
-        const field = row.original.field_changed;
-        const value = getValue();
-    
-        if (field === "team_id") {
-          const team = teams?.find((t) => t.team_id.toString() === value);
-          return team ? team.team_name : value;
-        }
-    
-        return value === "NULL" || value === null ? "" : value;
-      },
+          const field = row.original.field_changed;
+          const value = getValue();
+
+          if (field === "team_id") {
+            const team = teams?.find((t) => t.team_id.toString() === value);
+            return team ? team.team_name : value;
+          }
+
+          return value === "NULL" || value === null ? "" : value;
+        },
       },
       {
         accessorKey: "new_value",
         header: "Oppdatert",
         cell: ({ row, getValue }) => {
-        const field = row.original.field_changed;
-        const value = getValue();
-    
-        if (field === "team_id") {
-          const team = teams?.find((t) => t.team_id.toString() === value);
-          return team ? team.team_name : value;
-        }
-    
-        return value === "NULL" || value === null ? "" : value;
-      },
+          const field = row.original.field_changed;
+          const value = getValue();
+
+          if (field === "team_id") {
+            const team = teams?.find((t) => t.team_id.toString() === value);
+            return team ? team.team_name : value;
+          }
+
+          return value === "NULL" || value === null ? "" : value;
+        },
       },
       {
         accessorKey: "endret_av_navn",
@@ -140,20 +140,24 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
           return date || "Ukjent";
         },
       },
-      {
-        header: "Rediger",
-        cell: ({ row }) => (
-          <img
-            src={editIcon}
-            alt="Rediger"
-            className="edit-icon"
-            onClick={() => handleEdit(row.original)}
-            style={{ cursor: "pointer" }}
-          />
-        ),
-      },
+      ...(userRole === "Admin"
+        ? [
+            {
+              header: "Rediger",
+              cell: ({ row }) => (
+                <img
+                  src={editIcon}
+                  alt="Rediger"
+                  className="edit-icon"
+                  onClick={() => handleEdit(row.original)}
+                  style={{ cursor: "pointer" }}
+                />
+              ),
+            },
+          ]
+        : []),
     ],
-    [loggedInUser] // Avhenger av den innloggede brukeren
+    [userRole]
   );
 
   // Oppsett av tabellen med React Table
@@ -166,7 +170,6 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
   // Håndterer lastestatus og feilmeldinger
   if (loading) return <div>Laster historikk...</div>;
   if (error) return <div>Feil: {error}</div>;
-  if (!data.length) return <div>Ingen historikk funnet.</div>;
 
   return (
     <div className="history-table-wrapper">
@@ -176,37 +179,54 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
         <h2>Historikk</h2>
       </div>
 
-      {/* Selve tabellen */}
+      {/* Selve tabellen eller melding om ingen historikk */}
       <div className="history-table-container">
-        <table className="history-table">
-          <thead>
-            <tr>
-              {table
-                .getHeaderGroups()
-                .map((headerGroup) =>
-                  headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </th>
-                  ))
-                )}
-            </tr>
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+        {loading ? (
+          <div>Laster historikk...</div>
+        ) : error ? (
+          <div>Feil: {error}</div>
+        ) : (
+          <table className="history-table">
+            <thead>
+              <tr>
+                {table
+                  .getHeaderGroups()
+                  .map((headerGroup) =>
+                    headerGroup.headers.map((header) => (
+                      <th key={header.id}>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </th>
+                    ))
+                  )}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data?.length > 0 ? (
+                table.getRowModel().rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={columns.length} className="no-history-text">
+                    Ingen historikk funnet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Popup for redigering */}

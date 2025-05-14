@@ -30,8 +30,12 @@ const EditHistoryPopup = ({
     if (history) {
       let formattedOldValue = history.old_value || "";
 
-    if ((type === "leave" || type === "leave_percentage") && history.start_date && history.end_date) {
-    formattedOldValue = `${history.old_value}% fra ${history.start_date} til ${history.end_date}`;
+      if (
+        (type === "leave" || type === "leave_percentage") &&
+        history.start_date &&
+        history.end_date
+      ) {
+        formattedOldValue = `${history.old_value}% fra ${history.start_date} til ${history.end_date}`;
       }
       setEditData({
         old_value: formattedOldValue,
@@ -47,7 +51,6 @@ const EditHistoryPopup = ({
   }, [history]);
 
   //useeffekt for hvis team
-  
 
   const getTitle = () => {
     switch (type) {
@@ -72,7 +75,6 @@ const EditHistoryPopup = ({
         return "Rediger historikk";
     }
   };
-  
 
   // Håndterer endring av inputverdier
   const handleChange = (e) => {
@@ -98,15 +100,15 @@ const EditHistoryPopup = ({
         const percent = editData.new_value?.toString().split("%")[0];
         newValue = `${percent}% fra ${editData.start_date} til ${editData.end_date}`;
       } else if (type === "end_date") {
-        newValue = editData.end_date; 
+        newValue = editData.end_date;
       }
-      
+
       // Bygger oppdatert data basert på type
       const updatedData = {
-        field_changed:history.field_changed,
+        field_changed: history.field_changed,
         old_value: editData.old_value,
-        new_value: newValue
-      }
+        new_value: newValue,
+      };
 
       if (type === "end_date") {
         updatedData.end_date = editData.end_date;
@@ -122,13 +124,12 @@ const EditHistoryPopup = ({
           updatedFields: updatedData,
         })
       );
-        if(result.meta.requestStatus === "fulfilled"){
-          onSave(); // Oppdaterer historikken i parent
-          onClose(); // Lukker popupen
-        }else{
-          console.error("Oppdatering feilet:", result.payload);
-        }
-     
+      if (result.meta.requestStatus === "fulfilled") {
+        onSave(); // Oppdaterer historikken i parent
+        onClose(); // Lukker popupen
+      } else {
+        console.error("Oppdatering feilet:", result.payload);
+      }
     } catch (error) {
       console.error("Feil ved lagring av historikk", error);
     }
@@ -156,36 +157,35 @@ const EditHistoryPopup = ({
               ))}
             </select>
           </>
-           ) : type === "form_of_employeement" ? (
-            <>
-              <label>Velg ansettelsesform</label>
-              <select
-                name="new_value"
-                value={editData.new_value}
-                onChange={handleChange}
-              >
-                <option value="">Velg type</option>
-                <option value="Fast">Fast</option>
-                <option value="Innleid">Innleid</option>
-              </select>
-            </>
-          
-          ) : type === "team_id" || type === "team_name" ? (
-            <>
-              <label>Velg team</label>
-              <select
-                name="new_value"
-                value={editData.new_value}
-                onChange={handleChange}
-              >
-                <option value="">Velg team</option>
-                {teams?.map((team) => (
-                  <option key={team.team_id} value={team.team_id}>
-                    {team.team_name}
-                  </option>
-                ))}
-              </select>
-            </>
+        ) : type === "form_of_employeement" ? (
+          <>
+            <label>Velg ansettelsesform</label>
+            <select
+              name="new_value"
+              value={editData.new_value}
+              onChange={handleChange}
+            >
+              <option value="">Velg type</option>
+              <option value="Fast">Fast</option>
+              <option value="Innleid">Innleid</option>
+            </select>
+          </>
+        ) : type === "team_id" || type === "team_name" ? (
+          <>
+            <label>Velg team</label>
+            <select
+              name="new_value"
+              value={editData.new_value}
+              onChange={handleChange}
+            >
+              <option value="">Velg team</option>
+              {teams?.map((team) => (
+                <option key={team.team_id} value={team.team_id}>
+                  {team.team_name}
+                </option>
+              ))}
+            </select>
+          </>
         ) : type === "employee_percentages" ? (
           <>
             <label>Velg stillingsprosent</label>

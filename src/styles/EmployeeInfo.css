@@ -46,7 +46,7 @@
 .employee-info-text {
   font-size: 14px;
   line-height: 1.6;
-  max-width: 200px
+  max-width: 200px;
 }
 
 .employee-info,
@@ -72,6 +72,27 @@
   white-space: nowrap;
   position: relative;
   top: 1px;
+}
+
+.access-checkboxes input[type="checkbox"] {
+  accent-color: #60aa3b;
+}
+
+/* Tving check-marken til å bli hvit når valgt */
+.access-checkboxes input[type="checkbox"]:checked {
+  position: relative;
+}
+
+/* Hvit check-mark */
+.access-checkboxes input[type="checkbox"]:checked::after {
+  content: "✓";
+  font-size: 12px;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
 }
 
 .employee-emergency-inner h4:nth-of-type(2) {
