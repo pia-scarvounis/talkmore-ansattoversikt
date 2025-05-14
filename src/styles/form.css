@@ -81,6 +81,7 @@ h1 {
 }
 
 /* checkbox - lisenser */
+/* checkbox - lisenser */
 .checkbox-group {
   display: flex;
   gap: 60px;
@@ -96,6 +97,38 @@ h1 {
   align-items: center;
   gap: 8px;
   font-size: 16px;
+}
+
+/* Større checkbox med grønn kant */
+.checkbox-group input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  appearance: none;
+  border: 2px solid #60aa3b;
+  background-color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Når checkboxen er valgt */
+.checkbox-group input[type="checkbox"]:checked {
+  background-color: #60aa3b;
+  border-color: #60aa3b;
+  position: relative;
+}
+
+/* Tilpasset check-ikon (grønn) */
+.checkbox-group input[type="checkbox"]:checked::after {
+  content: "✓";
+  font-size: 16px;
+  color: #fff;
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-weight: bold;
 }
 
 /* lagre og avbryt knapp - visning på siden */

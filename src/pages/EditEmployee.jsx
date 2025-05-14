@@ -20,7 +20,7 @@ import {
 import { fetchEmployees } from "../redux/slices/employeeSlice";
 import { fetchMetaData } from "../redux/slices/metaDataCrudsSlice";
 //hjelpefunksjon for validering
-import { validateEmployeeForm } from '../utilsFunksj./employeeValidation';
+import { validateEmployeeForm } from "../utilsFunksj./employeeValidation";
 
 const EditEmployee = () => {
   const { id } = useParams();
@@ -55,9 +55,7 @@ const EditEmployee = () => {
   //alle lisenser
   const { licenses: allLicenses } = useSelector((state) => state.metaData);
   //Henter fra updateEmployeeSlicen
-  const { success, error } = useSelector(
-    (state) => state.updateEmployee
-  );
+  const { success, error } = useSelector((state) => state.updateEmployee);
 
   //vi må bruke formdata
   const [formData, setFormData] = useState(null);
@@ -175,7 +173,7 @@ const EditEmployee = () => {
       (dep) => dep.department_id.toString() === formData?.department_id
     )
   );
-    //Håndterer lisens endringer og oppdaterer lisenser tilgang for ansatt
+  //Håndterer lisens endringer og oppdaterer lisenser tilgang for ansatt
   const handleLicenseChange = (e) => {
     const isChecked = e.target.checked;
     const licenseId = Number(e.target.value);
@@ -198,7 +196,7 @@ const EditEmployee = () => {
 
     //validering sjekk
     const { valid, error } = validateEmployeeForm(formData);
-    if(!valid){
+    if (!valid) {
       setErrorMessage(error);
       setShowError(true);
       return;
@@ -566,7 +564,8 @@ const EditEmployee = () => {
                     );
                   })}
                 </select>
-
+              </div>
+              <div className="column">
                 <label>Startdato permisjon</label>
                 <input
                   type="date"
@@ -586,7 +585,8 @@ const EditEmployee = () => {
                     }));
                   }}
                 />
-
+              </div>
+              <div className="column">
                 <label>Sluttdato permisjon</label>
                 <input
                   type="date"

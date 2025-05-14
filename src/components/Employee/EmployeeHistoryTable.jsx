@@ -19,10 +19,9 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
     (state) => state.employeeHistory
   );
 
-  // Henter den innloggede brukeren
-  const loggedInUser = useSelector(
-    (state) => state.user?.name || "Ukjent Bruker"
-  );
+  // Henter den innloggede brukeren og rollen
+  const { user } = useSelector((state) => state.auth);
+  const userRole = user?.role;
 
   // Henter team og stillinger fra Redux
   const teams = useSelector((state) => state.metaData.teams);
@@ -62,10 +61,12 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
     return fieldDescriptions[fieldName] || fieldName;
   };
 
-  // Åpner redigerings-popupen
+  // Åpner redigerings-popupen (kun for admin)
   const handleEdit = (history) => {
-    setSelectedHistory(history);
-    setEditPopup(true);
+    if (userRole === "Admin") {
+      setSelectedHistory(history);
+      setEditPopup(true);
+    }
   };
 
   // Håndterer lagring av redigert historikk
@@ -139,20 +140,24 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
           return date || "Ukjent";
         },
       },
-      {
-        header: "Rediger",
-        cell: ({ row }) => (
-          <img
-            src={editIcon}
-            alt="Rediger"
-            className="edit-icon"
-            onClick={() => handleEdit(row.original)}
-            style={{ cursor: "pointer" }}
-          />
-        ),
-      },
+      ...(userRole === "Admin"
+        ? [
+            {
+              header: "Rediger",
+              cell: ({ row }) => (
+                <img
+                  src={editIcon}
+                  alt="Rediger"
+                  className="edit-icon"
+                  onClick={() => handleEdit(row.original)}
+                  style={{ cursor: "pointer" }}
+                />
+              ),
+            },
+          ]
+        : []),
     ],
-    [loggedInUser] // Avhenger av den innloggede brukeren
+    [userRole]
   );
 
   // Oppsett av tabellen med React Table
@@ -165,6 +170,7 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
   // Håndterer lastestatus og feilmeldinger
   if (loading) return <div>Laster historikk...</div>;
   if (error) return <div>Feil: {error}</div>;
+
   return (
     <div className="history-table-wrapper">
       {/* Header for historikk */}
