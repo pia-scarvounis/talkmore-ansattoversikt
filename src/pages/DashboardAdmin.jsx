@@ -70,7 +70,7 @@ const DashboardAdmin = () => {
       <div className="dashboard-header">
         <div className="dashboard-header-left">
           <div className="dashboard-welcome">
-            velkommen, {user?.username || "Ukjent bruker"}
+            Velkommen, {user?.username || "Ukjent bruker"}
           </div>
           <div className="dashboard-dategroup">
             <span className="pageContent-text">{formattedDate}</span>
