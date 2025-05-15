@@ -1,5 +1,5 @@
 
-# EmployeeMore – Administrasjonssystem for Talkmore Kundeservice
+# EmployeeMore – Administrasjonssystem for Talkmore
 
 Dette prosjektet er et fullstack HR-system utviklet som eksamens-/prosjektoppgave. Applikasjonen håndterer ansatte, tilganger, stillinger, permisjoner og historikk, og er bygget med:
 
@@ -48,7 +48,7 @@ CLIENT_SECRET= x --
  - Fjerner ansatte + lisens tilganger ,på ansatte som har slutt dato fra       ansattlisten
         --- Cron Job synkronisering (dekativerer ansatt) kjører hvert 5 minutt
 
- # Innlogging 
+ # Innlogging i verktøyet
  Systemet har to roller :
 
     - Admin (Adminstrator full tilgang)
