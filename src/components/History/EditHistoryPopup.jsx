@@ -7,6 +7,7 @@ import { updateChangeLog } from "../../redux/slices/AdminSlices/adminHistoryCrud
 import { useNavigate, useLocation } from "react-router-dom";
 import { fetchEmployees } from "../../redux/slices/employeeSlice";
 
+//Debugget en del med gpt med tanke på response frem og tilbake med id og navn resultat
 const EditHistoryPopup = ({
   history,
   type,
@@ -56,7 +57,6 @@ const EditHistoryPopup = ({
     }
   }, [history]);
 
-  //useeffekt for hvis team
 
   const getTitle = () => {
     switch (type) {
@@ -91,6 +91,7 @@ const EditHistoryPopup = ({
     }));
   };
 
+  //lagrer input verdiene 
   const handleSave = async () => {
     try {
       if (!history.changeLog_id) {
