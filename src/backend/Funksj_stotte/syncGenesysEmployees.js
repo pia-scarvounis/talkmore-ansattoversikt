@@ -40,7 +40,7 @@ async function fetchAllGenEmployees(token) {
 export async function syncGenesysEmployees() {
   try {
     // Hvis ikke Genesys nøkler eksisterer - bruk mockdata fallback
-    const keysExist = process.env.GENESYS_CLIENT_ID && process.env.GENESYS_CLIENT_SECRET;
+    const keysExist = process.env.CLIENT_ID && process.env.CLIENT_SECRET;
     let genesysApiEmployees = [];
 
     if(keysExist){

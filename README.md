@@ -32,7 +32,7 @@ DEFAULT_TEST_PASSWORD=
 CLIENT_ID= x -- 
 CLIENT_SECRET= x --
 
- # sette opp databaseskjem 
+ # sette opp databaseskjema 
  mysql -u root -p < schema.sql
 
  # Starte servere 
@@ -46,7 +46,7 @@ CLIENT_SECRET= x --
         (Vent til cron job henter ansatte)
 
  - Fjerner ansatte + lisens tilganger ,på ansatte som har slutt dato fra       ansattlisten
-        --- Cron Job synkronisering (hente ansatte) kjører hvert 5 minutt
+        --- Cron Job synkronisering (dekativerer ansatt) kjører hvert 5 minutt
 
  # Innlogging 
  Systemet har to roller :
