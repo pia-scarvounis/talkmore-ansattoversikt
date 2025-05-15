@@ -42,6 +42,7 @@ CLIENT_SECRET= x --
  # Cron Job 
 
  - Henter mockdata av navn og epost istedenfor Genesys brukere (hvis ingen genesys nøkler i env)
+ [Se full kildekode for cron-jobb](./src/cron/syncEmployeesCron.js)
         --- Cron Job synkronisering (hente ansatte) kjører hvert 2 minutt
         (Vent til cron job henter ansatte)
 
@@ -64,3 +65,37 @@ CLIENT_SECRET= x --
  # Vedlegg 
  MYSQL SCRIPT
  [Last ned fullstendig rapport (PDF)](./employeeOverview_prosjekt.sql.zip)
+
+ # Dashbord 
+    -> Se oversikt over FTE eksludert ansatte som har permisjon eller sluttdato
+    -> Total sum på alle ansatte fordelt på stilling og stilling%
+    -> Klikkbare filtreringer (grønne bokser på dashbord)
+
+ # Navigasjon
+    -> Begrenset navigasjon for Teamleder (leserolle)
+
+ # Alle ansatte 
+    -> Liste over alle ansatte med klikkbare profilkort
+    -> Søkefelt (søk etter navn, epost og stilling)
+
+# Ansatt detaljer
+    -> Full oversikt på ansatt med informasjon og historikktabell
+    -> begrenset endringsvalg for Teamleder (leserolle)
+    -> Endre ansatt, endre historikkfelter (Admin)
+
+# Endre ansatt informasjon
+    -> kun Admin
+    -> endre valgte felter og oppdaterere
+
+# Endre historikkfelter
+    -> Kun Admin
+    -> endre felter via popup og lagre den nye informasjonen. Lagres i historikk og i ansatt informasjonen
+
+# Admin- Navigasjon
+ -> vises Adminstrasjonspanel
+
+# Adminstrasjonspanel
+ -> Adminstrere Team
+ -> Adminstrere Lisenser 
+ -> Regisrere ny ansatt
+
