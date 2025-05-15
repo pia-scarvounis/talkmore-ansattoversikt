@@ -73,6 +73,8 @@ CLIENT_SECRET= x --
 
  # Navigasjon
     -> Begrenset navigasjon for Teamleder (leserolle)
+    -> liste med avdeling og team
+    -> logg ut
 
  # Alle ansatte 
     -> Liste over alle ansatte med klikkbare profilkort
@@ -92,7 +94,7 @@ CLIENT_SECRET= x --
     -> endre felter via popup og lagre den nye informasjonen. Lagres i historikk og i ansatt informasjonen
 
 # Admin- Navigasjon
- -> vises Adminstrasjonspanel
+ -> her vises Adminstrasjonspanel
 
 # Adminstrasjonspanel
  -> Adminstrere Team
