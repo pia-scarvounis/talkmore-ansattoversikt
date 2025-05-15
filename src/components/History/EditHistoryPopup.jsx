@@ -110,6 +110,7 @@ const EditHistoryPopup = ({
         newValue = editData.end_date; 
       }
 
+      // Bygger oppdatert data basert på type
       const updatedData = {
         field_changed: history.field_changed,
         old_value: oldValue,
@@ -122,7 +123,8 @@ const EditHistoryPopup = ({
 
       console.log("Sending ChangeLog ID:", history.changeLog_id);
       console.log("Oppdaterer historikk:", updatedData);
-  
+      
+       // Bruk Redux-thunk for å oppdatere historikk
       const result = await dispatch(
         updateChangeLog({
           changeLogId: history.changeLog_id,
@@ -142,58 +144,6 @@ const EditHistoryPopup = ({
       console.error("Feil ved lagring av historikk:", error);
     }
   };
-  
-  
-/** 
-  const handleSave = async () => {
-    try {
-      // Sjekker om changeLog_id er gyldig
-      if (!history.changeLog_id) {
-        console.error("Feil: changeLog ID mangler.");
-        return;
-      }
-
-      let newValue = editData.new_value;
-      let updatedEmployeeData = {};
-
-      //håndtere dato og leave dato
-      if (type === "leave" || type === "leave_percentage") {
-        const percent = editData.new_value?.toString().split("%")[0];
-        newValue = `${percent}% fra ${editData.start_date} til ${editData.end_date}`;
-      } else if (type === "end_date") {
-        newValue = editData.end_date;
-      }
-      
-      // Bygger oppdatert data basert på type
-      const updatedData = {
-        field_changed: history.field_changed,
-        old_value: editData.old_value,
-        new_value: newValue,
-      };
-
-      if (type === "end_date") {
-        updatedData.end_date = editData.end_date;
-      }
-
-      console.log("Sending ChangeLog ID:", history.changeLog_id);
-      console.log("Updated Data:", updatedData);
-
-      // Bruk Redux-thunk for å oppdatere historikk
-      const result = await dispatch(
-        updateChangeLog({
-          changeLogId: history.changeLog_id,
-          updatedFields: updatedData,
-        })
-      );
-        onSave(); // Oppdaterer historikken i parent
-        onClose(); // Lukker popupen
-        navigate(location.pathname, { replace: true });
-    
-    } catch (error) {
-      console.error("Feil ved lagring av historikk", error);
-    }
-  }
-  */
 
   return (
     <div className="popup-overlay" onClick={onClose}>
