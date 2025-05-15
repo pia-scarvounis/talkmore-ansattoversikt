@@ -307,6 +307,8 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
   
     //Oppdatere ansatt i api genesys hvis endring i navn eller epost
     //genesys_user_id link mellom api og databasen
+    //Må kommentere ut hvis genesys logikk , feiler hvis man ikke har genesys nøkler
+    /**
     if (original.genesys_user_id) {
       //henter inn token
       const accessTokenGen = await getOAuthToken();
@@ -345,6 +347,7 @@ router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
         console.error("Feil ved oppdatering i Genesys", genesysError);
       }
     }
+    */
     //returnere oppdatert ansatt med hjelpefunksjonen getfullemployeebyid sender inn conn som argument
     //Ikke anbefalt å opprette ny conn i getFullEmployeeById
     const updatedEmployee = await getFullEmployeeById(conn, id);
