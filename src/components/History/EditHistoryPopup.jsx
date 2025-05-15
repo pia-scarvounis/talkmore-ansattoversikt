@@ -100,19 +100,15 @@ const EditHistoryPopup = ({
   
       let newValue = editData.new_value;
       let oldValue = editData.old_value;
-  
-      //Håndter permisjon (tekst-format)
+      
+      //håndtere dato og leave dato
       if (type === "leave" || type === "leave_percentage") {
-        const percent = editData.new_value?.toString().split("%")[0];
-        newValue = `${percent}% fra ${editData.start_date} til ${editData.end_date}`;
+      const percent = editData.new_value?.toString().split("%")[0];
+      newValue = `${percent}% fra ${editData.start_date} til ${editData.end_date}`;
+      } else if (type === "end_date") {
+        newValue = editData.end_date; 
       }
-  
-      //Håndter sluttdato
-      else if (type === "end_date") {
-        newValue = editData.end_date;
-      }
-  
-     
+
       const updatedData = {
         field_changed: history.field_changed,
         old_value: oldValue,
@@ -122,8 +118,9 @@ const EditHistoryPopup = ({
       if (type === "end_date") {
         updatedData.end_date = editData.end_date;
       }
-  
-      console.log("▶️ Oppdaterer historikk:", updatedData);
+      
+      console.log("Sending ChangeLog ID:", history.changeLog_id);
+      console.log("Oppdaterer historikk:", updatedData);
   
       const result = await dispatch(
         updateChangeLog({
