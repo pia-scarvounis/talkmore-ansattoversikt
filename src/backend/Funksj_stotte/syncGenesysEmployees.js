@@ -3,6 +3,9 @@ import pool from '../config/db.js'; // Justér sti hvis nødvendig
 import bcrypt from 'bcrypt';
 import axios from 'axios';
 import { getOAuthToken } from '../apiGenesysAuth/authTokenGenesys.js';
+//Hvis ikke nøkler til genesys kjør mockdata automatisk hvis mockdata epost ikke eksisterer fra før
+import { getMockGenesysEmployees } from './mockGenesysData.js';
+
 
 dotenv.config();
 //Dette er funksjon for å sjekke om nye ansatte fra genesys er i databasen eller ikke skal sette i cron job
@@ -36,8 +39,20 @@ async function fetchAllGenEmployees(token) {
 
 export async function syncGenesysEmployees() {
   try {
-    const token = await getOAuthToken();
-    const genesysApiEmployees = await fetchAllGenEmployees(token);
+    // Hvis ikke Genesys nøkler eksisterer - bruk mockdata fallback
+    const keysExist = process.env.GENESYS_CLIENT_ID && process.env.GENESYS_CLIENT_SECRET;
+    let genesysApiEmployees = [];
+
+    if(keysExist){
+      const token = await getOAuthToken();
+      genesysApiEmployees = await fetchAllGenEmployees(token);
+      console.log('[DEBUG] Antall ansatte hentet:', genesysApiEmployees.length);
+    }else{
+      //Hvis ikke nøkler eksisterer bruk mockdata
+      console.warn('Genesys nøkler mangler, bruker mockdata for ansatte');
+      genesysApiEmployees = getMockGenesysEmployees();
+    }
+    
     const formOptions = ['Fast', 'Innleid'];
     let currentAdminCount = 0;
     const teamLeadersAssigned = new Set();

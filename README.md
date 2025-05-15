@@ -1,12 +1,62 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# EmployeeMore – Administrasjonssystem for Talkmore Kundeservice
 
-Currently, two official plugins are available:
+Dette prosjektet er et fullstack HR-system utviklet som eksamens-/prosjektoppgave. Applikasjonen håndterer ansatte, tilganger, stillinger, permisjoner og historikk, og er bygget med:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| Teknologi         | Bruksområde                 |
+|-------------------|-----------------------------|
+| React             | Brukergrensesnitt           |
+| Redux Toolkit     | Tilstandshåndtering         |
+| MySQL             | Databaselagring             |
+| Express / Node.js | Backend API                 |
+| Axios             | API-kall og datainnhenting  |
+| Genesys Cloud API | (valgfritt) Synk ansatte fra ekstern tjeneste |
 
-## Expanding the ESLint configuration
+# installer avhengiheter 
+npm install
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Type 
+: module i package.json
+
+# opprett miljøfil i env
+# Legg inn dine egene testverdier 
+DB_USER= 
+DB_PASSWORD= 
+DB_DATABASE_NAME= 
+ 
+
+JWT_SECRET= 
+DEFAULT_TEST_PASSWORD= 
+ 
+
+CLIENT_ID= x -- 
+CLIENT_SECRET= x --
+
+ # sette opp databaseskjem 
+ mysql -u root -p < schema.sql
+
+ # Starte servere 
+ npm start - > server 3000 (backend)
+ npm run dev -> server 5173 (frontend)
+
+ # Cron Job 
+
+ - Henter mockdata av navn og epost istedenfor Genesys brukere (hvis ingen genesys nøkler i env)
+        --- Cron Job synkronisering (hente ansatte) kjører hvert 2 minutt
+        (Vent til cron job henter ansatte)
+
+ - Fjerner ansatte + lisens tilganger ,på ansatte som har slutt dato fra       ansattlisten
+        --- Cron Job synkronisering (hente ansatte) kjører hvert 5 minutt
+
+ # Innlogging 
+ Systemet har to roller :
+
+    - Admin (Adminstrator full tilgang)
+    - Teamleder (Leserolle inkludert tilgang på crud (notater))
+
+ Du kan logge inn med et av testbrukerene i "userOfTool", helt nederst i sql-scriptet kjør 1 gang: 
+ SELECT * FROM userOfTool;
+
+
+ # Vedlegg 
+ MYSQL SCRIPT

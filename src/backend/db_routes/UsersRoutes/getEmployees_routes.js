@@ -3,12 +3,15 @@ import dotenv from "dotenv";
 import pool from "../../config/db.js";
 import axios from "axios";
 import bcrypt from 'bcrypt';
+// Hvis ikke genesys brukes det mockdata
+import {getMockGenesysEmployees}from '../../Funksj_stotte/mockGenesysData.js';
 //Token for API genesys
-import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js'
+import {getOAuthToken} from '../../apiGenesysAuth/authTokenGenesys.js';
 //vi skal importere en autentisering middleware for alle brukere av vårt verktøy
 //Disse rutene skal gjelde for begge brukere av vårt verktøy (admin + teamleder)
 //Så det krever at vi setter inn authmiddleware i rutene her som sjekker om brukeren
 //har tilgang til ruterene dette kommer senere!!
+
 
 //middleware
 import { authenticateToken, requireTeamLeaderOrAdmin } from "../../AuthenticateUsers/AuthMiddleware.js";
@@ -54,9 +57,20 @@ async function fetchAllGenEmployees(token){
 //setter ikke midleware på denne da den skjer automatisk i bakgrunn i cronjob
 router.post('/', async (req, res) => {
     try {
-      const accessTokenGen = await getOAuthToken();
-      const genesysApiEmployees = await fetchAllGenEmployees(accessTokenGen);
-      console.log('Antall ansatte hentet fra Genesys:', genesysApiEmployees.length);
+
+      // Hvis ikke Genesys nøkler eksisterer - bruk mockdata fallback
+      const keysExist = process.env.GENESYS_CLIENT_ID && process.env.GENESYS_CLIENT_SECRET;
+      let genesysApiEmployees = [];
+
+      if(keysExist){
+        const accessTokenGen = await getOAuthToken();
+        genesysApiEmployees = await fetchAllGenEmployees(accessTokenGen);
+        console.log('Antall ansatte hentet fra Genesys:', genesysApiEmployees.length);
+      } else{
+         //Hvis ikke nøkler eksisterer bruk mockdata
+        console.warn('Genesys nøkler mangler, bruker mockdata for ansatte');
+        genesysApiEmployees = getMockGenesysEmployees();
+      }
   
       const formOptions = ['Fast', 'Innleid'];
       let currentAdminCount = 0;
