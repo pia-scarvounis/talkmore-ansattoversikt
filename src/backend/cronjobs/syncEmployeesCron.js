@@ -7,7 +7,7 @@ console.log('[CRON] syncEmployeesCron.js er lastet inn');
 //Kjører hvert 5 min for levering av kode og prosjekt
 //CRON JOB hver hver uke, mnd , år , kl 23 ('0 23 * * *')
 //tester med 5 minutter nå ('*/5 * * * *')
-cron.schedule('0 23 * * *', async () => {
+cron.schedule('*/2 * * * *', async () => {
     console.log('[CRON] starter synskronisering av testbrukere fra api genesys');
     try{
         await syncGenesysEmployees();

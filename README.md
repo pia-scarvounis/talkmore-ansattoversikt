@@ -55,8 +55,12 @@ CLIENT_SECRET= x --
     - Teamleder (Leserolle inkludert tilgang på crud (notater))
 
  Du kan logge inn med et av testbrukerene i "userOfTool", helt nederst i sql-scriptet kjør 1 gang: 
- SELECT * FROM userOfTool;
+ SELECT * FROM userOfTool; 
+  1. Bruk "username" -> epost adresse 
+  2. Testpassord setter du selv i env filen i (DEFAULT_TEST_PASSWORD= )- krypteres i    databasen
+  3. Logg inn med username og passord 
 
 
  # Vedlegg 
  MYSQL SCRIPT
+ [Last ned fullstendig rapport (PDF)](./employeeOverview_prosjekt.sql.zip)
