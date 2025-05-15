@@ -5,7 +5,7 @@ import "../../styles/popup.css";
 import { useDispatch } from "react-redux";
 import { updateChangeLog } from "../../redux/slices/AdminSlices/adminHistoryCrudSlice";
 import { useNavigate, useLocation } from "react-router-dom";
-import { updateEmployee } from "../../redux/slices/AdminSlices/adminEmpl_CrudsSlice";
+import { fetchEmployees } from "../../redux/slices/employeeSlice";
 
 const EditHistoryPopup = ({
   history,
@@ -118,7 +118,7 @@ const EditHistoryPopup = ({
       if (type === "end_date") {
         updatedData.end_date = editData.end_date;
       }
-      
+
       console.log("Sending ChangeLog ID:", history.changeLog_id);
       console.log("Oppdaterer historikk:", updatedData);
   
@@ -130,6 +130,7 @@ const EditHistoryPopup = ({
       );
   
       if (result.meta.requestStatus === "fulfilled") {
+        await dispatch(fetchEmployees()); 
         onSave();
         onClose();
         navigate(location.pathname, { replace: true });
