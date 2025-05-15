@@ -5,13 +5,13 @@ import {
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import axios from "axios";
 import { fetchEmployeeHistory } from "../../redux/slices/historySlice";
 import editIcon from "../../assets/icons/edit.svg";
 import historyIcon from "../../assets/icons/history.svg";
 import "../../styles/historyTable.css";
 import EditHistoryPopup from "../History/EditHistoryPopup";
 import { updateChangeLog } from "../../redux/slices/AdminSlices/adminHistoryCrudSlice";
+
 
 const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
   const dispatch = useDispatch();
@@ -105,7 +105,7 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
           const value = getValue();
 
           if (field === "team_id") {
-            const team = teams?.find((t) => t.team_id.toString() === value);
+            const team = teams?.find((t) => t.team_id.toString() === value.toString());
             return team ? team.team_name : value;
           }
 
@@ -120,7 +120,7 @@ const EmployeeHistoryTable = ({ employeeId, employeeRole }) => {
           const value = getValue();
 
           if (field === "team_id") {
-            const team = teams?.find((t) => t.team_id.toString() === value);
+            const team = teams?.find((t) => t.team_id.toString() === value.toString());
             return team ? team.team_name : value;
           }
 

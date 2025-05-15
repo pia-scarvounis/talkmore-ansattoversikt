@@ -40,7 +40,7 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
         }
     }
 
-        const [result] = await pool.query(
+        await pool.query(
             `UPDATE changeLog SET ${(fields.join(', '))} WHERE changeLog_id = ?`,
             [...values, changeLog_id]
         );
@@ -66,6 +66,51 @@ router.patch("/:changeLog_id",authenticateToken, requireAdmin, async (req, res) 
             'form_of_employeement', 'employee_percentages', 
             'employeeNr_Talkmore', 'employeeNr_Telenor'
         ];
+
+        if (field === 'team_id') {
+            let team_id = value;
+            let team_name = value;
+          
+            // Uansett om det er navn eller ID, slå opp korrekt navn og ID
+            if (!isNaN(Number(value))) {
+              const [teamRow] = await pool.query(
+                `SELECT team_name FROM team WHERE team_id = ?`,
+                [value]
+              );
+          
+              if (teamRow.length === 0) {
+                return res.status(400).json({ error: "Fant ikke team basert på ID" });
+              }
+          
+              team_name = teamRow[0].team_name;
+              team_id = Number(value);
+            } else {
+              const [teamRow] = await pool.query(
+                `SELECT team_id FROM team WHERE team_name = ?`,
+                [value]
+              );
+          
+              if (teamRow.length === 0) {
+                return res.status(400).json({ error: "Fant ikke team basert på navn" });
+              }
+          
+              team_id = teamRow[0].team_id;
+              team_name = value;
+            }
+          
+            //Oppdater employee med ID
+            await pool.query(
+              `UPDATE employee SET team_id = ? WHERE employee_id = ?`,
+              [team_id, employeeId]
+            );
+          
+            //Oppdater changeLog med navn
+            await pool.query(
+              `UPDATE changeLog SET new_value = ? WHERE changeLog_id = ?`,
+              [team_name, changeLog_id]
+            );
+          }
+    
         if(employeeFields.includes(field)) {
             await pool.query(
                 `UPDATE employee SET ${field} = ? WHERE employee_id = ?`,

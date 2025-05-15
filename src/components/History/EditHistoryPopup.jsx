@@ -4,6 +4,8 @@ import RedButton from "../UI/RedButton";
 import "../../styles/popup.css";
 import { useDispatch } from "react-redux";
 import { updateChangeLog } from "../../redux/slices/AdminSlices/adminHistoryCrudSlice";
+import { useNavigate, useLocation } from "react-router-dom";
+import { updateEmployee } from "../../redux/slices/AdminSlices/adminEmpl_CrudsSlice";
 
 const EditHistoryPopup = ({
   history,
@@ -13,6 +15,7 @@ const EditHistoryPopup = ({
   onClose,
   onSave,
 }) => {
+
   const [editData, setEditData] = useState({
     old_value: history?.old_value || "",
     new_value: history?.new_value || "",
@@ -21,6 +24,8 @@ const EditHistoryPopup = ({
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation(); 
 
   useEffect(() => {
     console.log("EditHistoryPopup type:", type);
@@ -37,6 +42,7 @@ const EditHistoryPopup = ({
       ) {
         formattedOldValue = `${history.old_value}% fra ${history.start_date} til ${history.end_date}`;
       }
+    
       setEditData({
         old_value: formattedOldValue,
         new_value: history.new_value || "",
@@ -87,6 +93,61 @@ const EditHistoryPopup = ({
 
   const handleSave = async () => {
     try {
+      if (!history.changeLog_id) {
+        console.error("Feil: changeLog ID mangler.");
+        return;
+      }
+  
+      let newValue = editData.new_value;
+      let oldValue = editData.old_value;
+  
+      //Håndter permisjon (tekst-format)
+      if (type === "leave" || type === "leave_percentage") {
+        const percent = editData.new_value?.toString().split("%")[0];
+        newValue = `${percent}% fra ${editData.start_date} til ${editData.end_date}`;
+      }
+  
+      //Håndter sluttdato
+      else if (type === "end_date") {
+        newValue = editData.end_date;
+      }
+  
+     
+      const updatedData = {
+        field_changed: history.field_changed,
+        old_value: oldValue,
+        new_value: newValue,
+      };
+  
+      if (type === "end_date") {
+        updatedData.end_date = editData.end_date;
+      }
+  
+      console.log("▶️ Oppdaterer historikk:", updatedData);
+  
+      const result = await dispatch(
+        updateChangeLog({
+          changeLogId: history.changeLog_id,
+          updatedFields: updatedData,
+        })
+      );
+  
+      if (result.meta.requestStatus === "fulfilled") {
+        onSave();
+        onClose();
+        navigate(location.pathname, { replace: true });
+      } else {
+        console.error("Historikk-oppdatering feilet:", result.payload);
+      }
+    } catch (error) {
+      console.error("Feil ved lagring av historikk:", error);
+    }
+  };
+  
+  
+/** 
+  const handleSave = async () => {
+    try {
       // Sjekker om changeLog_id er gyldig
       if (!history.changeLog_id) {
         console.error("Feil: changeLog ID mangler.");
@@ -94,6 +155,7 @@ const EditHistoryPopup = ({
       }
 
       let newValue = editData.new_value;
+      let updatedEmployeeData = {};
 
       //håndtere dato og leave dato
       if (type === "leave" || type === "leave_percentage") {
@@ -102,7 +164,7 @@ const EditHistoryPopup = ({
       } else if (type === "end_date") {
         newValue = editData.end_date;
       }
-
+      
       // Bygger oppdatert data basert på type
       const updatedData = {
         field_changed: history.field_changed,
@@ -124,16 +186,15 @@ const EditHistoryPopup = ({
           updatedFields: updatedData,
         })
       );
-      if (result.meta.requestStatus === "fulfilled") {
         onSave(); // Oppdaterer historikken i parent
         onClose(); // Lukker popupen
-      } else {
-        console.error("Oppdatering feilet:", result.payload);
-      }
+        navigate(location.pathname, { replace: true });
+    
     } catch (error) {
       console.error("Feil ved lagring av historikk", error);
     }
-  };
+  }
+  */
 
   return (
     <div className="popup-overlay" onClick={onClose}>
