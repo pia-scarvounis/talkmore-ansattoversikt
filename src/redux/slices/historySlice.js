@@ -15,7 +15,7 @@ export const fetchEmployeeHistory = createAsyncThunk(
   async (employeeId, { rejectWithValue }) => {
     try {
       const response = await api.get(
-        `http://localhost:3000/api/employee/history/${employeeId}`
+        `/employee/history/${employeeId}`
       );
       console.log("Response fra API employeeHistoryGet:", response.data);
       return response.data;

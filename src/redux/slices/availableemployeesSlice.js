@@ -11,7 +11,7 @@ export const fetchAvailableEmployees = createAsyncThunk(
     'availableEmployees/fetchAvailableEmployees',
         async(selectedDate, thunkAPI) =>{
             try{
-                const response = await api.get(`http://localhost:3000/api/availableemployees?date=${selectedDate}`);
+                const response = await api.get(`/availableemployees?date=${selectedDate}`);
                 return response.data;
             }catch(error){
                 return thunkAPI.rejectWithValue(error.response.data);

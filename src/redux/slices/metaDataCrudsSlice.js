@@ -11,10 +11,10 @@ export const fetchMetaData = createAsyncThunk(
     async(_, {rejectedWithValue}) => {
         try{
             const [departmentsRes, teamsRes, posistionsRes, licensesRes] = await Promise.all([
-                api.get('http://localhost:3000/api/metaData/departments'),
-                api.get('http://localhost:3000/api/metaData/teams'),
-                api.get('http://localhost:3000/api/metaData/posistions'),
-                api.get('http://localhost:3000/api/metaData/licenses')
+                api.get('/metaData/departments'),
+                api.get('metaData/teams'),
+                api.get('/metaData/posistions'),
+                api.get('/metaData/licenses')
             ]);
             return{
                 departments: departmentsRes.data,
