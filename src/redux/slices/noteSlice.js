@@ -21,7 +21,7 @@ export const addNote = createAsyncThunk(
   async ({ employee_id, note }) => {
     console.log("Sender til backend:", { employee_id, note });
 
-    const res = await api.post(`api/note`, {
+    const res = await api.post(`/note`, {
       employee_id,
       note,
     });
@@ -33,7 +33,7 @@ export const addNote = createAsyncThunk(
 export const editNote = createAsyncThunk(
   "note/editNote",
   async ({ noteId, note }) => {
-    const res = await api.put(`/api/note/${noteId}`, {
+    const res = await api.put(`/note/${noteId}`, {
       note,
     });
     return { noteId, note };
@@ -42,7 +42,7 @@ export const editNote = createAsyncThunk(
 
 //fetch slette notat til ansatt
 export const deleteNote = createAsyncThunk("note/delete", async (noteId) => {
-  const res = await api.delete(`/api/note/${noteId}`);
+  const res = await api.delete(`/note/${noteId}`);
   return noteId;
 });
 
