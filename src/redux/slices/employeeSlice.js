@@ -16,7 +16,7 @@ export const fetchEmployees = createAsyncThunk(
   "employees/fetchEmployees",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/api/employees");
+      const response = await api.get("/employees");
       console.log("Respons fra API fetchEmployee:", response.data);
       return response.data;
     } catch {
