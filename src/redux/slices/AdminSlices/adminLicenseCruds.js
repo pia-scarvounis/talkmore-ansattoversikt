@@ -10,7 +10,7 @@ export const createLicense = createAsyncThunk(
   async (newLicense, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.post(
-        "http://localhost:3000/api/license",
+        "/license",
         newLicense
       );
       dispatch(fetchMetaData());
@@ -34,7 +34,7 @@ export const updateLicense = createAsyncThunk(
   async ({ licenseId, updateData }, { dispatch, rejectWithValue }) => {
     try {
       await api.put(
-        `http://localhost:3000/api/license/${licenseId}`,
+        `/license/${licenseId}`,
         updateData
       );
       dispatch(fetchMetaData());
@@ -49,7 +49,7 @@ export const deleteLicense = createAsyncThunk(
   "license/deleteLicense",
   async (licenseId, { dispatch, rejectWithValue }) => {
     try {
-      await api.delete(`http://localhost:3000/api/license/${licenseId}`);
+      await api.delete(`/license/${licenseId}`);
       dispatch(fetchMetaData());
     } catch (err) {
       return rejectWithValue(err.response.data);

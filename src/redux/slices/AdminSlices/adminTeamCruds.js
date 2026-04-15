@@ -15,7 +15,7 @@ import { fetchMetaData } from '../metaDataCrudsSlice.js';
 export const createTeam = createAsyncThunk(
     'team/createTeam', async (newTeam, {dispatch, rejectWithValue}) =>{
         try{
-            await api.post('http://localhost:3000/api/team', newTeam);
+            await api.post('/team', newTeam);
             //oppdatere teams
             dispatch(fetchMetaData());
         }catch (err){
@@ -28,7 +28,7 @@ export const createTeam = createAsyncThunk(
 export const updateTeam = createAsyncThunk(
     'team/updateTeam', async({team_id, updateData}, {dispatch, rejectWithValue}) => {
         try{
-            await api.put(`http://localhost:3000/api/team/${team_id}`, updateData);
+            await api.put(`/team/${team_id}`, updateData);
             //oppdaterer teams
             dispatch(fetchMetaData());
         }catch(err){
@@ -41,7 +41,7 @@ export const updateTeam = createAsyncThunk(
 export const deleteTeam = createAsyncThunk(
     'team/deleteTeam', async(team_id, {dispatch, rejectWithValue}) => {
         try{
-            await api.delete(`http://localhost:3000/api/team/${team_id}`);
+            await api.delete(`/team/${team_id}`);
             dispatch(fetchMetaData());
         }catch(err){
             return rejectWithValue(err.response.data);
